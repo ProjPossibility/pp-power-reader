@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package powerreader;
+package image;
 import java.net.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.*;

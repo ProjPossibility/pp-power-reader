@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package powerreader;
+package image;
 import java.io.*;
 import java.net.*;
 import java.util.regex.*;
