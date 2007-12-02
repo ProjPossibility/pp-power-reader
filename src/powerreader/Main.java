@@ -8,6 +8,8 @@
  */
 
 package powerreader;
+import speech.*;
+import misc.*;
 
 /**
  *
@@ -28,6 +30,8 @@ public class Main {
                 new PowerReaderUI().setVisible(true);
             }
         });
+        
+        Speech.speak("Hello and welcome to Power Reader.  This is a test of the free text to speech synthesizer.");
     }
     
 }
