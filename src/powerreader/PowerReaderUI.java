@@ -33,6 +33,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+
+import java.io.*;
 /**
  *
  * @author  cleung
@@ -45,12 +48,15 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private TextParser textParser;
     private OpenPageDialog opd;
     private ArrayList parseTree;
+    private BranchGroup sceneRoot;
+    private TransformGroup root_group;
+    private Vector3f nextWordLocation;
     
     /** Creates new form PowerReaderUI */
     public PowerReaderUI() {
         initComponents();
                 
-        textParser = new TextParser();
+        //textParser = new TextParser();
         opd = new OpenPageDialog(this, true);
         
         // Now initialize the 3D Canvas
@@ -64,41 +70,51 @@ public class PowerReaderUI extends javax.swing.JFrame {
         // construct the 3D image
         Canvas3D canvas3D = new Canvas3D(config);
         SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
-        BranchGroup scene = createSceneGraph();
+        createSceneGraph();
         simpleU.getViewingPlatform().setNominalViewingTransform();       // This will move the ViewPlatform back a bit so the
-        simpleU.addBranchGraph(scene);
+        simpleU.addBranchGraph(sceneRoot);
         
         m_panel_textArea.setLayout( new BorderLayout() );
         m_panel_textArea.setOpaque( false );
         m_panel_textArea.add("Center", canvas3D);   // <-- HERE IT IS - tada! j3d in swing
     }
     
-    private BranchGroup createSceneGraph() {
+    private void createSceneGraph() {
         // Create the root of the branch graph
-        BranchGroup objRoot = new BranchGroup();
-        TransformGroup root_group = new TransformGroup(  );
+        sceneRoot = new BranchGroup();
+        
+        sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        
+        root_group = new TransformGroup(  );
         root_group.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE); // allow the mouse behavior to rotate the scene
         root_group.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-        objRoot.addChild( root_group );  // this is the local origin  - everyone hangs off this - moving this move every one
-        
-        root_group.addChild( new ColorCube(0.2) );  // add a color cube
-        root_group.addChild( new Label3D( 0.2f, 0.2f, 0.0f, "ColorCube") );
         
         MouseRotate mouseRotate = new MouseRotate( root_group );  // add the mouse behavior
         mouseRotate.setSchedulingBounds( new BoundingSphere() );
-        objRoot.addChild( mouseRotate);
-        return objRoot;
+        
+        nextWordLocation= new Vector3f(-1.0f,1.0f,0);
+        root_group.addChild( new Label3D("Please open a text file.") );
+                
+        sceneRoot.addChild( mouseRotate);
+        
+        BranchGroup startText = new BranchGroup();
+        startText.addChild(root_group);
+        startText.setCapability(BranchGroup.ALLOW_DETACH);
+        
+        sceneRoot.addChild( startText );  // this is the local origin  - everyone hangs off this - moving this move every one
     }
     
     class Label3D
             extends TransformGroup {
         
-        public Label3D( float x, float y, float z, String msg ) {
+        public Label3D( String msg ) {
             super();
             
             // place it in the scene graph
             Transform3D offset = new Transform3D();
-            offset.setTranslation( new Vector3f( x, y, z ));
+            offset.setTranslation(nextWordLocation);
             this.setTransform( offset );
             
             // face it in the scene graph
@@ -131,30 +147,47 @@ public class PowerReaderUI extends javax.swing.JFrame {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
-        m_button_play = new javax.swing.JButton();
-        m_buton_stop = new javax.swing.JButton();
+        m_panel_textArea = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
         m_slider_readSpeed = new javax.swing.JSlider();
         m_label_readSpeed = new javax.swing.JLabel();
-        m_slider_zoomLevel = new javax.swing.JSlider();
-        m_label_zoomLevel = new javax.swing.JLabel();
+        m_button_play = new javax.swing.JButton();
+        m_buton_stop = new javax.swing.JButton();
         m_slider_lod = new javax.swing.JSlider();
         m_label_lod = new javax.swing.JLabel();
-        m_button_fgColor = new javax.swing.JButton();
-        m_label_fgColor = new javax.swing.JLabel();
-        m_label_bgColor = new javax.swing.JLabel();
+        m_slider_zoomLevel = new javax.swing.JSlider();
+        m_label_zoomLevel = new javax.swing.JLabel();
         m_button_bgColor = new javax.swing.JButton();
         m_label_hlColor = new javax.swing.JLabel();
         m_button_hlColor = new javax.swing.JButton();
         m_checkBox_showImages = new javax.swing.JCheckBox();
         m_checkBox_wordsGrow = new javax.swing.JCheckBox();
         m_checkBox_speechEnabled = new javax.swing.JCheckBox();
-        m_panel_textArea = new javax.swing.JPanel();
+        m_button_fgColor = new javax.swing.JButton();
+        m_label_bgColor = new javax.swing.JLabel();
+        m_label_fgColor = new javax.swing.JLabel();
         m_button_open = new javax.swing.JButton();
         m_menubar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Power Reader Alpha");
+        setResizable(false);
+        //Test
+        org.jdesktop.layout.GroupLayout m_panel_textAreaLayout = new org.jdesktop.layout.GroupLayout(m_panel_textArea);
+        m_panel_textArea.setLayout(m_panel_textAreaLayout);
+        m_panel_textAreaLayout.setHorizontalGroup(
+            m_panel_textAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 509, Short.MAX_VALUE)
+        );
+        m_panel_textAreaLayout.setVerticalGroup(
+            m_panel_textAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 512, Short.MAX_VALUE)
+        );
+
+        m_label_readSpeed.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        m_label_readSpeed.setText("<--Slow     Read Speed     Fast-->");
+
         m_button_play.setText("Play");
         m_button_play.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,28 +197,11 @@ public class PowerReaderUI extends javax.swing.JFrame {
 
         m_buton_stop.setText("Stop");
 
-        m_label_readSpeed.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_label_readSpeed.setText("<--Slow     Read Speed     Fast-->");
-
-        m_label_zoomLevel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_label_zoomLevel.setText("<--Slow     Zoom Level     Fast-->");
-
         m_label_lod.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_lod.setText("<--Low   Level of Detail   High-->");
 
-        m_button_fgColor.setBackground(new java.awt.Color(0, 0, 204));
-        m_button_fgColor.setText("Foreground Color");
-        m_button_fgColor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                m_button_fgColorActionPerformed(evt);
-            }
-        });
-
-        m_label_fgColor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_label_fgColor.setText("Foreground Color");
-
-        m_label_bgColor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_label_bgColor.setText("Background Color");
+        m_label_zoomLevel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        m_label_zoomLevel.setText("<--Slow     Zoom Level     Fast-->");
 
         m_button_bgColor.setBackground(new java.awt.Color(255, 153, 0));
         m_button_bgColor.setText("Background Color");
@@ -218,17 +234,19 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_checkBox_speechEnabled.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         m_checkBox_speechEnabled.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
-        //Test
-        org.jdesktop.layout.GroupLayout m_panel_textAreaLayout = new org.jdesktop.layout.GroupLayout(m_panel_textArea);
-        m_panel_textArea.setLayout(m_panel_textAreaLayout);
-        m_panel_textAreaLayout.setHorizontalGroup(
-            m_panel_textAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 437, Short.MAX_VALUE)
-        );
-        m_panel_textAreaLayout.setVerticalGroup(
-            m_panel_textAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 552, Short.MAX_VALUE)
-        );
+        m_button_fgColor.setBackground(new java.awt.Color(0, 0, 204));
+        m_button_fgColor.setText("Foreground Color");
+        m_button_fgColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_button_fgColorActionPerformed(evt);
+            }
+        });
+
+        m_label_bgColor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        m_label_bgColor.setText("Background Color");
+
+        m_label_fgColor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        m_label_fgColor.setText("Foreground Color");
 
         m_button_open.setText("Open...");
         m_button_open.addActionListener(new java.awt.event.ActionListener() {
@@ -237,63 +255,49 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
-        jMenu1.setMnemonic('F');
-        jMenu1.setText("File");
-        jMenu1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu1ActionPerformed(evt);
-            }
-        });
-
-        m_menubar.add(jMenu1);
-
-        setJMenuBar(m_menubar);
-
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .add(m_panel_textArea, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(layout.createSequentialGroup()
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(layout.createSequentialGroup()
-                                .add(2, 2, 2)
-                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_slider_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .add(m_label_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                                .add(m_slider_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .add(m_label_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .add(m_slider_zoomLevel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                                .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 260, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(m_button_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                                .add(m_label_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                                .add(m_button_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                                .add(m_checkBox_showImages)
-                                .add(m_checkBox_wordsGrow)
-                                .add(m_checkBox_speechEnabled)
-                                .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .add(m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                                .add(m_label_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .add(layout.createSequentialGroup()
-                                .add(m_button_play, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(m_buton_stop, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE))))
-                    .add(layout.createSequentialGroup()
-                        .add(101, 101, 101)
-                        .add(m_button_open)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(m_slider_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(m_label_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(m_slider_zoomLevel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 260, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(m_button_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_label_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_button_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_checkBox_showImages)
+                    .add(m_checkBox_wordsGrow)
+                    .add(m_checkBox_speechEnabled)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_label_fgColor))
+                .addContainerGap())
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(41, 41, 41)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, m_slider_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(m_label_readSpeed))
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(m_button_play, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(m_buton_stop, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)))
+                .add(59, 59, 59))
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(110, 110, 110)
                 .add(m_button_open)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE, false)
+                .addContainerGap(119, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(m_button_open)
+                .add(16, 16, 16)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE, false)
                     .add(m_button_play)
                     .add(m_buton_stop))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -326,8 +330,40 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 .add(m_checkBox_wordsGrow)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_checkBox_speechEnabled)
-                .addContainerGap(75, Short.MAX_VALUE))
-            .add(m_panel_textArea, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(25, Short.MAX_VALUE))
+        );
+
+        jMenu1.setMnemonic('F');
+        jMenu1.setText("File");
+        jMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu1ActionPerformed(evt);
+            }
+        });
+
+        m_menubar.add(jMenu1);
+
+        setJMenuBar(m_menubar);
+
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                .add(m_panel_textArea, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 277, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_panel_textArea, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .add(40, 40, 40))
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -337,7 +373,13 @@ public class PowerReaderUI extends javax.swing.JFrame {
         opd.setVisible(true);
         
         if (opd.getStatus() == OpenPageDialog.APPROVE_OPTION) {
-            parseTree = textParser.loadFile(opd.getPage());
+            //parseTree = textParser.loadFile(opd.getPage());
+            
+            //prepare scenegraph for new text
+            sceneRoot.removeChild(1);
+            nextWordLocation.x=-1f;
+            nextWordLocation.y=1f;
+            sceneRoot.addChild(renderFile(opd.getPage()));
         }
     }//GEN-LAST:event_m_button_openActionPerformed
 
@@ -361,10 +403,87 @@ public class PowerReaderUI extends javax.swing.JFrame {
 // TODO add your handling code here:
     }//GEN-LAST:event_jMenu1ActionPerformed
 
-
+    private BranchGroup renderFile(String infile){
+        BranchGroup node = new BranchGroup();
+        
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        node.setCapability(BranchGroup.ALLOW_DETACH);
+        
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(infile));
+            String paragraph;
+            while ((paragraph = in.readLine()) != null) {
+                node.addChild(renderParagraph(paragraph+"."));
+                
+                // increment scenegraph to next line
+                nextWordLocation.x = -1.0f;
+                nextWordLocation.y -= 0.1f;
+            }
+            in.close();
+                    
+        } catch (Exception e) {
+            System.out.println(e);
+        } 
+        return node;
+    }
+    
+    private BranchGroup renderParagraph(String para){
+        BranchGroup node = new BranchGroup();
+        
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        node.setCapability(BranchGroup.ALLOW_DETACH);
+        
+        int i;
+        String[] sentences= para.split("\\.+");
+        for (i=0; i<sentences.length; i++) {
+            node.addChild(renderSentence(sentences[i]+"."));
+        }
+        return node;
+    }
+    
+    private BranchGroup renderSentence(String sentence){
+        BranchGroup node = new BranchGroup();
+        
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        node.setCapability(BranchGroup.ALLOW_DETACH);
+        
+        int i;
+        String[] words= sentence.split("\\s+");
+        for (i=0; i<words.length; i++) {
+            node.addChild(renderWord(words[i]));
+        }
+        return node;
+    }
+    
+    private BranchGroup renderWord(String word)
+    {
+        BranchGroup node = new BranchGroup();
+        
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        node.setCapability(BranchGroup.ALLOW_DETACH);
+        
+        if (nextWordLocation.x > 0.9f) {
+           nextWordLocation.x = -1.0f;
+           nextWordLocation.y -= 0.1f;
+        }
+        
+        node.addChild(new Label3D(word));
+        
+        nextWordLocation.x += 0.05f * word.length();
+        return node;
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JButton m_buton_stop;
     private javax.swing.JButton m_button_bgColor;
     private javax.swing.JButton m_button_fgColor;
