@@ -5,34 +5,18 @@
  */
 
 package powerreader;
-import image.*;
 
 // Import J3D Stuff
-import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
-import com.sun.j3d.utils.geometry.ColorCube;
-import com.sun.j3d.utils.geometry.Text2D;
+import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;
+import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.universe.*;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GraphicsConfiguration;
 import javax.media.j3d.*;
-import javax.vecmath.Color3f;
 import javax.vecmath.Vector3f;
-
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-
-// Import file loader stuff
-import edu.stanford.nlp.ling.*;
 import edu.stanford.nlp.io.ui.OpenPageDialog;
-import edu.stanford.nlp.trees.Tree;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 
 import java.io.*;
@@ -44,7 +28,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     
     // Manually added variables
     private Canvas3D theCanvas;
-
+    
     private TextParser textParser;
     private OpenPageDialog opd;
     private ArrayList parseTree;
@@ -55,14 +39,14 @@ public class PowerReaderUI extends javax.swing.JFrame {
     /** Creates new form PowerReaderUI */
     public PowerReaderUI() {
         initComponents();
-                
+        
         //textParser = new TextParser();
         opd = new OpenPageDialog(this, true);
         
         // Now initialize the 3D Canvas
         create3dCanvas();
     }
-
+    
     private void create3dCanvas() {
         
         GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
@@ -87,17 +71,27 @@ public class PowerReaderUI extends javax.swing.JFrame {
         sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
         sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
         
-        root_group = new TransformGroup(  );
+        Transform3D transform3d = new Transform3D();
+        transform3d.setTranslation(new Vector3f(0,0,-25));
+        root_group = new TransformGroup();
         root_group.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE); // allow the mouse behavior to rotate the scene
         root_group.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        root_group.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+        root_group.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
+        root_group.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
+        root_group.setTransform(transform3d);
         
-        MouseRotate mouseRotate = new MouseRotate( root_group );  // add the mouse behavior
-        mouseRotate.setSchedulingBounds( new BoundingSphere() );
+        MouseWheelZoom mouseWheelZoom = new MouseWheelZoom(root_group);
+        mouseWheelZoom.setSchedulingBounds(new BoundingSphere());
+        
+        MouseTranslate mouseTranslate = new MouseTranslate(root_group);
+        mouseTranslate.setSchedulingBounds(new BoundingSphere());
         
         nextWordLocation= new Vector3f(-1.0f,1.0f,0);
         root_group.addChild( new Label3D("Please open a text file.") );
-                
-        sceneRoot.addChild( mouseRotate);
+        
+        sceneRoot.addChild(mouseWheelZoom);
+        sceneRoot.addChild(mouseTranslate);
         
         BranchGroup startText = new BranchGroup();
         startText.addChild(root_group);
@@ -122,20 +116,23 @@ public class PowerReaderUI extends javax.swing.JFrame {
             TransformGroup rotation_group = new TransformGroup( rotation );
             this.addChild( rotation_group );
             
-            // make a texture mapped polygon
-            Text2D msg_poly = new Text2D( msg, new
-                    Color3f( 1.0f, 1.0f, 1.0f),
-                    "Helvetica", 18, Font.PLAIN );
-            
-            
-            // set it to draw both the front and back of the poly
-            PolygonAttributes msg_attributes = new PolygonAttributes();
-            msg_attributes.setCullFace( PolygonAttributes.CULL_NONE );
-            msg_attributes.setBackFaceNormalFlip( true );
-            msg_poly.getAppearance().setPolygonAttributes( msg_attributes );
+            // create the 3d text
+            Appearance textAppear = new Appearance();
+            Material textMaterial = new Material();
+            textMaterial.setEmissiveColor(1.0f,1.0f,1.0f);
+            textAppear.setMaterial(textMaterial);
+            FontExtrusion fontExtrusion = new FontExtrusion();
+            Font3D font3D = new Font3D(
+                    new Font("Helvetica", Font.PLAIN, 1),
+                    new FontExtrusion());
+            Text3D textGeom = new Text3D(font3D,msg);
+            textGeom.setAlignment(Text3D.ALIGN_CENTER);
+            Shape3D textShape = new Shape3D();
+            textShape.setGeometry(textGeom);
+            textShape.setAppearance(textAppear);
             
             // attach it
-            rotation_group.addChild( msg_poly );
+            rotation_group.addChild( textShape );
         }
         
     }
@@ -365,7 +362,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void m_button_openActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_openActionPerformed
         opd.setLocation(getLocationOnScreen().x + (getWidth() - opd.getWidth()) / 2, getLocationOnScreen().y + (getHeight() - opd.getHeight()) / 2);
         opd.setVisible(true);
@@ -374,13 +371,13 @@ public class PowerReaderUI extends javax.swing.JFrame {
             //parseTree = textParser.loadFile(opd.getPage());
             
             //prepare scenegraph for new text
-            sceneRoot.removeChild(1);
+            //sceneRoot.removeChild(1);
             nextWordLocation.x=-1f;
             nextWordLocation.y=1f;
-            sceneRoot.addChild(renderFile(opd.getPage()));
+            root_group.addChild(renderFile(opd.getPage()));
         }
     }//GEN-LAST:event_m_button_openActionPerformed
-
+    
     private void m_button_hlColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_hlColorActionPerformed
 // TODO add your handling code here:
     }//GEN-LAST:event_m_button_hlColorActionPerformed
@@ -400,7 +397,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
 // TODO add your handling code here:
     }//GEN-LAST:event_jMenu1ActionPerformed
-
+    
     private BranchGroup renderFile(String infile){
         BranchGroup node = new BranchGroup();
         
@@ -420,10 +417,10 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 nextWordLocation.y -= 0.1f;
             }
             in.close();
-                    
+            
         } catch (Exception e) {
             System.out.println(e);
-        } 
+        }
         return node;
     }
     
@@ -459,8 +456,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         return node;
     }
     
-    private BranchGroup renderWord(String word)
-    {
+    private BranchGroup renderWord(String word) {
         BranchGroup node = new BranchGroup();
         
         node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
@@ -469,8 +465,8 @@ public class PowerReaderUI extends javax.swing.JFrame {
         node.setCapability(BranchGroup.ALLOW_DETACH);
         
         if (nextWordLocation.x > 0.9f) {
-           nextWordLocation.x = -1.0f;
-           nextWordLocation.y -= 0.1f;
+            nextWordLocation.x = -1.0f;
+            nextWordLocation.y -= 0.1f;
         }
         
         node.addChild(new Label3D(word));
