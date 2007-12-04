@@ -35,6 +35,8 @@ public class FlickrImageFetcher extends ImageFetcher {
         } catch (Exception e) {
             System.out.println(e);
         }
+        
+        imageFetcherName = "Flickr";
     }
 
     public String getImageURL(String text) {

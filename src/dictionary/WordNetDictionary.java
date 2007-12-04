@@ -20,6 +20,7 @@ public class WordNetDictionary extends DictionaryLookup {
     
     /** Creates a new instance of WordNetDictionary */
     public WordNetDictionary() {
+        dictionaryName = "WordNet";
     }
     
     public String getDefinition(String text) {

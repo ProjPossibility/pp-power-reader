@@ -15,8 +15,15 @@ package dictionary;
  */
 public abstract class DictionaryLookup {
     
+    protected static String dictionaryName;
+            
     /** Creates a new instance of DictionaryLookup */
     public DictionaryLookup() {
     }
     public abstract String getDefinition(String text);
+    
+    static public String getName() {
+        return dictionaryName;
+    }
+
 }

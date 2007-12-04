@@ -17,6 +17,9 @@ import javax.imageio.*;
  * @author zhanshi
  */
 public abstract class ImageFetcher {
+    
+    protected String imageFetcherName;
+    
     public abstract String getImageURL(String text);
     public BufferedImage getImage(String imgURL) {
         BufferedImage img;
@@ -28,5 +31,8 @@ public abstract class ImageFetcher {
             System.out.println("Unable to retrieve image from " + imgURL);
         }
         return null;
+    }
+    public String getName() {
+        return imageFetcherName;
     }
 }

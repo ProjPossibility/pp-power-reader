@@ -21,6 +21,7 @@ public class GoogleImageFetcher extends ImageFetcher {
     
     /** Creates a new instance of GoogleImageFetcher */
     public GoogleImageFetcher() {
+        imageFetcherName = "Google Images";
     }
     
     public String getImageURL(String text) {

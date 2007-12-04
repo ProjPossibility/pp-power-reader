@@ -20,6 +20,7 @@ public class Wiktionary extends DictionaryLookup {
     
     /** Creates a new instance of Wiktionary */
     public Wiktionary() {
+        dictionaryName = "Wiktionary";
     }
     
     public String getDefinition(String text) {

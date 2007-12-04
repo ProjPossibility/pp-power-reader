@@ -20,6 +20,7 @@ public class YahooImageFetcher extends ImageFetcher {
     
     /** Creates a new instance of YahooImageFetcher */
     public YahooImageFetcher() {
+        imageFetcherName = "Yahoo Images";
     }
     
     public String getImageURL(String text) {
