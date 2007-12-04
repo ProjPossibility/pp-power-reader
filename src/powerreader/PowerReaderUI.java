@@ -9,12 +9,10 @@ package powerreader;
 // Import J3D Stuff
 import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
-import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GraphicsConfiguration;
-import java.awt.event.MouseAdapter;
 import javax.media.j3d.*;
 import javax.swing.JColorChooser;
 import javax.vecmath.Color3f;
@@ -23,6 +21,7 @@ import edu.stanford.nlp.io.ui.OpenPageDialog;
 import java.awt.Component;
 import java.util.ArrayList;
 import javax.vecmath.Point3d;
+import speech.Speech;
 import util.HierarchyObject;
 import util.RawTextParser;
 import util.TextObject3d;
@@ -49,9 +48,15 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private RawTextParser rawTextParser;
     private Pick pick;
     
+    // Config panel
+    private ConfigUI m_configPanel;
+    
     /** Creates new form PowerReaderUI */
     public PowerReaderUI() {
         initComponents();
+        
+        // Initialize config panel
+        m_configPanel = new ConfigUI();
         
         // Set default button colors
         m_button_bgColor.setBackground(DEFAULT_BG_COLOR);
@@ -154,6 +159,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_label_bgColor = new javax.swing.JLabel();
         m_label_fgColor = new javax.swing.JLabel();
         m_button_open = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         m_menubar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
 
@@ -258,45 +264,49 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Options");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout m_panel_controlAreaLayout = new org.jdesktop.layout.GroupLayout(m_panel_controlArea);
         m_panel_controlArea.setLayout(m_panel_controlAreaLayout);
         m_panel_controlAreaLayout.setHorizontalGroup(
             m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, m_panel_controlAreaLayout.createSequentialGroup()
-                .add(m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+            .add(m_panel_controlAreaLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_button_open, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_panel_controlAreaLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(m_label_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_panel_controlAreaLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(m_button_open, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_panel_controlAreaLayout.createSequentialGroup()
-                        .add(10, 10, 10)
                         .add(m_button_play, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(m_buton_stop, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 129, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_panel_controlAreaLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                            .add(m_slider_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(m_slider_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(m_label_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 260, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(m_button_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                            .add(m_label_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                            .add(m_button_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                            .add(m_checkBox_showImages)
-                            .add(m_checkBox_wordsGrow)
-                            .add(m_checkBox_speechEnabled)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                            .add(m_label_fgColor)
-                            .add(m_slider_zoomLevel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .add(m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                        .add(m_slider_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(m_slider_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(m_label_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 260, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(m_button_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                        .add(m_label_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                        .add(m_button_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                        .add(m_checkBox_showImages)
+                        .add(m_checkBox_wordsGrow)
+                        .add(m_checkBox_speechEnabled)
+                        .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                        .add(m_label_fgColor)
+                        .add(m_slider_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jButton1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
                 .addContainerGap())
         );
         m_panel_controlAreaLayout.setVerticalGroup(
             m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(m_panel_controlAreaLayout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, m_panel_controlAreaLayout.createSequentialGroup()
+                .add(jButton1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 14, Short.MAX_VALUE)
                 .add(m_button_open)
                 .add(16, 16, 16)
                 .add(m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -332,7 +342,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 .add(m_checkBox_wordsGrow)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_checkBox_speechEnabled)
-                .addContainerGap(65, Short.MAX_VALUE))
+                .add(28, 28, 28))
         );
 
         jMenu1.setMnemonic('F');
@@ -366,6 +376,11 @@ public class PowerReaderUI extends javax.swing.JFrame {
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        m_configPanel.setVisible(true);       
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void m_slider_readSpeedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_readSpeedStateChanged
         Player.setSleepDelay(m_slider_readSpeed.getValue());
@@ -484,6 +499,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JButton m_buton_stop;
     private javax.swing.JButton m_button_bgColor;

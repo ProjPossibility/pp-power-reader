@@ -19,6 +19,7 @@ public class Speech extends Thread {
     }
     
     private Speech() {
+        Voice[] voices = VoiceManager.getInstance().getVoices();
         m_voice = VoiceManager.getInstance().getVoice("kevin16");
         if (m_voice == null) {
             ErrorDialog.show("Could not load FreeTTS voice");

@@ -201,5 +201,6 @@ public class Player extends Thread {
     
     static public void pause() {
         m_instance.suspend();
+        Speech.cancel();
     }
 }
