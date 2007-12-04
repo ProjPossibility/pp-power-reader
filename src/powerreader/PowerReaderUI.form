@@ -79,28 +79,23 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="m_label_readSpeed" pref="262" max="32767" attributes="3"/>
+                      </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="m_button_open" pref="262" max="32767" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="1" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-                                  <Component id="m_label_readSpeed" min="-2" max="-2" attributes="3"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="m_button_play" pref="127" max="32767" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="m_buton_stop" min="-2" pref="129" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="m_button_play" pref="127" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="m_buton_stop" min="-2" pref="129" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="m_slider_readSpeed" alignment="0" max="32767" attributes="1"/>
                               <Component id="m_slider_lod" alignment="0" max="32767" attributes="1"/>
                               <Component id="m_label_lod" alignment="0" max="32767" attributes="1"/>
@@ -168,6 +163,17 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JSlider" name="m_slider_readSpeed">
+          <Properties>
+            <Property name="majorTickSpacing" type="int" value="50"/>
+            <Property name="maximum" type="int" value="1350"/>
+            <Property name="minimum" type="int" value="250"/>
+            <Property name="paintTicks" type="boolean" value="true"/>
+            <Property name="value" type="int" value="800"/>
+            <Property name="name" type="java.lang.String" value="Read Speed"/>
+          </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="m_slider_readSpeedStateChanged"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="m_label_readSpeed">
           <Properties>
@@ -204,7 +210,7 @@
         <Component class="javax.swing.JLabel" name="m_label_zoomLevel">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="&lt;--Slow     Zoom Level     Fast--&gt;"/>
+            <Property name="text" type="java.lang.String" value="&lt;--Low     Zoom Level     High--&gt;"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="m_button_bgColor">
