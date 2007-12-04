@@ -21,23 +21,25 @@ public class HierarchyObject {
     /**
      * Defines document level identifier as integer.
      */
-    public static int LEVEL_DOCUMENT = 0;
+    public static int LEVEL_DOCUMENT_ID = 0;
     /**
      * Defines paragraph level identifier as integer.
      */
-    public static int LEVEL_PARAGRAPH  = 1;
+    public static int LEVEL_PARAGRAPH_ID  = 1;
     /**
      * Defines sentence level identifier as integer.
      */
-    public static int LEVEL_SENTENCE  = 2;
-    /**
-     * Defines phrase level identifier as integer.
-     */
-    public static int LEVEL_PHRASE = 3;
+    public static int LEVEL_SENTENCE_ID  = 2;
     /**
      * Defines word level identifier as integer.
      */
-    public static int LEVEL_WORD = 4;
+    public static int LEVEL_WORD_ID = 3;
+
+    
+    public static String LEVEL_DOCUMENT_STR = "Document";
+    public static String LEVEL_PARAGRAPH_STR = "Paragraph";
+    public static String LEVEL_SENTENCE_STR = "Sentence";
+    public static String LEVEL_WORD_STR = "Word";
     
     // Referece to scene graph node
     private Node m_node;

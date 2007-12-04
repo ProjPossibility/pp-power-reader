@@ -11,15 +11,14 @@ import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.universe.*;
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.GraphicsConfiguration;
 import javax.media.j3d.*;
 import javax.vecmath.Vector3f;
 import edu.stanford.nlp.io.ui.OpenPageDialog;
 import java.util.ArrayList;
-
-
-import java.io.*;
+import util.HierarchyObject;
+import util.RawTextParser;
+import util.TextObject3d;
 /**
  *
  * @author  cleung
@@ -29,12 +28,12 @@ public class PowerReaderUI extends javax.swing.JFrame {
     // Manually added variables
     private Canvas3D theCanvas;
     
-    private TextParser textParser;
     private OpenPageDialog opd;
-    private ArrayList parseTree;
-    private BranchGroup sceneRoot;
+    private BranchGroup m_sceneRoot;
+    private BranchGroup m_documentRoot;
+    private HierarchyObject m_hierarchyRoot;
     private TransformGroup root_group;
-    private Vector3f nextWordLocation;
+    private RawTextParser rawTextParser;
     
     /** Creates new form PowerReaderUI */
     public PowerReaderUI() {
@@ -56,7 +55,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
         createSceneGraph();
         simpleU.getViewingPlatform().setNominalViewingTransform();       // This will move the ViewPlatform back a bit so the
-        simpleU.addBranchGraph(sceneRoot);
+        simpleU.addBranchGraph(m_sceneRoot);
         
         m_panel_textArea.setLayout( new BorderLayout() );
         m_panel_textArea.setOpaque( false );
@@ -65,11 +64,11 @@ public class PowerReaderUI extends javax.swing.JFrame {
     
     private void createSceneGraph() {
         // Create the root of the branch graph
-        sceneRoot = new BranchGroup();
+        m_sceneRoot = new BranchGroup();
         
-        sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-        sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-        sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        m_sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        m_sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        m_sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
         
         Transform3D transform3d = new Transform3D();
         transform3d.setTranslation(new Vector3f(0,0,-25));
@@ -87,17 +86,16 @@ public class PowerReaderUI extends javax.swing.JFrame {
         MouseTranslate mouseTranslate = new MouseTranslate(root_group);
         mouseTranslate.setSchedulingBounds(new BoundingSphere());
         
-        nextWordLocation= new Vector3f(-1.0f,1.0f,0);
-        root_group.addChild( new Label3D("Please open a text file.") );
+        root_group.addChild( new TextObject3d("Please open a text file.") );
         
-        sceneRoot.addChild(mouseWheelZoom);
-        sceneRoot.addChild(mouseTranslate);
+        m_sceneRoot.addChild(mouseWheelZoom);
+        m_sceneRoot.addChild(mouseTranslate);
         
         BranchGroup startText = new BranchGroup();
         startText.addChild(root_group);
         startText.setCapability(BranchGroup.ALLOW_DETACH);
         
-        sceneRoot.addChild( startText );  // this is the local origin  - everyone hangs off this - moving this move every one
+        m_sceneRoot.addChild( startText );  // this is the local origin  - everyone hangs off this - moving this move every one
     }
         
     /** This method is called from within the constructor to
@@ -331,7 +329,16 @@ public class PowerReaderUI extends javax.swing.JFrame {
         opd.setVisible(true);
         
         if (opd.getStatus() == OpenPageDialog.APPROVE_OPTION) {
-            root_group.addChild(renderFile(opd.getPage()));
+            rawTextParser = new RawTextParser(opd.getPage());
+
+            // Parse
+            rawTextParser.parse();
+
+            // Returns the scene graph root with word locations not set
+            m_documentRoot = rawTextParser.getRootNode();
+            
+            // Returns the document level hierarchy object
+            m_hierarchyRoot = rawTextParser.getHierarchyRoot();
         }
     }//GEN-LAST:event_m_button_openActionPerformed
     

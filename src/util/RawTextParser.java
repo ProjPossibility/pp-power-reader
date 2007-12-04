@@ -9,21 +9,16 @@
 
 package util;
 
-import edu.stanford.nlp.ling.BasicDocument;
-import edu.stanford.nlp.ling.Document;
-import edu.stanford.nlp.process.Processor;
-import edu.stanford.nlp.process.StripTagsProcessor;
 import edu.stanford.nlp.trees.PennTreebankLanguagePack;
 import edu.stanford.nlp.trees.TreebankLanguagePack;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Iterator;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Node;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -31,7 +26,7 @@ import javax.swing.JOptionPane;
  */
 public class RawTextParser {
     private TreebankLanguagePack tlp;
-    private Node m_rootNode;
+    private BranchGroup m_rootNode = null;
     private HierarchyObject m_hierarchyRoot;
     private String m_fileName;
     
@@ -41,13 +36,13 @@ public class RawTextParser {
         tlp = new PennTreebankLanguagePack();
     }
     
-    public Node getRootNode() {
+    public BranchGroup getRootNode() {
         return m_rootNode;
     }
     
     public HierarchyObject getHierarchyRoot() {
         return m_hierarchyRoot;
-    }    
+    }
     public void parse() {
         BranchGroup node = new BranchGroup();
         
@@ -55,52 +50,75 @@ public class RawTextParser {
         node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
         node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
         node.setCapability(BranchGroup.ALLOW_DETACH);
-
-        File file = new File(m_fileName);
         
-        String urlOrFile = m_fileName;
-        // if file can't be found locally, try prepending http:// and looking on web
-        if (!file.exists() && m_fileName.indexOf("://") == -1) {
-            urlOrFile = "http://" + m_fileName;
-        }
-        // else prepend file:// to handle local html file urls
-        else if (m_fileName.indexOf("://") == -1) {
-            urlOrFile = "file://" + m_fileName;
-        }
+        BufferedReader input = null;
+        String line = null;
+        StringTokenizer wordTok = null;
+        StringTokenizer sentenceTok = null;
+        String token = null;
+        String sentence = new String();
+        String paragraph = new String();
+        String senToken = null;
         
-        // load the document
-        Document doc = null;
+        HierarchyObject dObj = new HierarchyObject(HierarchyObject.LEVEL_DOCUMENT_ID,HierarchyObject.LEVEL_DOCUMENT_STR,null);
+        HierarchyObject pObj = new HierarchyObject(HierarchyObject.LEVEL_PARAGRAPH_ID,HierarchyObject.LEVEL_PARAGRAPH_STR,null);
+        HierarchyObject sObj = new HierarchyObject(HierarchyObject.LEVEL_SENTENCE_ID,HierarchyObject.LEVEL_SENTENCE_STR,null);
+        HierarchyObject wObj = new HierarchyObject(HierarchyObject.LEVEL_WORD_ID,HierarchyObject.LEVEL_WORD_STR,null);
+        
         try {
-            if (urlOrFile.startsWith("http://") || urlOrFile.endsWith(".htm") || urlOrFile.endsWith(".html")) {
-                // strip tags from html documents
-                Document docPre = new BasicDocument().init(new URL(urlOrFile));
-                Processor noTags = new StripTagsProcessor();
-                doc = noTags.processDocument(docPre);
-            } else {
-                doc = new BasicDocument(tlp.getTokenizerFactory()).init(new InputStreamReader(new FileInputStream(m_fileName), tlp.getEncoding()));
+            input = new BufferedReader( new FileReader(m_fileName) );
+
+            while (( line = input.readLine()) != null){
+                // Paragraph break
+                if(line.equals("")) {
+                    // Signify paragraph found
+                    System.out.println("< NEW PARAGRAPH >");
+                    
+                    // Add the paragraph object to list of paragraphs
+                }
+                else {
+                    // Tokenize for sentence breaks
+                    sentenceTok = new StringTokenizer(line, ".!?", true);
+                    
+                    // While we have sentences
+                    while(sentenceTok.hasMoreTokens()) {
+                        
+                        // Get all the individual words
+                        senToken = sentenceTok.nextToken();
+                        wordTok = new StringTokenizer(senToken," ", false);
+                        
+                        // While we have words or characters
+                        while(wordTok.hasMoreTokens()) {
+                            
+                            // Get the token
+                            token = wordTok.nextToken();
+                            
+                            // If we are at the end of a sentence
+                            if(token.contains(".") || token.contains("!") || token.contains("?")) {
+                                System.out.println("Sentence Found: " + sentence + token);
+                                paragraph = paragraph.concat(sentence);
+                                sentence = new String();
+                                
+                                // Add the sentence object to list of sentence objects
+                            }
+                            // Else append the word to the current sentence
+                            else {
+                                
+                                // Append to sentence string
+                                sentence = sentence.concat(" " + token);
+                                
+                                // Create object for the token
+                                
+                                // Add the token to the list of sentence objects
+                            }
+                        }
+                    }
+                }
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Could not load file " + m_fileName + "\n" + e, null, JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
-        
-        // load the document into string
-        StringBuilder docStr = new StringBuilder();
-        for (Iterator it = doc.iterator(); it.hasNext(); ) {
-            if (docStr.length() > 0) {
-                docStr.append(' ');
-            }
-            docStr.append(it.next().toString());
-        }
-        
-        // parse the string
-        StringTokenizer strtok = new StringTokenizer(docStr.toString(), ".!?", true);
-        while(strtok.hasMoreTokens()) {
-            String sentence = strtok.nextToken();
-            if (strtok.hasMoreTokens()) {
-                sentence += strtok.nextToken();
-            }
-            System.out.println(sentence);
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex){
+            ex.printStackTrace();
         }
     }
     
@@ -145,8 +163,8 @@ public class RawTextParser {
         node.setCapability(BranchGroup.ALLOW_DETACH);
         
         node.addChild(new TextObject3d(word));
-
+        
         return node;
     }
-
+    
 }
