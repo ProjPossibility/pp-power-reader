@@ -53,6 +53,8 @@ public class RawTextParser {
         return m_hierarchyRoot;
     }
     public void parse() {
+        WordHashMap map = WordHashMap.getInstance();
+        
         BranchGroup node = new BranchGroup();
         
         node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
@@ -139,8 +141,10 @@ public class RawTextParser {
                         // Set value of the word object
                         wordObj.setValue(token);
                         
-                        // Create 3d object and add it to the scene graph
-                        wordObj.addSceneNode(new TextObject3d(token));
+                        // Create 3d object and add it to the scene graph and hashMap
+                        TextObject3d textObj = new TextObject3d(token);
+                        wordObj.addSceneNode(textObj);
+                        map.addHash(textObj,wordObj);                        
                         
                         // Add the parents to the word
                         wordObj.setParents(currentWordParents);

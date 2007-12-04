@@ -14,6 +14,7 @@ import com.sun.j3d.utils.universe.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GraphicsConfiguration;
+import java.awt.event.MouseAdapter;
 import javax.media.j3d.*;
 import javax.swing.JColorChooser;
 import javax.vecmath.Color3f;
@@ -25,6 +26,7 @@ import javax.vecmath.Point3d;
 import util.HierarchyObject;
 import util.RawTextParser;
 import util.TextObject3d;
+import util.WordHashMap;
 /**
  *
  * @author  cleung
@@ -46,6 +48,8 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private TransformGroup root_group;
     private RawTextParser rawTextParser;
     private Player m_player;
+    private Pick pick;
+    
     /** Creates new form PowerReaderUI */
     public PowerReaderUI() {
         initComponents();
@@ -79,6 +83,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_panel_textArea.setLayout( new BorderLayout() );
         m_panel_textArea.setOpaque( false );
         m_panel_textArea.add("Center", m_canvas);   // <-- HERE IT IS - tada! j3d in swing
+        pick = new Pick(m_canvas,m_sceneRoot);
     }
     
     private void createSceneGraph() {
@@ -379,9 +384,10 @@ public class PowerReaderUI extends javax.swing.JFrame {
         if (opd.getStatus() == OpenPageDialog.APPROVE_OPTION) {
             rawTextParser = new RawTextParser(opd.getPage());
             
-            //reset the scene
+            //reset the scene and memmory
             rootTansformGroup.removeAllChildren();
             TextObject3d.resetLocation();
+            WordHashMap.getInstance().clearMap();
             
             // Parse
             rawTextParser.parse();

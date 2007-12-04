@@ -30,7 +30,7 @@ import javax.vecmath.Vector3f;
 
 public class TextObject3d extends TransformGroup {
 
-    private static Vector3f nextLocation = new Vector3f(-11.0f,11.0f,0);
+    private static Vector3f nextLocation = new Vector3f(-5.0f,0,0);//coordinates for the welcome/start string 
     private static Color3f highlightColor = new Color3f(1.0f, 0, 0);
     private static Color3f baseColor = new Color3f(0, 1.0f, 1.0f);
 
@@ -62,7 +62,7 @@ public class TextObject3d extends TransformGroup {
         Point3d up= new Point3d();
         bb.getUpper(up);
 
-        //check if the word fits on screen at default zoom level
+        //check if the word fits on screen at default zoom level else warp the text to newline
         if (nextLocation.x + up.x > 10f) {
             warpTextToNewLine();
         }
@@ -83,16 +83,19 @@ public class TextObject3d extends TransformGroup {
 
     }
 
+    // reset co-ordinates of the text to be rendered to the top-left corner
     public static void resetLocation() {
         nextLocation.x=-11f;
         nextLocation.y=11f;
     }
     
+    // Warp text and spovide spacing for next paragraph
     public static void startNewParagraph() {
         nextLocation.x = -11.0f;
         nextLocation.y -= 2.0f;
     }
     
+    //warp to new line below the current line
     private void warpTextToNewLine() {
         nextLocation.x = -11.0f;
         nextLocation.y -= 1.0f;
