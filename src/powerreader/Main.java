@@ -31,7 +31,7 @@ public class Main {
             }
         });
         
-        Speech.speak("Hello and welcome to Power Reader.  This is a test of the free text to speech synthesizer.");
+        Speech.speak("Hello and welcome to Power Reader, by Christopher Leung, Rubaiz Virk, and Zhan Shi.");
     }
     
 }

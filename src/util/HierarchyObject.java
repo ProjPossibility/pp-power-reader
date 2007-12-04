@@ -52,6 +52,7 @@ public class HierarchyObject {
         m_parents = new ArrayList();
         m_value = null;
         m_branchGroup = new BranchGroup();
+        m_branchGroup.setCapability(BranchGroup.ALLOW_DETACH);
         m_transformGroup = new TransformGroup();
         m_branchGroup.addChild(m_transformGroup);
     }
