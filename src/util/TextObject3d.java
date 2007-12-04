@@ -19,6 +19,7 @@ import javax.media.j3d.Shape3D;
 import javax.media.j3d.Text3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 
@@ -30,6 +31,10 @@ import javax.vecmath.Vector3f;
 public class TextObject3d extends TransformGroup {
 
     private static Vector3f nextLocation = new Vector3f(-11.0f,11.0f,0);
+    private static Color3f highlightColor = new Color3f(1.0f, 0, 0);
+    private static Color3f baseColor = new Color3f(0, 1.0f, 1.0f);
+
+    private Material m_textMaterial;
     
     /** Creates a new instance of TextObject */
     public TextObject3d(String text) {
@@ -42,9 +47,10 @@ public class TextObject3d extends TransformGroup {
 
         // create the 3d text
         Appearance textAppear = new Appearance();
-        Material textMaterial = new Material();
-        textMaterial.setEmissiveColor(1.0f,1.0f,1.0f);
-        textAppear.setMaterial(textMaterial);
+        m_textMaterial = new Material();
+        m_textMaterial.setCapability(Material.ALLOW_COMPONENT_WRITE);
+        m_textMaterial.setEmissiveColor(baseColor);
+        textAppear.setMaterial(m_textMaterial);
         FontExtrusion fontExtrusion = new FontExtrusion();
         Font3D font3D = new Font3D(
                 new Font("Helvetica", Font.PLAIN, 1),
@@ -91,5 +97,19 @@ public class TextObject3d extends TransformGroup {
         nextLocation.x = -11.0f;
         nextLocation.y -= 1.0f;
     }
+    
+    public void setHighlightColor(Color3f color) {
+        highlightColor = color;
+    }
+    
+    public void setBaseColor (Color3f color) {
+        baseColor = color;
+    }
 
+    public void highLight() {
+        m_textMaterial.setEmissiveColor(new Color3f(highlightColor));
+    }
+    public void unHighLight() {
+        m_textMaterial.setEmissiveColor(new Color3f(baseColor));
+    }
 }

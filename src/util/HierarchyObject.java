@@ -19,7 +19,7 @@ import javax.media.j3d.TransformGroup;
  * @author Christopher Leung
  */
 public class HierarchyObject {
-
+    
     // Referece to scene graph node
     private BranchGroup m_branchGroup;
     private TransformGroup m_transformGroup;
@@ -55,7 +55,7 @@ public class HierarchyObject {
         m_transformGroup = new TransformGroup();
         m_branchGroup.addChild(m_transformGroup);
     }
-
+    
     /**
      * Get type of Hierarchy object as string (i.e. "Word", "Sentence")
      */
@@ -67,17 +67,16 @@ public class HierarchyObject {
         // If we're at the highest level, return null'
         if(m_level == 0) {
             return null;
-        }
-        else {
+        } else {
             return (HierarchyObject) m_parents.get(m_level-1);
         }
     }
-
+    
     public HierarchyObject getParent(int type) {
         // Will throw an exception of we've requested something out of bounds
         return (HierarchyObject) m_parents.get(type);
     }
-
+    
     public void setParents(ArrayList parents) {
         // Copy the arraylist into this object
         m_parents = (ArrayList)parents.clone();
@@ -90,13 +89,13 @@ public class HierarchyObject {
         // Now also make this item a child in the scene graph
         m_transformGroup.addChild(child.getBranchGroup());
     }
-
-    public void addSceneNode (TransformGroup transformGroup) {
+    
+    public void addSceneNode(TransformGroup transformGroup) {
         m_transformGroup = transformGroup;
         m_branchGroup.addChild(m_transformGroup);
     }
     
-    public TransformGroup getTransformGroup () {
+    public TransformGroup getTransformGroup() {
         return m_transformGroup;
     }
     
@@ -104,7 +103,7 @@ public class HierarchyObject {
         return m_branchGroup;
     }
     
-    public ArrayList getChildren () {
+    public ArrayList getChildren() {
         return m_children;
     }
     
@@ -118,15 +117,14 @@ public class HierarchyObject {
         ArrayList result;
         if(toParse.getLevel() == level) {
             children.add(toParse);
-        }
-        else {
+        } else {
             // Get all the children
             Iterator childrenIt =  toParse.getChildren().iterator();
-
+            
             while(childrenIt.hasNext()) {
-               treeNode = (HierarchyObject) childrenIt.next();
-               result = getAllChildrenOfLevelRecursive(level,treeNode);
-               children = joinArrayList(children,result);
+                treeNode = (HierarchyObject) childrenIt.next();
+                result = getAllChildrenOfLevelRecursive(level,treeNode);
+                children = joinArrayList(children,result);
             }
         }
         return (children);
@@ -138,31 +136,50 @@ public class HierarchyObject {
         ArrayList result = new ArrayList();
         while(it1.hasNext()) {
             result.add(it1.next());
-       }
+        }
         while(it2.hasNext()) {
             result.add(it2.next());
-       }
+        }
         return result;
     }
     
     public int getLevel() {
-        return m_level;       
+        return m_level;
     }
     
-    public boolean hasChildren () {
+    public boolean hasChildren() {
         if (m_children.size() > 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
     
-    public void setValue (String value) {
+    public void setValue(String value) {
         m_value = value;
     }
     
-    public String getValue () {
+    public String getValue() {
         return m_value;
+    }
+    
+    public void color (boolean highLight) {
+        ArrayList objectsToColor = this.getAllChildrenOfLevel(RawTextParser.LEVEL_WORD_ID);
+        Iterator it = objectsToColor.iterator();
+        HierarchyObject objectToColor;
+        TextObject3d objectToHighlight;
+        if(highLight) {
+            while(it.hasNext()) {
+                objectToColor = (HierarchyObject)it.next();
+                objectToHighlight = (TextObject3d)(objectToColor.getTransformGroup());
+                objectToHighlight.highLight();
+            }
+        } else {
+            while(it.hasNext()) {
+                objectToColor = (HierarchyObject)it.next();
+                objectToHighlight = (TextObject3d)(objectToColor.getTransformGroup());
+                objectToHighlight.unHighLight();
+            }
+        }
     }
 }

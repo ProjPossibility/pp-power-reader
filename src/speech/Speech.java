@@ -9,7 +9,7 @@ import misc.*;
 
 public class Speech extends Thread {
 	static private Speech m_instance = null;
-	
+
 	private Voice m_voice = null;
 	private String m_msg = null;
 	private Object m_ready = null;

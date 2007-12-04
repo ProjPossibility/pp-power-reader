@@ -34,7 +34,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private HierarchyObject m_hierarchyRoot;
     private TransformGroup root_group;
     private RawTextParser rawTextParser;
-    
+    private Player m_player;
     /** Creates new form PowerReaderUI */
     public PowerReaderUI() {
         initComponents();
@@ -360,6 +360,9 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 System.out.println("< NEW PARAGRAPH >");
             }
             
+            m_player = new Player(m_hierarchyRoot,RawTextParser.LEVEL_WORD_ID);
+            //player.play();
+            
         }
     }//GEN-LAST:event_m_button_openActionPerformed
     
@@ -376,7 +379,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     }//GEN-LAST:event_m_button_fgColorActionPerformed
     
     private void m_button_playActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_playActionPerformed
-// TODO add your handling code here:
+        m_player.start();
     }//GEN-LAST:event_m_button_playActionPerformed
     
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
