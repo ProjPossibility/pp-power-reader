@@ -47,7 +47,6 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private HierarchyObject m_hierarchyRoot;
     private TransformGroup root_group;
     private RawTextParser rawTextParser;
-    private Player m_player;
     private Pick pick;
     
     /** Creates new form PowerReaderUI */
@@ -69,20 +68,19 @@ public class PowerReaderUI extends javax.swing.JFrame {
     }
     
     private void create3dCanvas() {
-        
+       
+        // Set up the canvas and scene
         GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
-        
-        // construct the 3D image
         m_canvas = new Canvas3D(config);
-        
         SimpleUniverse simpleU = new SimpleUniverse(m_canvas);
         createSceneGraph();
-        simpleU.getViewingPlatform().setNominalViewingTransform();       // This will move the ViewPlatform back a bit so the
+        simpleU.getViewingPlatform().setNominalViewingTransform();
         simpleU.addBranchGraph(m_sceneRoot);
-        
         m_panel_textArea.setLayout( new BorderLayout() );
         m_panel_textArea.setOpaque( false );
-        m_panel_textArea.add("Center", m_canvas);   // <-- HERE IT IS - tada! j3d in swing
+        m_panel_textArea.add("Center", m_canvas);
+
+        // Create picker
         pick = new Pick(m_canvas,m_sceneRoot);
     }
     
@@ -370,11 +368,11 @@ public class PowerReaderUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void m_slider_readSpeedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_readSpeedStateChanged
-        m_player.setSleepDelay(m_slider_readSpeed.getValue());
+        Player.setSleepDelay(m_slider_readSpeed.getValue());
     }//GEN-LAST:event_m_slider_readSpeedStateChanged
     
     private void m_buton_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_buton_stopActionPerformed
-        m_player.suspend();
+        Player.pause();
     }//GEN-LAST:event_m_buton_stopActionPerformed
     
     private void m_button_openActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_openActionPerformed
@@ -416,7 +414,10 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 System.out.println("< NEW PARAGRAPH >");
             }
             
-            m_player = new Player(m_hierarchyRoot,RawTextParser.LEVEL_WORD_ID);
+            Player.reset();
+            Player.setHierarchyRoot(m_hierarchyRoot);
+            Player.setFocusLevel(RawTextParser.LEVEL_WORD_ID);
+
         }
     }//GEN-LAST:event_m_button_openActionPerformed
     
@@ -433,7 +434,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             TextObject3d.setHighlightColor(new Color3f(c));
             
             // Recolor only the focused item
-            m_player.getFocusOn().color(true);
+            Player.getFocusOn().color(true);
         }
     }//GEN-LAST:event_m_button_hlColorActionPerformed
     
@@ -469,16 +470,12 @@ public class PowerReaderUI extends javax.swing.JFrame {
             m_hierarchyRoot.color(false);
             
             // Rehighlight the focused
-            m_player.getFocusOn().color(true);
+            Player.getFocusOn().color(true);
         }
     }//GEN-LAST:event_m_button_fgColorActionPerformed
     
     private void m_button_playActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_playActionPerformed
-        if(m_player.isAlive()) {
-            m_player.resume();
-        } else {
-            m_player.start();
-        }
+        Player.play();
     }//GEN-LAST:event_m_button_playActionPerformed
     
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
