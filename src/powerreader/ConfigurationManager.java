@@ -85,4 +85,8 @@ public class ConfigurationManager {
     static public void setDictionary(int index) {
         m_instance.dictionaryLookup = (DictionaryLookup)m_instance.dictionaries.get(index);
     }
+    
+    static public void setImageLookup(int index) {
+        m_instance.imageFetcher = (ImageFetcher)m_instance.imageFetchers.get(index);
+    }
 }
