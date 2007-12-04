@@ -9,13 +9,19 @@ package powerreader;
 // Import J3D Stuff
 import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;
 import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
+import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.*;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GraphicsConfiguration;
 import javax.media.j3d.*;
+import javax.swing.JColorChooser;
+import javax.vecmath.Color3f;
 import javax.vecmath.Vector3f;
 import edu.stanford.nlp.io.ui.OpenPageDialog;
+import java.awt.Component;
 import java.util.ArrayList;
+import javax.vecmath.Point3d;
 import util.HierarchyObject;
 import util.RawTextParser;
 import util.TextObject3d;
@@ -25,8 +31,13 @@ import util.TextObject3d;
  */
 public class PowerReaderUI extends javax.swing.JFrame {
     
+    private Color DEFAULT_BG_COLOR = Color.ORANGE;
+    private Color DEFAULT_FG_COLOR = Color.BLUE;
+    private Color DEFAULT_HL_COLOR = Color.RED;
+    
     // Manually added variables
-    private Canvas3D theCanvas;
+    private Canvas3D m_canvas;
+    private Background m_background;
     
     private OpenPageDialog opd;
     private BranchGroup m_sceneRoot;
@@ -39,7 +50,14 @@ public class PowerReaderUI extends javax.swing.JFrame {
     public PowerReaderUI() {
         initComponents();
         
-        //textParser = new TextParser();
+        // Set default button colors
+        m_button_bgColor.setBackground(DEFAULT_BG_COLOR);
+        m_button_fgColor.setBackground(DEFAULT_FG_COLOR);
+        m_button_hlColor.setBackground(DEFAULT_HL_COLOR);
+        
+        TextObject3d.setBaseColor(new Color3f(DEFAULT_FG_COLOR));
+        TextObject3d.setHighlightColor(new Color3f(DEFAULT_HL_COLOR));
+        
         opd = new OpenPageDialog(this, true);
         
         // Now initialize the 3D Canvas
@@ -51,20 +69,30 @@ public class PowerReaderUI extends javax.swing.JFrame {
         GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
         
         // construct the 3D image
-        Canvas3D canvas3D = new Canvas3D(config);
-        SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
+        m_canvas = new Canvas3D(config);
+        
+        SimpleUniverse simpleU = new SimpleUniverse(m_canvas);
         createSceneGraph();
         simpleU.getViewingPlatform().setNominalViewingTransform();       // This will move the ViewPlatform back a bit so the
         simpleU.addBranchGraph(m_sceneRoot);
         
         m_panel_textArea.setLayout( new BorderLayout() );
         m_panel_textArea.setOpaque( false );
-        m_panel_textArea.add("Center", canvas3D);   // <-- HERE IT IS - tada! j3d in swing
+        m_panel_textArea.add("Center", m_canvas);   // <-- HERE IT IS - tada! j3d in swing
     }
     
     private void createSceneGraph() {
         // Create the root of the branch graph
         m_sceneRoot = new BranchGroup();
+        
+        // Set the background color
+        BoundingSphere boundingSphere =
+                new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
+        m_background = new Background();
+        m_background.setApplicationBounds(boundingSphere);
+        m_background.setColor(new Color3f(DEFAULT_BG_COLOR));
+        m_background.setCapability(Background.ALLOW_COLOR_WRITE);
+        m_sceneRoot.addChild(m_background);
         
         Transform3D transform3d = new Transform3D();
         transform3d.setTranslation(new Vector3f(0,0,-25));
@@ -151,6 +179,11 @@ public class PowerReaderUI extends javax.swing.JFrame {
         });
 
         m_buton_stop.setText("Stop");
+        m_buton_stop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_buton_stopActionPerformed(evt);
+            }
+        });
 
         m_label_lod.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_lod.setText("<--Low   Level of Detail   High-->");
@@ -322,6 +355,10 @@ public class PowerReaderUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    private void m_buton_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_buton_stopActionPerformed
+        m_player.suspend();
+    }//GEN-LAST:event_m_buton_stopActionPerformed
+    
     private void m_button_openActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_openActionPerformed
         opd.setLocation(getLocationOnScreen().x + (getWidth() - opd.getWidth()) / 2, getLocationOnScreen().y + (getHeight() - opd.getHeight()) / 2);
         opd.setVisible(true);
@@ -332,7 +369,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             //reset the scene
             rootTansformGroup.removeAllChildren();
             TextObject3d.resetLocation();
-                        
+            
             // Parse
             rawTextParser.parse();
             
@@ -342,7 +379,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             rootTansformGroup.addChild(m_hierarchyRoot.getBranchGroup());
             
             System.out.println("----- TEST OUTPUT -----");
-
+            
             ArrayList paragraphs = m_hierarchyRoot.getAllChildrenOfLevel(RawTextParser.LEVEL_PARAGRAPH_ID);
             
             for(int i = 0; i < paragraphs.size(); i++) {
@@ -361,25 +398,68 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
             
             m_player = new Player(m_hierarchyRoot,RawTextParser.LEVEL_WORD_ID);
-            //player.play();
-            
         }
     }//GEN-LAST:event_m_button_openActionPerformed
     
     private void m_button_hlColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_hlColorActionPerformed
-// TODO add your handling code here:
+        Color c = m_button_hlColor.getBackground();
+        // Bring up color selector
+        c = JColorChooser.showDialog(((Component)evt.getSource()).getParent(), "Highlight Color", c);
+        
+        if(c != null) {
+            // Assign result to the button
+            m_button_hlColor.setBackground(c);
+            
+            // Assign to text object
+            TextObject3d.setHighlightColor(new Color3f(c));
+            
+            // Recolor only the focused item
+            m_player.getFocusOn().color(true);
+        }
     }//GEN-LAST:event_m_button_hlColorActionPerformed
     
     private void m_button_bgColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_bgColorActionPerformed
-// TODO add your handling code here:
+        Color c = m_button_bgColor.getBackground();
+        // Bring up color selector
+        c = JColorChooser.showDialog(((Component)evt.getSource()).getParent(), "Choose Background Color", c);
+        
+        if(c != null) {
+            // Assign result to the button
+            m_button_bgColor.setBackground(c);
+            
+            // Assign result to background
+            m_background.setColor(new Color3f(c));
+        }
     }//GEN-LAST:event_m_button_bgColorActionPerformed
     
     private void m_button_fgColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_fgColorActionPerformed
-// TODO add your handling code here:
+        
+        Color c = m_button_fgColor.getBackground();
+        // Bring up color selector
+        c = JColorChooser.showDialog(((Component)evt.getSource()).getParent(), "Choose Foreground Color", c);
+        
+        if (c != null) {
+            
+            // Assign result to the button
+            m_button_fgColor.setBackground(c);
+            
+            // Assign result to foreground
+            TextObject3d.setBaseColor(new Color3f(c));
+            
+            // Color all the foreground                        
+            m_hierarchyRoot.color(false);
+            
+            // Rehighlight the focused
+            m_player.getFocusOn().color(true);
+        }
     }//GEN-LAST:event_m_button_fgColorActionPerformed
     
     private void m_button_playActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_playActionPerformed
-        m_player.start();
+        if(m_player.isAlive()) {
+            m_player.resume();
+        } else {
+            m_player.start();
+        }
     }//GEN-LAST:event_m_button_playActionPerformed
     
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed

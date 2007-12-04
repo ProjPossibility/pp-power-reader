@@ -98,11 +98,11 @@ public class TextObject3d extends TransformGroup {
         nextLocation.y -= 1.0f;
     }
     
-    public void setHighlightColor(Color3f color) {
+    public static void setHighlightColor(Color3f color) {
         highlightColor = color;
     }
     
-    public void setBaseColor (Color3f color) {
+    public static void setBaseColor (Color3f color) {
         baseColor = color;
     }
 

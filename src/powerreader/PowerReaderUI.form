@@ -187,6 +187,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Stop"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="m_buton_stopActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JSlider" name="m_slider_lod">
         </Component>
