@@ -52,7 +52,8 @@ public class HierarchyObject {
         m_parents = new ArrayList();
         m_value = null;
         m_branchGroup = new BranchGroup();
-        m_transformGroup = null;
+        m_transformGroup = new TransformGroup();
+        m_branchGroup.addChild(m_transformGroup);
     }
 
     /**
@@ -87,10 +88,10 @@ public class HierarchyObject {
         m_children.add(child);
         
         // Now also make this item a child in the scene graph
-        m_branchGroup.addChild(child.getBranchGroup());
+        m_transformGroup.addChild(child.getBranchGroup());
     }
 
-    public void setTransformGroup (TransformGroup transformGroup) {
+    public void addSceneNode (TransformGroup transformGroup) {
         m_transformGroup = transformGroup;
         m_branchGroup.addChild(m_transformGroup);
     }
@@ -119,7 +120,7 @@ public class HierarchyObject {
             children.add(toParse);
         }
         else {
-            // Get the children
+            // Get all the children
             Iterator childrenIt =  toParse.getChildren().iterator();
 
             while(childrenIt.hasNext()) {

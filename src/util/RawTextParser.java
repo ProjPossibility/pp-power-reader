@@ -77,14 +77,24 @@ public class RawTextParser {
         HierarchyObject sentObj = new HierarchyObject(LEVEL_SENTENCE_ID, LEVEL_SENTENCE_STR);
         HierarchyObject wordObj = new HierarchyObject(LEVEL_WORD_ID, LEVEL_WORD_STR);
         
+        ArrayList currentParagraphParent = new ArrayList();
         ArrayList currentSentenceParents = new ArrayList();
         ArrayList currentWordParents = new ArrayList();
         
+        // Add current document as parent to paragraphs
+        currentParagraphParent.add(docuObj);
+        
+        // Add current document, paragraph as parents to sentence
         currentSentenceParents.add(docuObj);
+        currentSentenceParents.add(paraObj);
+        
+        // Add current document, paragraph, and sentence as parents to word
         currentWordParents.add(docuObj);
+        currentWordParents.add(paraObj);
+        currentWordParents.add(sentObj);
         
         try {
-            input = new BufferedReader( new FileReader(m_fileName) );            
+            input = new BufferedReader( new FileReader(m_fileName) );
             
             while (( line = input.readLine()) != null){
                 // Paragraph break
@@ -95,11 +105,23 @@ public class RawTextParser {
                     // Add the text value of the paragraph to the object
                     paraObj.setValue(paragraphText);
                     
+                    paraObj.setParents(currentParagraphParent);
+                    
                     // Add the paragraph object to list of paragraphs
                     docuObj.addChild(paraObj);
                     
                     // Create a new container paragraph
                     paraObj = new HierarchyObject(LEVEL_PARAGRAPH_ID, LEVEL_PARAGRAPH_STR);
+                    
+                    // Set new sentence and word parents
+                    currentSentenceParents.set(LEVEL_PARAGRAPH_ID,paraObj);
+                    currentWordParents.set(LEVEL_PARAGRAPH_ID,paraObj);
+                    
+                    // Make sure our sentence is cleared out
+                    sentenceText = new String();
+                    sentObj = new HierarchyObject(LEVEL_SENTENCE_ID,LEVEL_SENTENCE_STR);
+                    sentObj.setParents(currentSentenceParents);
+                    currentWordParents.set(LEVEL_SENTENCE_ID,sentObj);
                     
                 } else {
                     // Tokenize the entire sequence by spaces
@@ -111,19 +133,22 @@ public class RawTextParser {
                         
                         // Append to sentence string
                         sentenceText = sentenceText.concat(" " + token);
-
+                        
                         // Create new object for the token
                         wordObj = new HierarchyObject(LEVEL_WORD_ID,LEVEL_WORD_STR);
-
+                        
                         // Set value of the word object
                         wordObj.setValue(token);
-
+                        
                         // Create 3d object and add it to the scene graph
-                        wordObj.setTransformGroup(new TextObject3d(token));
-
+                        wordObj.addSceneNode(new TextObject3d(token));
+                        
+                        // Add the parents to the word
+                        wordObj.setParents(currentWordParents);
+                        
                         // Add word object to the sentence object
-                        sentObj.addChild(wordObj);                            
-
+                        sentObj.addChild(wordObj);
+                        
                         // If we are also at the end of a sentence
                         if(token.contains(".") || token.contains("!") || token.contains("?")) {
                             System.out.println("Sentence Found: " + sentenceText);
@@ -131,13 +156,15 @@ public class RawTextParser {
                             
                             // Add the sentence object to list of sentence objects
                             paraObj.addChild(sentObj);
-
+                            
                             // Add the value of sentence to the sentence object
                             sentObj.setValue(sentenceText);
                             
                             // Create new containers
-                            sentenceText = new String();                            
+                            sentenceText = new String();
                             sentObj = new HierarchyObject(LEVEL_SENTENCE_ID,LEVEL_SENTENCE_STR);
+                            sentObj.setParents(currentSentenceParents);
+                            currentWordParents.set(LEVEL_SENTENCE_ID,sentObj);
                         }
                     }
                 }
@@ -146,8 +173,12 @@ public class RawTextParser {
             // Add any more paragraphs to the document
             paraObj.setValue(paragraphText);
             
-            // Add the paragraph object to list of paragraphs      
+            // Add the paragraph object to list of paragraphs
             docuObj.addChild(paraObj);
+            
+            // Set parser values
+            m_hierarchyRoot = docuObj;
+            m_rootNode = docuObj.getBranchGroup();
             
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();

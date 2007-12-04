@@ -30,7 +30,6 @@ public class PowerReaderUI extends javax.swing.JFrame {
     
     private OpenPageDialog opd;
     private BranchGroup m_sceneRoot;
-    private BranchGroup m_documentRoot;
     private HierarchyObject m_hierarchyRoot;
     private TransformGroup root_group;
     private RawTextParser rawTextParser;
@@ -97,7 +96,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         
         m_sceneRoot.addChild( startText );  // this is the local origin  - everyone hangs off this - moving this move every one
     }
-        
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -330,16 +329,33 @@ public class PowerReaderUI extends javax.swing.JFrame {
         
         if (opd.getStatus() == OpenPageDialog.APPROVE_OPTION) {
             rawTextParser = new RawTextParser(opd.getPage());
-
+            
             // Parse
             rawTextParser.parse();
-
-            // Returns the scene graph root with word locations not set
-            m_documentRoot = rawTextParser.getRootNode();
             
             // Returns the document level hierarchy object
-            m_hierarchyRoot = rawTextParser.getHierarchyRoot();           
-         }
+            m_hierarchyRoot = rawTextParser.getHierarchyRoot();
+            
+            System.out.println("----- TEST OUTPUT -----");
+
+            ArrayList paragraphs = m_hierarchyRoot.getAllChildrenOfLevel(RawTextParser.LEVEL_PARAGRAPH_ID);
+            
+            for(int i = 0; i < paragraphs.size(); i++) {
+                HierarchyObject paragraph = (HierarchyObject)paragraphs.get(i);
+                // This gets all the sentences in the paragraph
+                // ArrayList sentences = paragraph.getAllChildrenOfLevel(RawTextParser.LEVEL_SENTENCE_ID);
+                // This gets all the words in the paragraph
+                ArrayList words = paragraph.getAllChildrenOfLevel(RawTextParser.LEVEL_WORD_ID);
+                
+                // For all the words in the paragraph
+                for(int j = 0; j < words.size(); j++) {
+                    HierarchyObject word = (HierarchyObject) words.get(j);
+                    System.out.println(" " + word.getValue());
+                }
+                System.out.println("< NEW PARAGRAPH >");
+            }
+            
+        }
     }//GEN-LAST:event_m_button_openActionPerformed
     
     private void m_button_hlColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_hlColorActionPerformed
