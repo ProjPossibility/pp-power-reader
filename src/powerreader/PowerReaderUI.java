@@ -99,44 +99,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         
         sceneRoot.addChild( startText );  // this is the local origin  - everyone hangs off this - moving this move every one
     }
-    
-    class Label3D
-            extends TransformGroup {
         
-        public Label3D( String msg ) {
-            super();
-            
-            // place it in the scene graph
-            Transform3D offset = new Transform3D();
-            offset.setTranslation(nextWordLocation);
-            this.setTransform( offset );
-            
-            // face it in the scene graph
-            Transform3D rotation = new Transform3D();
-            TransformGroup rotation_group = new TransformGroup( rotation );
-            this.addChild( rotation_group );
-            
-            // create the 3d text
-            Appearance textAppear = new Appearance();
-            Material textMaterial = new Material();
-            textMaterial.setEmissiveColor(1.0f,1.0f,1.0f);
-            textAppear.setMaterial(textMaterial);
-            FontExtrusion fontExtrusion = new FontExtrusion();
-            Font3D font3D = new Font3D(
-                    new Font("Helvetica", Font.PLAIN, 1),
-                    new FontExtrusion());
-            Text3D textGeom = new Text3D(font3D,msg);
-            textGeom.setAlignment(Text3D.ALIGN_CENTER);
-            Shape3D textShape = new Shape3D();
-            textShape.setGeometry(textGeom);
-            textShape.setAppearance(textAppear);
-            
-            // attach it
-            rotation_group.addChild( textShape );
-        }
-        
-    }
-    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -368,12 +331,6 @@ public class PowerReaderUI extends javax.swing.JFrame {
         opd.setVisible(true);
         
         if (opd.getStatus() == OpenPageDialog.APPROVE_OPTION) {
-            //parseTree = textParser.loadFile(opd.getPage());
-            
-            //prepare scenegraph for new text
-            //sceneRoot.removeChild(1);
-            nextWordLocation.x=-1f;
-            nextWordLocation.y=1f;
             root_group.addChild(renderFile(opd.getPage()));
         }
     }//GEN-LAST:event_m_button_openActionPerformed
@@ -398,82 +355,6 @@ public class PowerReaderUI extends javax.swing.JFrame {
 // TODO add your handling code here:
     }//GEN-LAST:event_jMenu1ActionPerformed
     
-    private BranchGroup renderFile(String infile){
-        BranchGroup node = new BranchGroup();
-        
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-        node.setCapability(BranchGroup.ALLOW_DETACH);
-        
-        try {
-            BufferedReader in = new BufferedReader(new FileReader(infile));
-            String paragraph;
-            while ((paragraph = in.readLine()) != null) {
-                node.addChild(renderParagraph(paragraph+"."));
-                
-                // increment scenegraph to next line
-                nextWordLocation.x = -1.0f;
-                nextWordLocation.y -= 0.1f;
-            }
-            in.close();
-            
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return node;
-    }
-    
-    private BranchGroup renderParagraph(String para){
-        BranchGroup node = new BranchGroup();
-        
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-        node.setCapability(BranchGroup.ALLOW_DETACH);
-        
-        int i;
-        String[] sentences= para.split("\\.+");
-        for (i=0; i<sentences.length; i++) {
-            node.addChild(renderSentence(sentences[i]+"."));
-        }
-        return node;
-    }
-    
-    private BranchGroup renderSentence(String sentence){
-        BranchGroup node = new BranchGroup();
-        
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-        node.setCapability(BranchGroup.ALLOW_DETACH);
-        
-        int i;
-        String[] words= sentence.split("\\s+");
-        for (i=0; i<words.length; i++) {
-            node.addChild(renderWord(words[i]));
-        }
-        return node;
-    }
-    
-    private BranchGroup renderWord(String word) {
-        BranchGroup node = new BranchGroup();
-        
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-        node.setCapability(BranchGroup.ALLOW_DETACH);
-        
-        if (nextWordLocation.x > 0.9f) {
-            nextWordLocation.x = -1.0f;
-            nextWordLocation.y -= 0.1f;
-        }
-        
-        node.addChild(new Label3D(word));
-        
-        nextWordLocation.x += 0.05f * word.length();
-        return node;
-    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
