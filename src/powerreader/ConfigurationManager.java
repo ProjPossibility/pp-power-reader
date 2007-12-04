@@ -75,6 +75,6 @@ public class ConfigurationManager {
     }
     
     static public ArrayList getImageFetcherList() {
-        return m_instance.m_imageFetchers;
+        return m_instance.imageFetchers;
     }
 }
