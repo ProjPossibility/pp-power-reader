@@ -30,6 +30,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     
     private OpenPageDialog opd;
     private BranchGroup m_sceneRoot;
+    private TransformGroup rootTansformGroup;
     private HierarchyObject m_hierarchyRoot;
     private TransformGroup root_group;
     private RawTextParser rawTextParser;
@@ -65,36 +66,34 @@ public class PowerReaderUI extends javax.swing.JFrame {
         // Create the root of the branch graph
         m_sceneRoot = new BranchGroup();
         
-        m_sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-        m_sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-        m_sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-        
         Transform3D transform3d = new Transform3D();
         transform3d.setTranslation(new Vector3f(0,0,-25));
-        root_group = new TransformGroup();
-        root_group.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE); // allow the mouse behavior to rotate the scene
-        root_group.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-        root_group.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
-        root_group.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
-        root_group.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
-        root_group.setTransform(transform3d);
+        rootTansformGroup = new TransformGroup();
         
-        MouseWheelZoom mouseWheelZoom = new MouseWheelZoom(root_group);
+        rootTansformGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE); // allow the mouse behavior to rotate the scene
+        rootTansformGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        rootTansformGroup.setTransform(transform3d);
+        
+        MouseWheelZoom mouseWheelZoom = new MouseWheelZoom(rootTansformGroup);
         mouseWheelZoom.setSchedulingBounds(new BoundingSphere());
         
-        MouseTranslate mouseTranslate = new MouseTranslate(root_group);
+        MouseTranslate mouseTranslate = new MouseTranslate(rootTansformGroup);
         mouseTranslate.setSchedulingBounds(new BoundingSphere());
-        
-        root_group.addChild( new TextObject3d("Please open a text file.") );
         
         m_sceneRoot.addChild(mouseWheelZoom);
         m_sceneRoot.addChild(mouseTranslate);
         
-        BranchGroup startText = new BranchGroup();
-        startText.addChild(root_group);
-        startText.setCapability(BranchGroup.ALLOW_DETACH);
+        BranchGroup newBranch = new BranchGroup();
+        newBranch.addChild(new TextObject3d("Please open a text file."));
+        newBranch.setCapability(BranchGroup.ALLOW_DETACH);
         
-        m_sceneRoot.addChild( startText );  // this is the local origin  - everyone hangs off this - moving this move every one
+        //textRoot.addChild(newBranch);
+        rootTansformGroup.addChild( newBranch );
+        rootTansformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+        rootTansformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
+        rootTansformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
+        
+        m_sceneRoot.addChild( rootTansformGroup );  // this is the local origin  - everyone hangs off this - moving this move every one
     }
     
     /** This method is called from within the constructor to
@@ -330,11 +329,17 @@ public class PowerReaderUI extends javax.swing.JFrame {
         if (opd.getStatus() == OpenPageDialog.APPROVE_OPTION) {
             rawTextParser = new RawTextParser(opd.getPage());
             
+            //reset the scene
+            rootTansformGroup.removeAllChildren();
+            TextObject3d.resetLocation();
+                        
             // Parse
             rawTextParser.parse();
             
             // Returns the document level hierarchy object
             m_hierarchyRoot = rawTextParser.getHierarchyRoot();
+            
+            rootTansformGroup.addChild(m_hierarchyRoot.getBranchGroup());
             
             System.out.println("----- TEST OUTPUT -----");
 

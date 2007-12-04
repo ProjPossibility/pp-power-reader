@@ -45,7 +45,7 @@ public class TextParser {
         tlp = new PennTreebankLanguagePack();
         // parser = new LexicalizedParser("englishPCFG.ser.gz");
         // replace this with full path to parser?
-        parser = new LexicalizedParser("C:/cygwin/home/zhanshi/stanford-parser-2007-08-19/englishPCFG.ser.gz");
+        parser = new LexicalizedParser("D:/Class/588/Project/stanford-parser-2007-08-19/englishPCFG.ser.gz");
         parseTree = new ArrayList();
     }
     

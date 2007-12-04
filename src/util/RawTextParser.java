@@ -13,8 +13,6 @@
 
 package util;
 
-import edu.stanford.nlp.trees.PennTreebankLanguagePack;
-import edu.stanford.nlp.trees.TreebankLanguagePack;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -38,7 +36,6 @@ public class RawTextParser {
     public static int LEVEL_SENTENCE_ID  = 2;
     public static int LEVEL_WORD_ID = 3;
     
-    private TreebankLanguagePack tlp;
     private BranchGroup m_rootNode = null;
     private HierarchyObject m_hierarchyRoot;
     private String m_fileName;
@@ -46,7 +43,6 @@ public class RawTextParser {
     /** Creates a new instance of RawTextParser */
     public RawTextParser(String filename) {
         m_fileName = filename;
-        tlp = new PennTreebankLanguagePack();
     }
     
     public BranchGroup getRootNode() {
@@ -101,6 +97,9 @@ public class RawTextParser {
                 if(line.equals("")) {
                     // Signify paragraph found
                     System.out.println("< NEW PARAGRAPH >");
+                    
+                    // Tell the rendering component to reset text position for new paragraph
+                    TextObject3d.startNewParagraph();
                     
                     // Add the text value of the paragraph to the object
                     paraObj.setValue(paragraphText);
