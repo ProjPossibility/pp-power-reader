@@ -31,11 +31,15 @@ public class WordNetDictionary extends DictionaryLookup {
             URLConnection connection = url.openConnection();
             DataInputStream in = new DataInputStream(connection.getInputStream());
             String line;
+            String newLine;
+            int cutTextOffIndex;
             Pattern defPattern = Pattern.compile("<li>(.+)</li>");
             while ((line = in.readLine()) != null) {
                 Matcher match = defPattern.matcher(line);
                 if (match.find()) {
-                    def += "\n" + match.group(1).replaceAll("\\<.*?>","");
+                    newLine = match.group(1).replaceAll("\\<.*?>","");        
+                    cutTextOffIndex = newLine.indexOf(")") + 1;
+                    def += "\n" + newLine.substring(cutTextOffIndex) + ".";
                 }
             }
             in.close();

@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * @author Christopher Leung
  */
 public class ConfigurationManager {
-   
+    
     static private ConfigurationManager m_instance;
     
     private ArrayList dictionaries;
@@ -38,7 +38,7 @@ public class ConfigurationManager {
     }
     
     public ConfigurationManager() {
-        // Dictionaries 
+        // Dictionaries
         
         dictionaries = new ArrayList();
         dictionaries.add(new Wiktionary());
@@ -52,10 +52,10 @@ public class ConfigurationManager {
         imageFetchers.add(new FlickrImageFetcher());
         imageFetchers.add(new GoogleImageFetcher());
         imageFetchers.add(new YahooImageFetcher());
-       
+        
         // Set default image lookups
         imageFetcher = (ImageFetcher) imageFetchers.get(0);
-
+        
         // Fonts
         
         // Voices
@@ -76,5 +76,13 @@ public class ConfigurationManager {
     
     static public ArrayList getImageFetcherList() {
         return m_instance.imageFetchers;
+    }
+    
+    static public ConfigurationManager getInstnace() {
+        return m_instance;
+    }
+    
+    static public void setDictionary(int index) {
+        m_instance.dictionaryLookup = (DictionaryLookup)m_instance.dictionaries.get(index);
     }
 }

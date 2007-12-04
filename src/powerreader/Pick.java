@@ -9,15 +9,13 @@
 package powerreader;
 
 import com.sun.j3d.utils.picking.*;
-import dictionary.Wiktionary;
-import dictionary.WordNetDictionary;
+import dictionary.DictionaryLookup;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.Shape3D;
 import speech.Speech;
-import util.HierarchyObject;
 import util.HierarchyObject;
 import util.RawTextParser;
 import util.TextObject3d;
@@ -71,10 +69,10 @@ public class Pick extends MouseAdapter{
                 }
                 // If middle click
                 else if(e.getButton() == MouseEvent.BUTTON2) {
-                    WordNetDictionary w = new WordNetDictionary();
+                    DictionaryLookup w = ConfigurationManager.getDictionary();
                     String def =w.getDefinition(pickedText);
                     System.out.println(def);
-                    Speech.speak(def);
+                    Speech.speak("Definition of " + pickedText + "." + def);
 
                     //FlickrImageFetcher f = new FlickrImageFetcher();
                     //String url =f.getImageURL(text);

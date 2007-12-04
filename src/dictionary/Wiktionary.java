@@ -47,7 +47,7 @@ public class Wiktionary extends DictionaryLookup {
                     }
                     if (line.indexOf("</li>") >= 0) {
                         if (inDefItem) {
-                            def += "\n";
+                            def += ".\n";
                         }
                         inDefItem = false;
                     }
