@@ -338,8 +338,8 @@ public class PowerReaderUI extends javax.swing.JFrame {
             m_documentRoot = rawTextParser.getRootNode();
             
             // Returns the document level hierarchy object
-            m_hierarchyRoot = rawTextParser.getHierarchyRoot();
-        }
+            m_hierarchyRoot = rawTextParser.getHierarchyRoot();           
+         }
     }//GEN-LAST:event_m_button_openActionPerformed
     
     private void m_button_hlColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_hlColorActionPerformed

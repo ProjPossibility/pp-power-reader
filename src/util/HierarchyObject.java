@@ -10,41 +10,21 @@
 package util;
 
 import java.util.ArrayList;
-import javax.media.j3d.Node;
+import java.util.Iterator;
+import javax.media.j3d.BranchGroup;
+import javax.media.j3d.TransformGroup;
 
 /**
  *
  * @author Christopher Leung
  */
 public class HierarchyObject {
-    
-    /**
-     * Defines document level identifier as integer.
-     */
-    public static int LEVEL_DOCUMENT_ID = 0;
-    /**
-     * Defines paragraph level identifier as integer.
-     */
-    public static int LEVEL_PARAGRAPH_ID  = 1;
-    /**
-     * Defines sentence level identifier as integer.
-     */
-    public static int LEVEL_SENTENCE_ID  = 2;
-    /**
-     * Defines word level identifier as integer.
-     */
-    public static int LEVEL_WORD_ID = 3;
 
-    
-    public static String LEVEL_DOCUMENT_STR = "Document";
-    public static String LEVEL_PARAGRAPH_STR = "Paragraph";
-    public static String LEVEL_SENTENCE_STR = "Sentence";
-    public static String LEVEL_WORD_STR = "Word";
-    
     // Referece to scene graph node
-    private Node m_node;
+    private BranchGroup m_branchGroup;
+    private TransformGroup m_transformGroup;
     
-    // Value of this object (i.e. word, or phrase, or sentence)
+    // Value of this object (i.e. word, or sentence, or paragraph)
     private String m_value;
     
     // "Level" of this object
@@ -65,10 +45,14 @@ public class HierarchyObject {
      * @param newType Tpe of the hierarchy as string
      * @param newNode Reference to the scene graph node
      */
-    public HierarchyObject(int newLevel, String newType, Node newNode) {
+    public HierarchyObject(int newLevel, String newType) {
         m_level = newLevel;
         m_type = newType;
-        m_node = newNode;
+        m_children = new ArrayList();
+        m_parents = new ArrayList();
+        m_value = null;
+        m_branchGroup = new BranchGroup();
+        m_transformGroup = null;
     }
 
     /**
@@ -99,10 +83,85 @@ public class HierarchyObject {
     }
     
     public void addChild(HierarchyObject child) {
+        // Add the child to the arraylist
         m_children.add(child);
+        
+        // Now also make this item a child in the scene graph
+        m_branchGroup.addChild(child.getBranchGroup());
+    }
+
+    public void setTransformGroup (TransformGroup transformGroup) {
+        m_transformGroup = transformGroup;
+        m_branchGroup.addChild(m_transformGroup);
+    }
+    
+    public TransformGroup getTransformGroup () {
+        return m_transformGroup;
+    }
+    
+    public BranchGroup getBranchGroup() {
+        return m_branchGroup;
     }
     
     public ArrayList getChildren () {
         return m_children;
+    }
+    
+    public ArrayList getAllChildrenOfLevel(int level) {
+        return getAllChildrenOfLevelRecursive(level,this);
+    }
+    
+    private static ArrayList getAllChildrenOfLevelRecursive(int level, HierarchyObject toParse) {
+        HierarchyObject treeNode;
+        ArrayList children = new ArrayList();
+        ArrayList result;
+        if(toParse.getLevel() == level) {
+            children.add(toParse);
+        }
+        else {
+            // Get the children
+            Iterator childrenIt =  toParse.getChildren().iterator();
+
+            while(childrenIt.hasNext()) {
+               treeNode = (HierarchyObject) childrenIt.next();
+               result = getAllChildrenOfLevelRecursive(level,treeNode);
+               children = joinArrayList(children,result);
+            }
+        }
+        return (children);
+    }
+    
+    private static ArrayList joinArrayList(ArrayList list1, ArrayList list2) {
+        Iterator it1 = list1.iterator();
+        Iterator it2 = list2.iterator();
+        ArrayList result = new ArrayList();
+        while(it1.hasNext()) {
+            result.add(it1.next());
+       }
+        while(it2.hasNext()) {
+            result.add(it2.next());
+       }
+        return result;
+    }
+    
+    public int getLevel() {
+        return m_level;       
+    }
+    
+    public boolean hasChildren () {
+        if (m_children.size() > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    public void setValue (String value) {
+        m_value = value;
+    }
+    
+    public String getValue () {
+        return m_value;
     }
 }
