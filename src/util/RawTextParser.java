@@ -93,6 +93,7 @@ public class RawTextParser {
         currentWordParents.add(paraObj);
         currentWordParents.add(sentObj);
         
+        
         try {
             input = new BufferedReader( new FileReader(m_fileName) );
             
@@ -164,6 +165,9 @@ public class RawTextParser {
                             //System.out.println("Sentence Found: " + sentenceText);
                             paragraphText = paragraphText.concat(sentenceText);
                             
+                            // Add the sentence parents before adding the sentence to the paragraph
+                            sentObj.setParents(currentSentenceParents);
+                             
                             // Add the sentence object to list of sentence objects
                             paraObj.addChild(sentObj);
                             
@@ -173,7 +177,6 @@ public class RawTextParser {
                             // Create new containers
                             sentenceText = new String();
                             sentObj = new HierarchyObject(LEVEL_SENTENCE_ID,LEVEL_SENTENCE_STR);
-                            sentObj.setParents(currentSentenceParents);
                             currentWordParents.set(LEVEL_SENTENCE_ID,sentObj);
                         }
                     }

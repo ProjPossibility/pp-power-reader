@@ -430,7 +430,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             m_slider_lod.setValue(ConfigurationManager.getFocusLevel());
         }
         ConfigurationManager.setDetailLevel(3 - m_slider_lod.getValue());
-        
+
     }//GEN-LAST:event_m_slider_lodStateChanged
     
     private void m_slider_lofStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_lofStateChanged
