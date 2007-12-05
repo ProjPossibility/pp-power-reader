@@ -61,8 +61,8 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
         canvas3D.addMouseMotionListener(this);
         m_sceneRoot = sceneRoot;
         m_mainTransformGroup = mainTransformGroup;
-
-         mousePressed = false;
+        
+        mousePressed = false;
     }
     
     public void mouseClicked(MouseEvent e) {
@@ -73,31 +73,31 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
             
             pickCanvas.setShapeLocation(e);
             PickResult result = pickCanvas.pickClosest();
-        
+            
             if (result != null) {
                 Shape3D s3 = (Shape3D)result.getNode(PickResult.SHAPE3D);
-            
+                
                 if (s3 != null) {
                     TextObject3d tObj = (TextObject3d) s3.getParent().getParent().getParent();
                     WordHashMap map = WordHashMap.getInstance();
-                
+                    
                     HierarchyObject pickedObject = map.getHirarchyObject(tObj);
                     String pickedText=pickedObject.getValue();
                     System.out.println(pickedText);
-
+                    
                     // select word
                     if(e.getButton() == MouseEvent.BUTTON1 || e.getButton() == MouseEvent.BUTTON2) {
                         // Clear the focus highlight
                         Player.getFocusOn().color(false);
-                    
+                        
                         // Kill the current player
                         Player.reset();
-                    
-                    // Reboot the player
-                    HierarchyObject root = pickedObject.getParent(RawTextParser.LEVEL_DOCUMENT_ID);
-                    Player.setHierarchyRoot(root);
-                    Player.setFocusOn(map.getHirarchyObject(tObj));
-                    Player.playOne();
+                        
+                        // Reboot the player
+                        HierarchyObject root = pickedObject.getParent(RawTextParser.LEVEL_DOCUMENT_ID);
+                        Player.setHierarchyRoot(root);
+                        Player.setFocusOn(map.getHirarchyObject(tObj));
+                        Player.playOne();
                     }
                     // dictionary meaning and images
                     if(e.getButton() == MouseEvent.BUTTON2) {
@@ -108,9 +108,9 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         String toSpeak = "Definition of " + pickedText + ". " + def;
                         System.out.println(toSpeak);
                         Speech.speak(toSpeak);
-
+                        
                         // Get image
-                        if (ConfigurationManager.showImages()) {
+                        if(ConfigurationManager.showImages()) {
                             ImageFetcher f = ConfigurationManager.getImageFetcher();
                             String url = f.getImageURL(pickedText);
                             System.out.println(url);
@@ -122,12 +122,13 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                             Shape3D shape = new Shape3D(imageObj);
                             imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
                             BranchGroup node = new BranchGroup();
-
+                            
                             node.setCapability(BranchGroup.ALLOW_DETACH);
-
+                            
                             node.addChild(shape);
                             lastPicked = tObj.getTheTextTransformGroup();
-                            lastPicked.addChild(node);                   
+                            lastPicked.addChild(node);
+                            
                             lastAttached =node;
                         }
                     }
@@ -137,7 +138,7 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
             ex.printStackTrace();
         }
     }
-          
+    
     public void mouseWheelMoved(MouseWheelEvent e) {
         ConfigurationManager.current_z += e.getWheelRotation()/-2.5f;
         ConfigurationManager.refreshTranslate();
@@ -171,5 +172,5 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
             mousePressed = false;
         }
     }
-
+    
 }

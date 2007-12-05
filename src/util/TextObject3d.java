@@ -44,6 +44,8 @@ public class TextObject3d extends TransformGroup {
     private TransformGroup theText;
     private Material m_textMaterial;
     
+    private Vector3f currentLocation;
+    
     /** Creates a new instance of TextObject */
     public TextObject3d(String text) {
         super();
@@ -77,6 +79,7 @@ public class TextObject3d extends TransformGroup {
         
         // place it in the scene graph
         Transform3D offset = new Transform3D();
+        this.currentLocation = new Vector3f(nextLocation.x,nextLocation.y,nextLocation.z);
         offset.setTranslation(nextLocation);
         this.setTransform( offset );
         
@@ -149,5 +152,9 @@ public class TextObject3d extends TransformGroup {
     
     public TransformGroup getTheTextTransformGroup() {
         return theText;
+    }
+    
+    public Vector3f getLocation() {
+        return currentLocation;
     }
 }

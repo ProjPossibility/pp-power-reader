@@ -59,6 +59,8 @@ public class HierarchyObject {
         
         
         m_transformGroup = new TransformGroup();
+        m_transformGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        
         m_branchGroup.addChild(m_transformGroup);
     }
     

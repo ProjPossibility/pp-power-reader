@@ -50,6 +50,7 @@ public class ConfigurationManager {
     private boolean audibleSpeech = true;
     private boolean showImages = false;
     private boolean wordsGrow = false;
+    private boolean followFocus = false;
     
     private TransformGroup m_mainTransformGroup = null;
     
@@ -65,6 +66,9 @@ public class ConfigurationManager {
         m_instance.m_mainTransformGroup = root;
     }
     
+    static public TransformGroup getMainTransformGroup() {
+        return m_instance.m_mainTransformGroup;
+    }
     static public void setZoomSlider(JSlider slider) {
         m_instance.m_zoomSlider = slider;
     }
@@ -76,6 +80,14 @@ public class ConfigurationManager {
         } else {
             m_instance.audibleSpeech = true;
             Speech.unmute();
+        }
+    }
+    
+    static public void toggleFollowFocus() {
+        if(m_instance.followFocus) {
+            m_instance.followFocus = false;
+        } else {
+            m_instance.followFocus = true;
         }
     }
     static public void toggleShowImages() {
@@ -148,6 +160,12 @@ public class ConfigurationManager {
     static public boolean wordsGrow() {
         return m_instance.wordsGrow;
     }
+    static public boolean showImages() {
+        return m_instance.showImages;
+    }
+    static public boolean followFocus() {
+        return m_instance.followFocus;
+    }
     
     static public boolean showImages() {
         return m_instance.showImages;
@@ -175,7 +193,7 @@ public class ConfigurationManager {
         m_instance.fileName = filename;
     }
     
-    static public String getCurrentFileName (String filename) {
+    static public String getCurrentFileName(String filename) {
         return m_instance.fileName;
     }
 }

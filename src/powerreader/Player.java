@@ -11,9 +11,11 @@ package powerreader;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.media.j3d.Transform3D;
 import speech.Speech;
 import util.HierarchyObject;
 import util.RawTextParser;
+import util.TextObject3d;
 
 /**
  *
@@ -99,13 +101,14 @@ public class Player extends Thread {
         ArrayList objectsToSearch = m_instance.m_root.getAllChildrenOfLevel(findOnLevel);
         Iterator it = objectsToSearch.iterator();
         int searchIndex = 0;
+        
         while(it.hasNext()) {
             Object objToTest = it.next();
             if(objToTest.equals(hObj)) {
                 
                 m_instance.m_focusLevel = findOnLevel;
                 m_instance.m_focusIndex = searchIndex;
-                                
+                
                 // Highlight the focused
                 getFocusOn().color(true);
                 
@@ -135,7 +138,8 @@ public class Player extends Thread {
     public void run() {
         
         HierarchyObject currentObj = null;
-        
+        Transform3D moveScene = new Transform3D();
+        TextObject3d theText = null;
         for(;;) {
 //            synchronized(m_ready) {
             for(int i = m_focusIndex; i < m_objectsToSpeak.size(); i++) {
@@ -147,6 +151,17 @@ public class Player extends Thread {
                 
                 // Highlight/grow the current object
                 currentObj.color(true);
+                
+                if(ConfigurationManager.followFocus()) {
+                    // Center the scene on the focused item
+                    theText = (TextObject3d) currentObj.getTransformGroup();
+                    //              System.out.println("To move, X: " + theText.getLocation().x + " Y: "+ theText.getLocation().y );
+                    ConfigurationManager.current_x = -theText.getLocation().x;
+                    ConfigurationManager.current_y = -theText.getLocation().y;
+                    ConfigurationManager.refreshTranslate();
+                    
+                }
+//                m_instance.m_root.getTransformGroup().setTransform(moveScene);
                 
                 try {
                     

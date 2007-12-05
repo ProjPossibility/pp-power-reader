@@ -42,7 +42,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private OpenPageDialog opd;
     private BranchGroup m_sceneRoot;
     private TransformGroup rootTransformGroup;
-    private HierarchyObject m_hierarchyRoot;
+    private HierarchyObject m_hierarchyRoot = null;
     private RawTextParser rawTextParser;
     private Pick pick;
     
@@ -74,53 +74,30 @@ public class PowerReaderUI extends javax.swing.JFrame {
     }
     
     private void create3dCanvas() {
-       
+        
         // Set up the canvas and scene
         GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
         m_canvas = new Canvas3D(config);
         SimpleUniverse simpleU = new SimpleUniverse(m_canvas);
-
+        
         createSceneGraph();
         simpleU.getViewingPlatform().setNominalViewingTransform();
         simpleU.addBranchGraph(m_sceneRoot);
         m_panel_textArea.setLayout( new BorderLayout() );
         m_panel_textArea.setOpaque( false );
         m_panel_textArea.add("Center", m_canvas);
-
+        
         // Create picker
         pick = new Pick(m_canvas,m_sceneRoot,rootTransformGroup);
-        
-        // Set configuration manager so we can coordinate zoom level changes
-        ConfigurationManager.setMainTransformGroup(rootTransformGroup);
     }
     
     private void createSceneGraph() {
         // Create the root of the branch graph
         m_sceneRoot = new BranchGroup();
-        
+        m_sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        m_sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+
         // Set the background color
-        BoundingSphere boundingSphere =
-                new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
-        m_background = new Background();
-        m_background.setApplicationBounds(boundingSphere);
-        m_background.setColor(new Color3f(DEFAULT_BG_COLOR));
-        m_background.setCapability(Background.ALLOW_COLOR_WRITE);
-        m_sceneRoot.addChild(m_background);
-        
-        Transform3D transform3d = new Transform3D();
-        transform3d.setTranslation(new Vector3f(ConfigurationManager.DEFAULT_X,ConfigurationManager.DEFAULT_Y,ConfigurationManager.DEFAULT_Z));
-        rootTransformGroup = new TransformGroup();
-        
-        rootTransformGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE); // allow the mouse behavior to rotate the scene
-        rootTransformGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-        rootTransformGroup.setTransform(transform3d);
-        
-        rootTransformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
-        rootTransformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
-        rootTransformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
-        
-        m_sceneRoot.addChild( rootTransformGroup );  // this is the local origin  - everyone hangs off this - moving this move every one
-        
         startPowerReader("default.txt");
         Speech.speak("Hello and welcome to Power Reader, by Christopher Leung, Rubaiz Virk, and Zhan Shi.  To begin, please click the Open File button to your right.");
     }
@@ -153,6 +130,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_label_fgColor = new javax.swing.JLabel();
         m_button_open = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        m_checkBox_speechEnabled1 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Power Reader Alpha");
@@ -295,6 +273,15 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_checkBox_speechEnabled1.setText("Follow words");
+        m_checkBox_speechEnabled1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        m_checkBox_speechEnabled1.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        m_checkBox_speechEnabled1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_checkBox_speechEnabled1ActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout m_panel_controlAreaLayout = new org.jdesktop.layout.GroupLayout(m_panel_controlArea);
         m_panel_controlArea.setLayout(m_panel_controlAreaLayout);
         m_panel_controlAreaLayout.setHorizontalGroup(
@@ -310,20 +297,20 @@ public class PowerReaderUI extends javax.swing.JFrame {
                         .add(m_button_play, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(m_buton_stop, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 129, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                        .add(m_slider_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(m_slider_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(m_label_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 260, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(m_button_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                        .add(m_label_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                        .add(m_button_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                        .add(m_checkBox_showImages)
-                        .add(m_checkBox_wordsGrow)
-                        .add(m_checkBox_speechEnabled)
-                        .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                        .add(m_label_fgColor)))
+                    .add(m_slider_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_slider_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_label_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 260, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(m_button_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_label_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_button_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_label_fgColor)
+                    .add(m_checkBox_speechEnabled)
+                    .add(m_checkBox_wordsGrow)
+                    .add(m_checkBox_showImages)
+                    .add(m_checkBox_speechEnabled1))
                 .addContainerGap())
         );
         m_panel_controlAreaLayout.setVerticalGroup(
@@ -362,12 +349,14 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_button_hlColor)
                 .add(23, 23, 23)
+                .add(m_checkBox_speechEnabled1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_checkBox_showImages)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_checkBox_wordsGrow)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_checkBox_speechEnabled)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -394,16 +383,20 @@ public class PowerReaderUI extends javax.swing.JFrame {
         ConfigurationManager.toggleShowImages();
     }//GEN-LAST:event_m_checkBox_showImagesActionPerformed
 
+    private void m_checkBox_speechEnabled1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_speechEnabled1ActionPerformed
+        ConfigurationManager.toggleFollowFocus();
+    }//GEN-LAST:event_m_checkBox_speechEnabled1ActionPerformed
+    
     private void m_slider_zoomLevelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_zoomLevelStateChanged
-
+        
         ConfigurationManager.current_z = m_slider_zoomLevel.getValue();
         ConfigurationManager.refreshTranslate();
     }//GEN-LAST:event_m_slider_zoomLevelStateChanged
-
+    
     private void m_checkBox_wordsGrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_wordsGrowActionPerformed
         ConfigurationManager.toggleWordsGrow();
     }//GEN-LAST:event_m_checkBox_wordsGrowActionPerformed
-
+    
     private void m_checkBox_speechEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_speechEnabledActionPerformed
         ConfigurationManager.toggleAudibleSpeech();
     }//GEN-LAST:event_m_checkBox_speechEnabledActionPerformed
@@ -433,8 +426,19 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private void startPowerReader(String file) {
         rawTextParser = new RawTextParser(file);
         
+        // Create a new background from scratc
+        BoundingSphere boundingSphere =
+                new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
+        m_background = new Background();
+        m_background.setApplicationBounds(boundingSphere);
+        m_background.setColor(new Color3f(m_button_bgColor.getBackground()));
+        m_background.setCapability(Background.ALLOW_COLOR_WRITE);
+        
         //reset the scene and memmory
-        rootTransformGroup.removeAllChildren();
+        if(m_hierarchyRoot != null) {
+            // Remove the scene from the root node
+            m_sceneRoot.removeChild(m_hierarchyRoot.getBranchGroup());
+        }
         TextObject3d.resetLocation();
         WordHashMap.getInstance().clearMap();
         
@@ -444,7 +448,22 @@ public class PowerReaderUI extends javax.swing.JFrame {
         // Returns the document level hierarchy object
         m_hierarchyRoot = rawTextParser.getHierarchyRoot();
         
-        rootTransformGroup.addChild(m_hierarchyRoot.getBranchGroup());
+        // Set the transform group that we use for translating the entire scene
+        Transform3D translation = new Transform3D();
+        translation.setTranslation(new Vector3f(ConfigurationManager.DEFAULT_X,ConfigurationManager.DEFAULT_Y,ConfigurationManager.DEFAULT_Z));
+        ConfigurationManager.setMainTransformGroup(m_hierarchyRoot.getTransformGroup());
+        ConfigurationManager.getMainTransformGroup().setTransform(translation);
+        ConfigurationManager.getMainTransformGroup().addChild(m_background);
+        
+        // Reset the slider zoom as well
+        
+        ConfigurationManager.current_x = ConfigurationManager.DEFAULT_X;
+        ConfigurationManager.current_y = ConfigurationManager.DEFAULT_Y;
+        ConfigurationManager.current_z = ConfigurationManager.DEFAULT_Z;
+        
+        m_slider_zoomLevel.setValue((int)ConfigurationManager.current_z);
+        
+        m_sceneRoot.addChild(m_hierarchyRoot.getBranchGroup());
         
         Player.reset();
         Player.setHierarchyRoot(m_hierarchyRoot);
@@ -519,6 +538,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private javax.swing.JButton m_button_play;
     private javax.swing.JCheckBox m_checkBox_showImages;
     private javax.swing.JCheckBox m_checkBox_speechEnabled;
+    private javax.swing.JCheckBox m_checkBox_speechEnabled1;
     private javax.swing.JCheckBox m_checkBox_wordsGrow;
     private javax.swing.JLabel m_label_bgColor;
     private javax.swing.JLabel m_label_fgColor;
