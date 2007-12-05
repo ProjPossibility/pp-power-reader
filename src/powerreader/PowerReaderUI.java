@@ -72,7 +72,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     }
     
     private void create3dCanvas() {
-        
+       
         // Set up the canvas and scene
         GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
         m_canvas = new Canvas3D(config);
@@ -84,9 +84,9 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_panel_textArea.setLayout( new BorderLayout() );
         m_panel_textArea.setOpaque( false );
         m_panel_textArea.add("Center", m_canvas);
-        
+
         // Create picker
-        pick = new Pick(m_canvas,m_sceneRoot,rootTransformGroup);
+        pick = new Pick(m_canvas,m_sceneRoot,rootTransformGroup,this);
         
         // Set configuration manager so we can coordinate zoom level changes
         ConfigurationManager.setMainTransformGroup(rootTransformGroup);
@@ -497,7 +497,6 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private void m_button_playActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_playActionPerformed
         Player.play();
     }//GEN-LAST:event_m_button_playActionPerformed
-        
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
