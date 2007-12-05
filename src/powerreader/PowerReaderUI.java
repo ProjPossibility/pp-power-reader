@@ -148,8 +148,6 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_label_fgColor = new javax.swing.JLabel();
         m_button_open = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        m_menubar = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Power Reader Alpha");
@@ -162,7 +160,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         );
         m_panel_textAreaLayout.setVerticalGroup(
             m_panel_textAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 552, Short.MAX_VALUE)
+            .add(0, 573, Short.MAX_VALUE)
         );
 
         m_slider_readSpeed.setMajorTickSpacing(50);
@@ -286,9 +284,10 @@ public class PowerReaderUI extends javax.swing.JFrame {
             .add(m_panel_controlAreaLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jButton1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_open, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_slider_zoomLevel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_button_open, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_panel_controlAreaLayout.createSequentialGroup()
                         .add(m_button_play, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -306,17 +305,17 @@ public class PowerReaderUI extends javax.swing.JFrame {
                         .add(m_checkBox_speechEnabled)
                         .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .add(m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                        .add(m_label_fgColor))
-                    .add(jButton1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
+                        .add(m_label_fgColor)))
                 .addContainerGap())
         );
         m_panel_controlAreaLayout.setVerticalGroup(
             m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, m_panel_controlAreaLayout.createSequentialGroup()
+            .add(m_panel_controlAreaLayout.createSequentialGroup()
+                .addContainerGap()
                 .add(jButton1)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_button_open)
-                .add(16, 16, 16)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(m_buton_stop)
                     .add(m_button_play))
@@ -350,20 +349,8 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 .add(m_checkBox_wordsGrow)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_checkBox_speechEnabled)
-                .add(28, 28, 28))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
-
-        jMenu1.setMnemonic('F');
-        jMenu1.setText("File");
-        jMenu1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu1ActionPerformed(evt);
-            }
-        });
-
-        m_menubar.add(jMenu1);
-
-        setJMenuBar(m_menubar);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -493,15 +480,10 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private void m_button_playActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_playActionPerformed
         Player.play();
     }//GEN-LAST:event_m_button_playActionPerformed
-    
-    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
-// TODO add your handling code here:
-    }//GEN-LAST:event_jMenu1ActionPerformed
-    
+        
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JButton m_buton_stop;
     private javax.swing.JButton m_button_bgColor;
     private javax.swing.JButton m_button_fgColor;
@@ -517,7 +499,6 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private javax.swing.JLabel m_label_lod;
     private javax.swing.JLabel m_label_readSpeed;
     private javax.swing.JLabel m_label_zoomLevel;
-    private javax.swing.JMenuBar m_menubar;
     private javax.swing.JPanel m_panel_controlArea;
     private javax.swing.JPanel m_panel_textArea;
     private javax.swing.JSlider m_slider_lod;
