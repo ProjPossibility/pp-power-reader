@@ -7,8 +7,6 @@
 package powerreader;
 
 // Import J3D Stuff
-import com.sun.j3d.utils.behaviors.mouse.MouseWheelZoom;
-import com.sun.j3d.utils.behaviors.mouse.MouseTranslate;
 import com.sun.j3d.utils.universe.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -32,6 +30,7 @@ import util.WordHashMap;
  */
 public class PowerReaderUI extends javax.swing.JFrame {
     
+    public static int DEFAULT_ZOOM = -25;
     private Color DEFAULT_BG_COLOR = Color.ORANGE;
     private Color DEFAULT_FG_COLOR = Color.BLUE;
     private Color DEFAULT_HL_COLOR = Color.RED;
@@ -42,7 +41,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     
     private OpenPageDialog opd;
     private BranchGroup m_sceneRoot;
-    private TransformGroup rootTansformGroup;
+    private TransformGroup rootTransformGroup;
     private HierarchyObject m_hierarchyRoot;
     private TransformGroup root_group;
     private RawTextParser rawTextParser;
@@ -86,7 +85,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_panel_textArea.add("Center", m_canvas);
 
         // Create picker
-        pick = new Pick(m_canvas,m_sceneRoot);
+        pick = new Pick(m_canvas,m_sceneRoot,rootTransformGroup);
     }
     
     private void createSceneGraph() {
@@ -103,33 +102,24 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_sceneRoot.addChild(m_background);
         
         Transform3D transform3d = new Transform3D();
-        transform3d.setTranslation(new Vector3f(0,0,-25));
-        rootTansformGroup = new TransformGroup();
+        transform3d.setTranslation(new Vector3f(ConfigurationManager.DEFAULT_X,ConfigurationManager.DEFAULT_Y,ConfigurationManager.DEFAULT_Z));
+        rootTransformGroup = new TransformGroup();
         
-        rootTansformGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE); // allow the mouse behavior to rotate the scene
-        rootTansformGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-        rootTansformGroup.setTransform(transform3d);
-        
-        MouseWheelZoom mouseWheelZoom = new MouseWheelZoom(rootTansformGroup);
-        mouseWheelZoom.setSchedulingBounds(new BoundingSphere());
-        
-        MouseTranslate mouseTranslate = new MouseTranslate(rootTansformGroup);
-        mouseTranslate.setSchedulingBounds(new BoundingSphere());
-        
-        m_sceneRoot.addChild(mouseWheelZoom);
-        m_sceneRoot.addChild(mouseTranslate);
+        rootTransformGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE); // allow the mouse behavior to rotate the scene
+        rootTransformGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        rootTransformGroup.setTransform(transform3d);
         
         BranchGroup newBranch = new BranchGroup();
         newBranch.addChild(new TextObject3d("Please open a text file."));
         newBranch.setCapability(BranchGroup.ALLOW_DETACH);
         
         //textRoot.addChild(newBranch);
-        rootTansformGroup.addChild( newBranch );
-        rootTansformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
-        rootTansformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
-        rootTansformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
+        rootTransformGroup.addChild( newBranch );
+        rootTransformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+        rootTransformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
+        rootTransformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
         
-        m_sceneRoot.addChild( rootTansformGroup );  // this is the local origin  - everyone hangs off this - moving this move every one
+        m_sceneRoot.addChild( rootTransformGroup );  // this is the local origin  - everyone hangs off this - moving this move every one
     }
     
     /** This method is called from within the constructor to
@@ -181,6 +171,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_slider_readSpeed.setMaximum(1350);
         m_slider_readSpeed.setMinimum(250);
         m_slider_readSpeed.setPaintTicks(true);
+        m_slider_readSpeed.setSnapToTicks(true);
         m_slider_readSpeed.setValue(800);
         m_slider_readSpeed.setName("Read Speed");
         m_slider_readSpeed.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -190,7 +181,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         });
 
         m_label_readSpeed.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_label_readSpeed.setText("<--Slow     Read Speed     Fast-->");
+        m_label_readSpeed.setText("<--Faster     Read Speed    Slowert-->");
 
         m_button_play.setText("Play");
         m_button_play.addActionListener(new java.awt.event.ActionListener() {
@@ -206,8 +197,16 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_slider_lod.setMajorTickSpacing(1);
+        m_slider_lod.setMaximum(4);
+        m_slider_lod.setMinimum(1);
+        m_slider_lod.setPaintTicks(true);
+        m_slider_lod.setSnapToTicks(true);
+
         m_label_lod.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_lod.setText("<--Low   Level of Detail   High-->");
+
+        m_slider_zoomLevel.setMajorTickSpacing(1);
 
         m_label_zoomLevel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_zoomLevel.setText("<--Low     Zoom Level     High-->");
@@ -278,6 +277,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             .add(m_panel_controlAreaLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(m_slider_zoomLevel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_button_open, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_panel_controlAreaLayout.createSequentialGroup()
@@ -297,8 +297,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
                         .add(m_checkBox_speechEnabled)
                         .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .add(m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                        .add(m_label_fgColor)
-                        .add(m_slider_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(m_label_fgColor))
                     .add(jButton1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -398,7 +397,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             rawTextParser = new RawTextParser(opd.getPage());
             
             //reset the scene and memmory
-            rootTansformGroup.removeAllChildren();
+            rootTransformGroup.removeAllChildren();
             TextObject3d.resetLocation();
             WordHashMap.getInstance().clearMap();
             
@@ -408,7 +407,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             // Returns the document level hierarchy object
             m_hierarchyRoot = rawTextParser.getHierarchyRoot();
             
-            rootTansformGroup.addChild(m_hierarchyRoot.getBranchGroup());
+            rootTransformGroup.addChild(m_hierarchyRoot.getBranchGroup());
             
             System.out.println("----- TEST OUTPUT -----");
             

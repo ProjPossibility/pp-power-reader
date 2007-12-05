@@ -24,6 +24,9 @@ import java.util.ArrayList;
  */
 public class ConfigurationManager {
     
+    static float DEFAULT_X = 0.0f;
+    static float DEFAULT_Y = 0.0f;
+    static float DEFAULT_Z = -25.0f;
     static private ConfigurationManager m_instance;
     
     private ArrayList dictionaries;
