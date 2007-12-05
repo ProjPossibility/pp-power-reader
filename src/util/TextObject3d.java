@@ -33,8 +33,13 @@ import powerreader.ConfigurationManager;
 public class TextObject3d extends TransformGroup {
     
     private static Vector3f nextLocation = new Vector3f(-5.0f,0,0);//coordinates for the welcome/start string
+    private static Vector3f nextLocationStart = new Vector3f(-10f,10f,0);
+    private static Vector3f nextLocationIncrementWordSentence = new Vector3f(0.3f,-1.5f,0);
+    private static float nextLocationIncrementParagraph = -2.5f;
+    
     private static Color3f highlightColor = new Color3f(1.0f, 0, 0);
     private static Color3f baseColor = new Color3f(0, 1.0f, 1.0f);
+    private static float m_lineWidth = 20.0f;
     
     private TransformGroup theText;
     private Material m_textMaterial;
@@ -66,7 +71,7 @@ public class TextObject3d extends TransformGroup {
         bb.getUpper(up);
         
         //check if the word fits on screen at default zoom level else warp the text to newline
-        if (nextLocation.x + up.x > 10f) {
+        if (nextLocation.x + up.x > m_lineWidth/2.0f) {
             warpTextToNewLine();
         }
         
@@ -75,7 +80,7 @@ public class TextObject3d extends TransformGroup {
         offset.setTranslation(nextLocation);
         this.setTransform( offset );
         
-        nextLocation.x += up.x + 0.3;
+        nextLocation.x += up.x + nextLocationIncrementWordSentence.x;
         
         Shape3D textShape = new Shape3D();
         textShape.setGeometry(textGeom);
@@ -84,28 +89,39 @@ public class TextObject3d extends TransformGroup {
         // attach it
         theText = new TransformGroup();
         theText.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        theText.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
+        theText.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
         theText.addChild(textShape);
         rotation_group.addChild( theText );
         
         
     }
     
+    public static void setLineWidth(float width) {
+        m_lineWidth = width;
+        nextLocationStart.x = -1.0f * width/2.0f;
+        nextLocationStart.y = width/2.0f;
+    }
+    public static float getLineWidth () {
+        return m_lineWidth;
+    }
+    
     // reset co-ordinates of the text to be rendered to the top-left corner
     public static void resetLocation() {
-        nextLocation.x=-11f;
-        nextLocation.y=11f;
+        nextLocation.x= nextLocationStart.x;
+        nextLocation.y= nextLocationStart.y;
     }
     
     // Warp text and spovide spacing for next paragraph
     public static void startNewParagraph() {
-        nextLocation.x = -11.0f;
-        nextLocation.y -= 2.5f;
+        nextLocation.x = nextLocationStart.x;
+        nextLocation.y += nextLocationIncrementParagraph;
     }
     
     //warp to new line below the current line
     private void warpTextToNewLine() {
-        nextLocation.x = -11.0f;
-        nextLocation.y -= 1.5f;
+        nextLocation.x = nextLocationStart.x;
+        nextLocation.y += nextLocationIncrementWordSentence.y;
     }
     
     public static void setHighlightColor(Color3f color) {
@@ -129,5 +145,9 @@ public class TextObject3d extends TransformGroup {
         Transform3D scale = new Transform3D();
         scale.setScale(new Vector3d(1.0f,1.0f,1.0f));
         theText.setTransform(scale);
+    }
+    
+    public TransformGroup getTheTextTransformGroup() {
+        return theText;
     }
 }

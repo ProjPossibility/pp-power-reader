@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import javax.media.j3d.BranchGroup;
+import powerreader.ConfigurationManager;
 
 /**
  *
@@ -43,6 +44,7 @@ public class RawTextParser {
     /** Creates a new instance of RawTextParser */
     public RawTextParser(String filename) {
         m_fileName = filename;
+        ConfigurationManager.setCurrentFileName(filename);        
     }
     
     public BranchGroup getRootNode() {
@@ -144,7 +146,7 @@ public class RawTextParser {
                         // Create 3d object and add it to the scene graph and hashMap
                         TextObject3d textObj = new TextObject3d(token);
                         wordObj.addSceneNode(textObj);
-                        map.addHash(textObj,wordObj);                        
+                        map.addHash(textObj,wordObj);
                         
                         // Add the parents to the word
                         wordObj.setParents(currentWordParents);

@@ -53,6 +53,8 @@ public class PowerReaderUI extends javax.swing.JFrame {
     public PowerReaderUI() {
         initComponents();
         
+        // Link the configuration manager and the slider on this UI
+        ConfigurationManager.setZoomSlider(m_slider_zoomLevel);
         // Initialize config panel
         m_configPanel = new ConfigUI();
         m_configPanel.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -207,11 +209,11 @@ public class PowerReaderUI extends javax.swing.JFrame {
 
         m_slider_zoomLevel.setMajorTickSpacing(1);
         m_slider_zoomLevel.setMaximum(1);
-        m_slider_zoomLevel.setMinimum(-50);
+        m_slider_zoomLevel.setMinimum(-46);
         m_slider_zoomLevel.setValue(-25);
-        m_slider_zoomLevel.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                m_slider_zoomLevelPropertyChange(evt);
+        m_slider_zoomLevel.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                m_slider_zoomLevelStateChanged(evt);
             }
         });
 
@@ -383,11 +385,11 @@ public class PowerReaderUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void m_slider_zoomLevelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_m_slider_zoomLevelPropertyChange
-        System.out.println(ConfigurationManager.current_z);
-   //     ConfigurationManager.current_z = m_slider_zoomLevel.getValue();
-     //   ConfigurationManager.refreshTranslate();
-    }//GEN-LAST:event_m_slider_zoomLevelPropertyChange
+    private void m_slider_zoomLevelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_zoomLevelStateChanged
+
+        ConfigurationManager.current_z = m_slider_zoomLevel.getValue();
+        ConfigurationManager.refreshTranslate();
+    }//GEN-LAST:event_m_slider_zoomLevelStateChanged
 
     private void m_checkBox_wordsGrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_wordsGrowActionPerformed
         ConfigurationManager.toggleWordsGrow();

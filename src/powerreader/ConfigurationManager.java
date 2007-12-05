@@ -19,6 +19,7 @@ import image.YahooImageFetcher;
 import java.util.ArrayList;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.swing.JSlider;
 import javax.vecmath.Vector3f;
 import speech.Speech;
 
@@ -31,6 +32,7 @@ public class ConfigurationManager {
     static float DEFAULT_X = 0.0f;
     static float DEFAULT_Y = 0.0f;
     static float DEFAULT_Z = -25.0f;
+    static float MIN_Z = -46.0f;
     static float MAX_Z = 1.0f;
     
     static float current_x = DEFAULT_X;
@@ -51,6 +53,9 @@ public class ConfigurationManager {
     
     private TransformGroup m_mainTransformGroup = null;
     
+    private String fileName = null;
+    
+    private JSlider m_zoomSlider = null;
     static {
         m_instance = new ConfigurationManager();
         
@@ -58,6 +63,10 @@ public class ConfigurationManager {
     
     static public void setMainTransformGroup(TransformGroup root) {
         m_instance.m_mainTransformGroup = root;
+    }
+    
+    static public void setZoomSlider(JSlider slider) {
+        m_instance.m_zoomSlider = slider;
     }
     
     static public void toggleAudibleSpeech() {
@@ -100,7 +109,7 @@ public class ConfigurationManager {
         imageFetchers.add(new YahooImageFetcher());
         
         // Set default image lookups
-        imageFetcher = (ImageFetcher) imageFetchers.get(0);
+        imageFetcher = (ImageFetcher) imageFetchers.get(1);
         
         // Fonts
         
@@ -145,10 +154,24 @@ public class ConfigurationManager {
             // Cap current_z if we need to
             if(current_z > MAX_Z) {
                 current_z = MAX_Z;
+            } else if (current_z < MIN_Z) {
+                current_z = MIN_Z;
             }
             Transform3D transform = new Transform3D();
             transform.setTranslation(new Vector3f(current_x,current_y,current_z));
             m_instance.m_mainTransformGroup.setTransform(transform);
+            
+            if(m_instance.m_zoomSlider != null) {
+                m_instance.m_zoomSlider.setValue((int)m_instance.current_z);
+            }
         }
+    }
+    
+    static public void setCurrentFileName(String filename) {
+        m_instance.fileName = filename;
+    }
+    
+    static public String getCurrentFileName (String filename) {
+        return m_instance.fileName;
     }
 }

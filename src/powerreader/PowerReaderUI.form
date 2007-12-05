@@ -196,11 +196,11 @@
           <Properties>
             <Property name="majorTickSpacing" type="int" value="1"/>
             <Property name="maximum" type="int" value="1"/>
-            <Property name="minimum" type="int" value="-50"/>
+            <Property name="minimum" type="int" value="-46"/>
             <Property name="value" type="int" value="-25"/>
           </Properties>
           <Events>
-            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="m_slider_zoomLevelPropertyChange"/>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="m_slider_zoomLevelStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="m_label_zoomLevel">

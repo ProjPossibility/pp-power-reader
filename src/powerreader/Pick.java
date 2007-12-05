@@ -46,7 +46,7 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
     private int lastX;
     private int lastY;
     private Canvas3D c3D;
-    private static BranchGroup lastPicked;
+    private static TransformGroup lastPicked;
     private static BranchGroup lastAttached;
     
     private boolean mousePressed;
@@ -101,12 +101,15 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                     }
                     // dictionary meaning and images
                     if(e.getButton() == MouseEvent.BUTTON2) {
+                        
+                        // Get and speak dictionary definition
                         DictionaryLookup w = ConfigurationManager.getDictionary();
-                        String def =w.getDefinition(pickedText);
+                        String def = w.getDefinition(pickedText);
                         String toSpeak = "Definition of " + pickedText + ". " + def;
                         System.out.println(toSpeak);
                         Speech.speak(toSpeak);
 
+                        // Get image
                         ImageFetcher f = ConfigurationManager.getImageFetcher();
                         String url = f.getImageURL(pickedText);
                         System.out.println(url);
@@ -119,17 +122,13 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
                         BranchGroup node = new BranchGroup();
 
-                        node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-                        node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-                        node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
                         node.setCapability(BranchGroup.ALLOW_DETACH);
 
                         node.addChild(shape);
-                        pickedObject.getBranchGroup().addChild(node);
-
-                        lastPicked =pickedObject.getBranchGroup();
+                        lastPicked = tObj.getTheTextTransformGroup();
+                        lastPicked.addChild(node);
+                        
                         lastAttached =node;
-
                     }
                 }
             }
@@ -139,9 +138,7 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
     }
           
     public void mouseWheelMoved(MouseWheelEvent e) {
-        System.out.println(ConfigurationManager.current_z);
         ConfigurationManager.current_z += e.getWheelRotation()/-2.5f;
-        System.out.println(ConfigurationManager.current_z);
         ConfigurationManager.refreshTranslate();
     }
     
