@@ -110,6 +110,9 @@ public class RawTextParser {
                     
                     paraObj.setParents(currentParagraphParent);
                     
+                    // Clear the paragraph string
+                    paragraphText = new String();
+                    
                     // Add the paragraph object to list of paragraphs
                     docuObj.addChild(paraObj);
                     
@@ -117,7 +120,9 @@ public class RawTextParser {
                     paraObj = new HierarchyObject(LEVEL_PARAGRAPH_ID, LEVEL_PARAGRAPH_STR);
                     
                     // Set new sentence and word parents
+                    currentSentenceParents = (ArrayList) currentSentenceParents.clone();
                     currentSentenceParents.set(LEVEL_PARAGRAPH_ID,paraObj);
+                    currentWordParents = (ArrayList) currentWordParents.clone();
                     currentWordParents.set(LEVEL_PARAGRAPH_ID,paraObj);
                     
                     // Make sure our sentence is cleared out
@@ -177,6 +182,9 @@ public class RawTextParser {
             
             // Add any more paragraphs to the document
             paraObj.setValue(paragraphText);
+            
+            // Set the paragraph's parents
+            paraObj.setParents(currentParagraphParent);
             
             // Add the paragraph object to list of paragraphs
             docuObj.addChild(paraObj);

@@ -52,6 +52,10 @@ public class ConfigurationManager {
     private boolean wordsGrow = false;
     private boolean followFocus = false;
     
+    // Word focus level by default
+    static private int m_focusLevel = 3;
+    static private int m_detailLevel = 0;
+    
     private TransformGroup m_mainTransformGroup = null;
     
     private String fileName = null;
@@ -191,5 +195,21 @@ public class ConfigurationManager {
     
     static public String getCurrentFileName(String filename) {
         return m_instance.fileName;
+    }
+    
+    static public int getFocusLevel() {
+        return m_focusLevel;
+    }
+    
+    static public void setFocusLevel(int level) {
+        m_focusLevel = level;
+    }
+    
+    static public int getDetailLevel() {
+        return m_detailLevel;
+    }
+    
+    static public void setDetailLevel(int level) {
+        m_detailLevel = level;
     }
 }

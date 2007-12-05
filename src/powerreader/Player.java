@@ -52,8 +52,8 @@ public class Player extends Thread {
     /** Creates a new instance of Player */
     public Player() {
         
-        // Default to word level focus
-        m_focusLevel = RawTextParser.LEVEL_WORD_ID;
+        // Default to document level focus
+        m_focusLevel = RawTextParser.LEVEL_DOCUMENT_ID;
         
         // Default colors
         m_highlightColorR = 1.0f;
@@ -146,12 +146,17 @@ public class Player extends Thread {
                 // Get current obj
                 currentObj = (HierarchyObject)m_objectsToSpeak.get(i);
                 
+                // Highlight/grow the current object
+                currentObj.color(true);
+
                 // Start speaking the object
                 Speech.speak(currentObj.getValue());
                 
-                // Highlight/grow the current object
-                currentObj.color(true);
-                
+                // Disable render on everything but the current object
+                if (ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_WORD_ID) {
+                    disableRenderExcept(currentObj);
+                }
+            
                 if(ConfigurationManager.followFocus()) {
                     // Center the scene on the focused item
                     theText = (TextObject3d) currentObj.getTransformGroup();
@@ -218,5 +223,37 @@ public class Player extends Thread {
     static public void pause() {
         m_instance.suspend();
         Speech.cancel();
+    }
+    
+    static public void disableRenderExcept(HierarchyObject object) {
+        
+        // Start with the document level
+        HierarchyObject documentParent = object.getParent(RawTextParser.LEVEL_DOCUMENT_ID);
+        HierarchyObject paragraphParent = object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID);
+        HierarchyObject sentenceParent = object.getParent(RawTextParser.LEVEL_SENTENCE_ID);
+        
+        // Disable all of its children starting with the highest parent
+        disableRenderOfChildren(documentParent,paragraphParent);
+        disableRenderOfChildren(paragraphParent,sentenceParent);
+        disableRenderOfChildren(paragraphParent,object);
+    }
+    
+    static public void disableRenderOfChildren(HierarchyObject parent, HierarchyObject except) {
+        ArrayList children = parent.getAllChildrenOfLevel(except.getLevel());
+        Iterator it = children.iterator();
+        HierarchyObject obj;
+        int i = 0;
+        while(it.hasNext()) {
+            obj = (HierarchyObject) it.next();
+            System.out.println(i + ". Disabling Item: " + obj.getLevel() + " Val: "+ obj.getValue());
+            if(!obj.equals(except)) {
+                obj.disableRender();
+                System.out.println("Disabled Success");
+            } else {
+                obj.enabledRender();
+                System.out.println("Enabled Success");
+            }
+            i++;
+        }
     }
 }

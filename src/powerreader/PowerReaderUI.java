@@ -95,7 +95,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_sceneRoot = new BranchGroup();
         m_sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
         m_sceneRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-
+        
         // Set the background color
         startPowerReader("default.txt");
         Speech.speak("Hello and welcome to Power Reader, by Christopher Leung, Rubaiz Virk, and Zhan Shi.  To begin, please click the Open File button to your right.");
@@ -130,6 +130,8 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_button_open = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         m_checkBox_speechEnabled1 = new javax.swing.JCheckBox();
+        m_label_lof = new javax.swing.JLabel();
+        m_slider_lof = new javax.swing.JSlider();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Power Reader Alpha");
@@ -142,7 +144,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         );
         m_panel_textAreaLayout.setVerticalGroup(
             m_panel_textAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 587, Short.MAX_VALUE)
+            .add(0, 646, Short.MAX_VALUE)
         );
 
         m_slider_readSpeed.setMajorTickSpacing(50);
@@ -158,9 +160,11 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_label_readSpeed.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_label_readSpeed.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_readSpeed.setText("<--Faster     Read Speed    Slowert-->");
 
+        m_button_play.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_button_play.setIcon(new javax.swing.ImageIcon(getClass().getResource("/powerreader/resources/player_play.png")));
         m_button_play.setText("Play");
         m_button_play.addActionListener(new java.awt.event.ActionListener() {
@@ -169,6 +173,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_buton_stop.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_buton_stop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/powerreader/resources/player_stop.png")));
         m_buton_stop.setText("Stop");
         m_buton_stop.addActionListener(new java.awt.event.ActionListener() {
@@ -178,13 +183,18 @@ public class PowerReaderUI extends javax.swing.JFrame {
         });
 
         m_slider_lod.setMajorTickSpacing(1);
-        m_slider_lod.setMaximum(4);
-        m_slider_lod.setMinimum(1);
+        m_slider_lod.setMaximum(3);
         m_slider_lod.setPaintTicks(true);
         m_slider_lod.setSnapToTicks(true);
+        m_slider_lod.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                m_slider_lodStateChanged(evt);
+            }
+        });
 
+        m_label_lod.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_label_lod.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_label_lod.setText("<--Low   Level of Detail   High-->");
+        m_label_lod.setText("<--Low             Level of Detail             High-->");
 
         m_slider_zoomLevel.setMajorTickSpacing(1);
         m_slider_zoomLevel.setMaximum(1);
@@ -196,8 +206,9 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_label_zoomLevel.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_label_zoomLevel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_label_zoomLevel.setText("<--Low     Zoom Level     High-->");
+        m_label_zoomLevel.setText("<--Low               Zoom Level               High-->");
 
         m_button_bgColor.setBackground(new java.awt.Color(255, 153, 0));
         m_button_bgColor.setText("Background Color");
@@ -207,6 +218,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_label_hlColor.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_label_hlColor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_hlColor.setText("Highlight Color");
 
@@ -218,6 +230,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_checkBox_showImages.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_checkBox_showImages.setText("Show images");
         m_checkBox_showImages.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         m_checkBox_showImages.setMargin(new java.awt.Insets(0, 0, 0, 0));
@@ -227,6 +240,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_checkBox_wordsGrow.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_checkBox_wordsGrow.setText("Words grow as they are read");
         m_checkBox_wordsGrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         m_checkBox_wordsGrow.setMargin(new java.awt.Insets(0, 0, 0, 0));
@@ -236,6 +250,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_checkBox_speechEnabled.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_checkBox_speechEnabled.setSelected(true);
         m_checkBox_speechEnabled.setText("Audible speech enabled");
         m_checkBox_speechEnabled.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -254,12 +269,15 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_label_bgColor.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_label_bgColor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_bgColor.setText("Background Color");
 
+        m_label_fgColor.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_label_fgColor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_fgColor.setText("Foreground Color");
 
+        m_button_open.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_button_open.setIcon(new javax.swing.ImageIcon(getClass().getResource("/powerreader/resources/open.png")));
         m_button_open.setText("Open File");
         m_button_open.addActionListener(new java.awt.event.ActionListener() {
@@ -268,6 +286,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/powerreader/resources/configure.png")));
         jButton1.setText("Options");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -276,12 +295,28 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_checkBox_speechEnabled1.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_checkBox_speechEnabled1.setText("Follow words");
         m_checkBox_speechEnabled1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         m_checkBox_speechEnabled1.setMargin(new java.awt.Insets(0, 0, 0, 0));
         m_checkBox_speechEnabled1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 m_checkBox_speechEnabled1ActionPerformed(evt);
+            }
+        });
+
+        m_label_lof.setFont(new java.awt.Font("Tahoma", 1, 11));
+        m_label_lof.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        m_label_lof.setText("<--Low             Level of Focus             High-->");
+
+        m_slider_lof.setMajorTickSpacing(1);
+        m_slider_lof.setMaximum(3);
+        m_slider_lof.setPaintTicks(true);
+        m_slider_lof.setSnapToTicks(true);
+        m_slider_lof.setValue(3);
+        m_slider_lof.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                m_slider_lofStateChanged(evt);
             }
         });
 
@@ -301,19 +336,21 @@ public class PowerReaderUI extends javax.swing.JFrame {
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(m_buton_stop, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 129, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(m_slider_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 260, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(m_slider_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_label_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 260, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(m_button_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_label_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_button_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_label_fgColor)
                     .add(m_checkBox_speechEnabled)
                     .add(m_checkBox_wordsGrow)
                     .add(m_checkBox_showImages)
-                    .add(m_checkBox_speechEnabled1))
+                    .add(m_checkBox_speechEnabled1)
+                    .add(m_label_lof, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_slider_lof, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_label_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
                 .addContainerGap())
         );
         m_panel_controlAreaLayout.setVerticalGroup(
@@ -336,6 +373,10 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_slider_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 29, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(m_label_lof, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 24, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(m_slider_lof, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 29, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 11, Short.MAX_VALUE)
                 .add(m_label_lod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 24, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_slider_lod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 29, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -358,8 +399,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_checkBox_wordsGrow)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(m_checkBox_speechEnabled)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(m_checkBox_speechEnabled))
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -381,11 +421,26 @@ public class PowerReaderUI extends javax.swing.JFrame {
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    private void m_slider_lodStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_lodStateChanged
+        
+        // If LOD is 'lower' than level of focus (i.e. detail level is word when focus level is sentence)
+        if(m_slider_lod.getValue() > ConfigurationManager.getFocusLevel()) {
+            // Force the level of detail equal to the level of focus
+            m_slider_lod.setValue(ConfigurationManager.getFocusLevel());
+        }
+        ConfigurationManager.setDetailLevel(3 - m_slider_lod.getValue());
+        
+    }//GEN-LAST:event_m_slider_lodStateChanged
+    
+    private void m_slider_lofStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_lofStateChanged
+        ConfigurationManager.setFocusLevel(m_slider_lof.getValue());
+    }//GEN-LAST:event_m_slider_lofStateChanged
+    
     private void m_checkBox_showImagesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_showImagesActionPerformed
         ConfigurationManager.toggleShowImages();
     }//GEN-LAST:event_m_checkBox_showImagesActionPerformed
-
+    
     private void m_checkBox_speechEnabled1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_speechEnabled1ActionPerformed
         ConfigurationManager.toggleFollowFocus();
     }//GEN-LAST:event_m_checkBox_speechEnabled1ActionPerformed
@@ -546,11 +601,13 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private javax.swing.JLabel m_label_fgColor;
     private javax.swing.JLabel m_label_hlColor;
     private javax.swing.JLabel m_label_lod;
+    private javax.swing.JLabel m_label_lof;
     private javax.swing.JLabel m_label_readSpeed;
     private javax.swing.JLabel m_label_zoomLevel;
     private javax.swing.JPanel m_panel_controlArea;
     private javax.swing.JPanel m_panel_textArea;
     private javax.swing.JSlider m_slider_lod;
+    private javax.swing.JSlider m_slider_lof;
     private javax.swing.JSlider m_slider_readSpeed;
     private javax.swing.JSlider m_slider_zoomLevel;
     // End of variables declaration//GEN-END:variables

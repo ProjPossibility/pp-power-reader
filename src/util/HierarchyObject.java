@@ -60,6 +60,8 @@ public class HierarchyObject {
         
         m_transformGroup = new TransformGroup();
         m_transformGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        m_transformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+        m_transformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
         
         m_branchGroup.addChild(m_transformGroup);
     }
@@ -171,7 +173,7 @@ public class HierarchyObject {
         return m_value;
     }
     
-    public void color (boolean highLight) {
+    public void color(boolean highLight) {
         ArrayList objectsToColor = this.getAllChildrenOfLevel(RawTextParser.LEVEL_WORD_ID);
         Iterator it = objectsToColor.iterator();
         HierarchyObject objectToColor;
@@ -188,6 +190,18 @@ public class HierarchyObject {
                 objectToHighlight = (TextObject3d)(objectToColor.getTransformGroup());
                 objectToHighlight.unHighLight();
             }
+        }
+    }
+    
+    public void disableRender() {
+        if(this.getParent() != null) {
+            this.getParent().getTransformGroup().removeChild(m_branchGroup);
+        }
+    }
+    
+    public void enabledRender() {
+        if(this.getParent() != null && m_branchGroup.getParent() == null) {
+            this.getParent().getTransformGroup().addChild(m_branchGroup);
         }
     }
 }
