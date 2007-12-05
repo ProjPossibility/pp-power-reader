@@ -242,6 +242,11 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_checkBox_showImages.setText("Show images");
         m_checkBox_showImages.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         m_checkBox_showImages.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        m_checkBox_showImages.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_checkBox_showImagesActionPerformed(evt);
+            }
+        });
 
         m_checkBox_wordsGrow.setText("Words grow as they are read");
         m_checkBox_wordsGrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -384,6 +389,10 @@ public class PowerReaderUI extends javax.swing.JFrame {
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void m_checkBox_showImagesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_showImagesActionPerformed
+        ConfigurationManager.toggleShowImages();
+    }//GEN-LAST:event_m_checkBox_showImagesActionPerformed
 
     private void m_slider_zoomLevelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_zoomLevelStateChanged
 

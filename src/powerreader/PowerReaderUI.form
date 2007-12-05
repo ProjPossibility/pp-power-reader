@@ -249,6 +249,9 @@
               <Insets value="[0, 0, 0, 0]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="m_checkBox_showImagesActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="m_checkBox_wordsGrow">
           <Properties>

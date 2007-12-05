@@ -149,6 +149,10 @@ public class ConfigurationManager {
         return m_instance.wordsGrow;
     }
     
+    static public boolean showImages() {
+        return m_instance.showImages;
+    }
+    
     static public void refreshTranslate() {
         if(m_instance.m_mainTransformGroup != null) {
             // Cap current_z if we need to

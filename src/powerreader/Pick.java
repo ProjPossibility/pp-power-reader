@@ -110,25 +110,26 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         Speech.speak(toSpeak);
 
                         // Get image
-                        ImageFetcher f = ConfigurationManager.getImageFetcher();
-                        String url = f.getImageURL(pickedText);
-                        System.out.println(url);
-                        URL mURL= new URL(url);
-                        TextureLoader imageT = new TextureLoader(mURL,c3D);
-                        Raster imageObj = new Raster(new Point3f(0, 0,1f),
-                                Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
-                                imageT.getImage(), null);
-                        Shape3D shape = new Shape3D(imageObj);
-                        imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
-                        BranchGroup node = new BranchGroup();
+                        if (ConfigurationManager.showImages()) {
+                            ImageFetcher f = ConfigurationManager.getImageFetcher();
+                            String url = f.getImageURL(pickedText);
+                            System.out.println(url);
+                            URL mURL= new URL(url);
+                            TextureLoader imageT = new TextureLoader(mURL,c3D);
+                            Raster imageObj = new Raster(new Point3f(0, 0,1f),
+                                    Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
+                                    imageT.getImage(), null);
+                            Shape3D shape = new Shape3D(imageObj);
+                            imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
+                            BranchGroup node = new BranchGroup();
 
-                        node.setCapability(BranchGroup.ALLOW_DETACH);
+                            node.setCapability(BranchGroup.ALLOW_DETACH);
 
-                        node.addChild(shape);
-                        lastPicked = tObj.getTheTextTransformGroup();
-                        lastPicked.addChild(node);
-                        
-                        lastAttached =node;
+                            node.addChild(shape);
+                            lastPicked = tObj.getTheTextTransformGroup();
+                            lastPicked.addChild(node);                   
+                            lastAttached =node;
+                        }
                     }
                 }
             }
