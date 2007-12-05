@@ -271,9 +271,13 @@
               <Insets value="[0, 0, 0, 0]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="m_checkBox_wordsGrowActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="m_checkBox_speechEnabled">
           <Properties>
+            <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Audible speech enabled"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
@@ -284,6 +288,9 @@
               <Insets value="[0, 0, 0, 0]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="m_checkBox_speechEnabledActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="m_button_fgColor">
           <Properties>
@@ -310,7 +317,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="m_button_open">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Open..."/>
+            <Property name="text" type="java.lang.String" value="Open File"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="m_button_openActionPerformed"/>

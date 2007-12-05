@@ -30,8 +30,6 @@ public class Main {
                 new PowerReaderUI().setVisible(true);
             }
         });
-        
-        Speech.speak("Hello and welcome to Power Reader, by Christopher Leung, Rubaiz Virk, and Zhan Shi.");
     }
     
 }

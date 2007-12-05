@@ -17,7 +17,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Vector3f;
 import edu.stanford.nlp.io.ui.OpenPageDialog;
 import java.awt.Component;
-import java.util.ArrayList;
+import javax.swing.WindowConstants;
 import javax.vecmath.Point3d;
 import speech.Speech;
 import util.HierarchyObject;
@@ -56,6 +56,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         
         // Initialize config panel
         m_configPanel = new ConfigUI();
+        m_configPanel.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         
         // Set default button colors
         m_button_bgColor.setBackground(DEFAULT_BG_COLOR);
@@ -72,7 +73,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     }
     
     private void create3dCanvas() {
-       
+        
         // Set up the canvas and scene
         GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
         m_canvas = new Canvas3D(config);
@@ -83,7 +84,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_panel_textArea.setLayout( new BorderLayout() );
         m_panel_textArea.setOpaque( false );
         m_panel_textArea.add("Center", m_canvas);
-
+        
         // Create picker
         pick = new Pick(m_canvas,m_sceneRoot,rootTransformGroup);
     }
@@ -109,17 +110,14 @@ public class PowerReaderUI extends javax.swing.JFrame {
         rootTransformGroup.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
         rootTransformGroup.setTransform(transform3d);
         
-        BranchGroup newBranch = new BranchGroup();
-        newBranch.addChild(new TextObject3d("Please open a text file."));
-        newBranch.setCapability(BranchGroup.ALLOW_DETACH);
-        
-        //textRoot.addChild(newBranch);
-        rootTransformGroup.addChild( newBranch );
         rootTransformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
         rootTransformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
         rootTransformGroup.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
         
         m_sceneRoot.addChild( rootTransformGroup );  // this is the local origin  - everyone hangs off this - moving this move every one
+        
+        startPowerReader("default.txt");
+        Speech.speak("Hello and welcome to Power Reader, by Christopher Leung, Rubaiz Virk, and Zhan Shi.  To begin, please click the Open File button to your right.");
     }
     
     /** This method is called from within the constructor to
@@ -237,10 +235,21 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_checkBox_wordsGrow.setText("Words grow as they are read");
         m_checkBox_wordsGrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         m_checkBox_wordsGrow.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        m_checkBox_wordsGrow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_checkBox_wordsGrowActionPerformed(evt);
+            }
+        });
 
+        m_checkBox_speechEnabled.setSelected(true);
         m_checkBox_speechEnabled.setText("Audible speech enabled");
         m_checkBox_speechEnabled.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         m_checkBox_speechEnabled.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        m_checkBox_speechEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_checkBox_speechEnabledActionPerformed(evt);
+            }
+        });
 
         m_button_fgColor.setBackground(new java.awt.Color(0, 0, 204));
         m_button_fgColor.setText("Foreground Color");
@@ -256,7 +265,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_label_fgColor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_fgColor.setText("Foreground Color");
 
-        m_button_open.setText("Open...");
+        m_button_open.setText("Open File");
         m_button_open.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 m_button_openActionPerformed(evt);
@@ -376,11 +385,19 @@ public class PowerReaderUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void m_checkBox_wordsGrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_wordsGrowActionPerformed
+        ConfigurationManager.toggleWordsGrow();
+    }//GEN-LAST:event_m_checkBox_wordsGrowActionPerformed
+
+    private void m_checkBox_speechEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_speechEnabledActionPerformed
+        ConfigurationManager.toggleAudibleSpeech();
+    }//GEN-LAST:event_m_checkBox_speechEnabledActionPerformed
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        m_configPanel.setVisible(true);       
+        m_configPanel.setVisible(true);
         
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    
     private void m_slider_readSpeedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_readSpeedStateChanged
         Player.setSleepDelay(m_slider_readSpeed.getValue());
     }//GEN-LAST:event_m_slider_readSpeedStateChanged
@@ -394,46 +411,31 @@ public class PowerReaderUI extends javax.swing.JFrame {
         opd.setVisible(true);
         
         if (opd.getStatus() == OpenPageDialog.APPROVE_OPTION) {
-            rawTextParser = new RawTextParser(opd.getPage());
-            
-            //reset the scene and memmory
-            rootTransformGroup.removeAllChildren();
-            TextObject3d.resetLocation();
-            WordHashMap.getInstance().clearMap();
-            
-            // Parse
-            rawTextParser.parse();
-            
-            // Returns the document level hierarchy object
-            m_hierarchyRoot = rawTextParser.getHierarchyRoot();
-            
-            rootTransformGroup.addChild(m_hierarchyRoot.getBranchGroup());
-            
-            System.out.println("----- TEST OUTPUT -----");
-            
-            ArrayList paragraphs = m_hierarchyRoot.getAllChildrenOfLevel(RawTextParser.LEVEL_PARAGRAPH_ID);
-            
-            for(int i = 0; i < paragraphs.size(); i++) {
-                HierarchyObject paragraph = (HierarchyObject)paragraphs.get(i);
-                // This gets all the sentences in the paragraph
-                // ArrayList sentences = paragraph.getAllChildrenOfLevel(RawTextParser.LEVEL_SENTENCE_ID);
-                // This gets all the words in the paragraph
-                ArrayList words = paragraph.getAllChildrenOfLevel(RawTextParser.LEVEL_WORD_ID);
-                
-                // For all the words in the paragraph
-                for(int j = 0; j < words.size(); j++) {
-                    HierarchyObject word = (HierarchyObject) words.get(j);
-                    System.out.println(" " + word.getValue());
-                }
-                System.out.println("< NEW PARAGRAPH >");
-            }
-            
-            Player.reset();
-            Player.setHierarchyRoot(m_hierarchyRoot);
-            Player.setFocusLevel(RawTextParser.LEVEL_WORD_ID);
-
+            startPowerReader(opd.getPage());
         }
     }//GEN-LAST:event_m_button_openActionPerformed
+    
+    private void startPowerReader(String file) {
+        rawTextParser = new RawTextParser(file);
+        
+        //reset the scene and memmory
+        rootTransformGroup.removeAllChildren();
+        TextObject3d.resetLocation();
+        WordHashMap.getInstance().clearMap();
+        
+        // Parse
+        rawTextParser.parse();
+        
+        // Returns the document level hierarchy object
+        m_hierarchyRoot = rawTextParser.getHierarchyRoot();
+        
+        rootTransformGroup.addChild(m_hierarchyRoot.getBranchGroup());
+        
+        Player.reset();
+        Player.setHierarchyRoot(m_hierarchyRoot);
+        Player.setFocusLevel(RawTextParser.LEVEL_WORD_ID);
+        
+    }
     
     private void m_button_hlColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_hlColorActionPerformed
         Color c = m_button_hlColor.getBackground();
@@ -480,7 +482,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             // Assign result to foreground
             TextObject3d.setBaseColor(new Color3f(c));
             
-            // Color all the foreground                        
+            // Color all the foreground
             m_hierarchyRoot.color(false);
             
             // Rehighlight the focused

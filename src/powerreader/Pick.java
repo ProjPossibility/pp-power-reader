@@ -64,7 +64,7 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
             Shape3D s3 = (Shape3D)result.getNode(PickResult.SHAPE3D);
             
             if (s3 != null) {
-                TextObject3d tObj = (TextObject3d) s3.getParent().getParent();
+                TextObject3d tObj = (TextObject3d) s3.getParent().getParent().getParent();
                 WordHashMap map = WordHashMap.getInstance();
                 
                 HierarchyObject pickedObject = map.getHirarchyObject(tObj);

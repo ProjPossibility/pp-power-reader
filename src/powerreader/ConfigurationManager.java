@@ -17,6 +17,7 @@ import image.GoogleImageFetcher;
 import image.ImageFetcher;
 import image.YahooImageFetcher;
 import java.util.ArrayList;
+import speech.Speech;
 
 /**
  *
@@ -35,11 +36,41 @@ public class ConfigurationManager {
     private ArrayList imageFetchers;
     private ImageFetcher imageFetcher;
     
+    private boolean audibleSpeech = true;
+    private boolean showImages = false;
+    private boolean wordsGrow = false;
+    
     static {
         m_instance = new ConfigurationManager();
         
     }
     
+    static public void toggleAudibleSpeech() {
+        if(m_instance.audibleSpeech) {
+            m_instance.audibleSpeech = false;
+            Speech.mute();
+        }
+        else {
+            m_instance.audibleSpeech = true;
+            Speech.unmute();
+        }
+    }
+    static public void toggleShowImages() {
+        if(m_instance.showImages) {
+            m_instance.showImages = false;
+        }
+        else {
+            m_instance.showImages = true;
+        }
+    }
+    static public void toggleWordsGrow() {
+        if(m_instance.wordsGrow) {
+            m_instance.wordsGrow = false;
+        }
+        else {
+            m_instance.wordsGrow = true;
+        }
+    }
     public ConfigurationManager() {
         // Dictionaries
         
@@ -91,5 +122,9 @@ public class ConfigurationManager {
     
     static public void setImageLookup(int index) {
         m_instance.imageFetcher = (ImageFetcher)m_instance.imageFetchers.get(index);
+    }
+    
+    static public boolean wordsGrow() {
+        return m_instance.wordsGrow;
     }
 }

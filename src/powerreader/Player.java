@@ -161,6 +161,7 @@ public class Player extends Thread {
                 
                 m_focusIndex++;
             }
+            m_focusIndex = 0;
             //}
         }
     }

@@ -13,11 +13,13 @@ public class Speech extends Thread {
     private Voice m_voice = null;
     private String m_msg = null;
     private Object m_ready = null;
+    private boolean m_mute = false;
     
     static {
         m_instance = new Speech();
     }
     
+   
     private Speech() {
         Voice[] voices = VoiceManager.getInstance().getVoices();
         m_voice = VoiceManager.getInstance().getVoice("kevin16");
@@ -45,7 +47,9 @@ public class Speech extends Thread {
                 curMsg = m_msg;
                 m_msg = null;
             }
-            m_voice.speak(curMsg);
+            if(!m_mute) {
+                m_voice.speak(curMsg);
+            }
         }
     }
     
@@ -67,5 +71,12 @@ public class Speech extends Thread {
     
     static public void cancel() {
         m_instance.m_voice.getAudioPlayer().cancel();
+    }
+    static public void mute() {
+        m_instance.cancel();
+        m_instance.m_mute = true;
+    }
+    static public void unmute() {
+        m_instance.m_mute = false;
     }
 }
