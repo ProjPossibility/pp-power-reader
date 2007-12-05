@@ -27,7 +27,7 @@ public class Wiktionary extends DictionaryLookup {
         String def = "";
         try {
             // Create an URL instance
-            URL url = new URL("http://en.wiktionary.org/wiki/" + text);
+            URL url = new URL("http://en.wiktionary.org/wiki/" + sanitize(text));
             URLConnection connection = url.openConnection();
             DataInputStream in = new DataInputStream(connection.getInputStream());
             String line;

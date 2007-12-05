@@ -27,7 +27,7 @@ public class WordNetDictionary extends DictionaryLookup {
         String def = "";
         try {
             // Create an URL instance
-            URL url = new URL("http://wordnet.princeton.edu/perl/webwn?s=" + text);
+            URL url = new URL("http://wordnet.princeton.edu/perl/webwn?s=" + sanitize(text));
             URLConnection connection = url.openConnection();
             DataInputStream in = new DataInputStream(connection.getInputStream());
             String line;

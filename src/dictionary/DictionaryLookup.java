@@ -9,6 +9,8 @@
 
 package dictionary;
 
+import java.util.regex.*;
+
 /**
  *
  * @author zhanshi
@@ -21,6 +23,10 @@ public abstract class DictionaryLookup {
     public DictionaryLookup() {
     }
     public abstract String getDefinition(String text);
+    
+    public String sanitize(String text) {
+        return text.replaceAll("^[^\\w]*", "").replaceAll("[^\\w]*$", "");
+    }
     
     static public String getName() {
         return dictionaryName;
