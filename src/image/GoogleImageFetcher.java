@@ -38,7 +38,8 @@ public class GoogleImageFetcher extends ImageFetcher {
             BufferedReader buffer = new BufferedReader(in);
             String line;
             
-            Pattern imgPattern = Pattern.compile("imgurl=([^&]+)&imgrefurl");
+//            Pattern imgPattern = Pattern.compile("imgurl=([^&]+)&imgrefurl");
+            Pattern imgPattern = Pattern.compile("(http://\\w+\\.google\\.com/images\\?[^\\s]+)");
             while ((line = buffer.readLine()) != null) {
                 Matcher match = imgPattern.matcher(line);
                 if (match.find()) {
