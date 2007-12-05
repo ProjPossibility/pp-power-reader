@@ -32,7 +32,7 @@ public class ConfigurationManager {
     static float DEFAULT_X = 0.0f;
     static float DEFAULT_Y = 0.0f;
     static float DEFAULT_Z = -25.0f;
-    static float MIN_Z = -46.0f;
+    static float MIN_Z = -100.0f;
     static float MAX_Z = 1.0f;
     
     static float current_x = DEFAULT_X;

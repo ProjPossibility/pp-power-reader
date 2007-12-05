@@ -140,6 +140,8 @@ public class TextObject3d extends TransformGroup {
         if(ConfigurationManager.wordsGrow()) {
             Transform3D scale = new Transform3D();
             scale.setScale(new Vector3d(1.0f,1.6f,1.0f));
+            // Alternative method -- have words come out at you
+            // scale.setTranslation(new Vector3f(0,0,10f));
             theText.setTransform(scale);
         }
     }

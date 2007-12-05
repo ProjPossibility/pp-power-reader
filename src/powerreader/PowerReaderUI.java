@@ -190,7 +190,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
 
         m_slider_zoomLevel.setMajorTickSpacing(1);
         m_slider_zoomLevel.setMaximum(1);
-        m_slider_zoomLevel.setMinimum(-46);
+        m_slider_zoomLevel.setMinimum(-100);
         m_slider_zoomLevel.setValue(-25);
         m_slider_zoomLevel.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
