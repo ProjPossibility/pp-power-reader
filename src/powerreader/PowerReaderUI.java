@@ -15,8 +15,9 @@ import javax.media.j3d.*;
 import javax.swing.JColorChooser;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3f;
-import edu.stanford.nlp.io.ui.OpenPageDialog;
 import java.awt.Component;
+import java.io.File;
+import javax.swing.JFileChooser;
 import javax.swing.WindowConstants;
 import javax.vecmath.Point3d;
 import speech.Speech;
@@ -39,7 +40,6 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private Canvas3D m_canvas;
     private Background m_background;
     
-    private OpenPageDialog opd;
     private BranchGroup m_sceneRoot;
     private TransformGroup rootTransformGroup;
     private HierarchyObject m_hierarchyRoot = null;
@@ -66,8 +66,6 @@ public class PowerReaderUI extends javax.swing.JFrame {
         
         TextObject3d.setBaseColor(new Color3f(DEFAULT_FG_COLOR));
         TextObject3d.setHighlightColor(new Color3f(DEFAULT_HL_COLOR));
-        
-        opd = new OpenPageDialog(this, true);
         
         // Now initialize the 3D Canvas
         create3dCanvas();
@@ -420,11 +418,10 @@ public class PowerReaderUI extends javax.swing.JFrame {
     }//GEN-LAST:event_m_buton_stopActionPerformed
     
     private void m_button_openActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_openActionPerformed
-        opd.setLocation(getLocationOnScreen().x + (getWidth() - opd.getWidth()) / 2, getLocationOnScreen().y + (getHeight() - opd.getHeight()) / 2);
-        opd.setVisible(true);
-        
-        if (opd.getStatus() == OpenPageDialog.APPROVE_OPTION) {
-            startPowerReader(opd.getPage());
+        JFileChooser fc = new JFileChooser();
+        fc.showOpenDialog(this);
+        if (fc.getSelectedFile() != null) {
+            startPowerReader(fc.getSelectedFile().getAbsolutePath());
         }
     }//GEN-LAST:event_m_button_openActionPerformed
     
