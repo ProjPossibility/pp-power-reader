@@ -17,6 +17,9 @@ import image.GoogleImageFetcher;
 import image.ImageFetcher;
 import image.YahooImageFetcher;
 import java.util.ArrayList;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.vecmath.Vector3f;
 import speech.Speech;
 
 /**
@@ -28,6 +31,12 @@ public class ConfigurationManager {
     static float DEFAULT_X = 0.0f;
     static float DEFAULT_Y = 0.0f;
     static float DEFAULT_Z = -25.0f;
+    static float MAX_Z = 1.0f;
+    
+    static float current_x = DEFAULT_X;
+    static float current_y = DEFAULT_Y;
+    static float current_z = DEFAULT_Z;
+    
     static private ConfigurationManager m_instance;
     
     private ArrayList dictionaries;
@@ -40,17 +49,22 @@ public class ConfigurationManager {
     private boolean showImages = false;
     private boolean wordsGrow = false;
     
+    private TransformGroup m_mainTransformGroup = null;
+    
     static {
         m_instance = new ConfigurationManager();
         
+    }
+    
+    static public void setMainTransformGroup(TransformGroup root) {
+        m_instance.m_mainTransformGroup = root;
     }
     
     static public void toggleAudibleSpeech() {
         if(m_instance.audibleSpeech) {
             m_instance.audibleSpeech = false;
             Speech.mute();
-        }
-        else {
+        } else {
             m_instance.audibleSpeech = true;
             Speech.unmute();
         }
@@ -58,16 +72,14 @@ public class ConfigurationManager {
     static public void toggleShowImages() {
         if(m_instance.showImages) {
             m_instance.showImages = false;
-        }
-        else {
+        } else {
             m_instance.showImages = true;
         }
     }
     static public void toggleWordsGrow() {
         if(m_instance.wordsGrow) {
             m_instance.wordsGrow = false;
-        }
-        else {
+        } else {
             m_instance.wordsGrow = true;
         }
     }
@@ -126,5 +138,17 @@ public class ConfigurationManager {
     
     static public boolean wordsGrow() {
         return m_instance.wordsGrow;
+    }
+    
+    static public void refreshTranslate() {
+        if(m_instance.m_mainTransformGroup != null) {
+            // Cap current_z if we need to
+            if(current_z > MAX_Z) {
+                current_z = MAX_Z;
+            }
+            Transform3D transform = new Transform3D();
+            transform.setTranslation(new Vector3f(current_x,current_y,current_z));
+            m_instance.m_mainTransformGroup.setTransform(transform);
+        }
     }
 }

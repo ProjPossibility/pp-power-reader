@@ -43,7 +43,6 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private BranchGroup m_sceneRoot;
     private TransformGroup rootTransformGroup;
     private HierarchyObject m_hierarchyRoot;
-    private TransformGroup root_group;
     private RawTextParser rawTextParser;
     private Pick pick;
     
@@ -78,6 +77,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
         m_canvas = new Canvas3D(config);
         SimpleUniverse simpleU = new SimpleUniverse(m_canvas);
+
         createSceneGraph();
         simpleU.getViewingPlatform().setNominalViewingTransform();
         simpleU.addBranchGraph(m_sceneRoot);
@@ -87,6 +87,9 @@ public class PowerReaderUI extends javax.swing.JFrame {
         
         // Create picker
         pick = new Pick(m_canvas,m_sceneRoot,rootTransformGroup);
+        
+        // Set configuration manager so we can coordinate zoom level changes
+        ConfigurationManager.setMainTransformGroup(rootTransformGroup);
     }
     
     private void createSceneGraph() {
@@ -203,6 +206,14 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_label_lod.setText("<--Low   Level of Detail   High-->");
 
         m_slider_zoomLevel.setMajorTickSpacing(1);
+        m_slider_zoomLevel.setMaximum(1);
+        m_slider_zoomLevel.setMinimum(-50);
+        m_slider_zoomLevel.setValue(-25);
+        m_slider_zoomLevel.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                m_slider_zoomLevelPropertyChange(evt);
+            }
+        });
 
         m_label_zoomLevel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_zoomLevel.setText("<--Low     Zoom Level     High-->");
@@ -371,6 +382,12 @@ public class PowerReaderUI extends javax.swing.JFrame {
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void m_slider_zoomLevelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_m_slider_zoomLevelPropertyChange
+        System.out.println(ConfigurationManager.current_z);
+   //     ConfigurationManager.current_z = m_slider_zoomLevel.getValue();
+     //   ConfigurationManager.refreshTranslate();
+    }//GEN-LAST:event_m_slider_zoomLevelPropertyChange
 
     private void m_checkBox_wordsGrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_wordsGrowActionPerformed
         ConfigurationManager.toggleWordsGrow();

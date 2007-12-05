@@ -34,9 +34,6 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
     private PickCanvas pickCanvas;
     private BranchGroup m_sceneRoot;
     private TransformGroup m_mainTransformGroup;
-    private float current_z;
-    private float current_x;
-    private float current_y;
     private int lastX;
     private int lastY;
     
@@ -52,9 +49,7 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
         canvas3D.addMouseMotionListener(this);
         m_sceneRoot = sceneRoot;
         m_mainTransformGroup = mainTransformGroup;
-        current_x = ConfigurationManager.DEFAULT_X;
-        current_y = ConfigurationManager.DEFAULT_Y;
-        current_z = ConfigurationManager.DEFAULT_Z;
+
         mousePressed = false;
     }
     
@@ -100,10 +95,12 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
             }
         }
     }
+          
     public void mouseWheelMoved(MouseWheelEvent e) {
-        current_z += e.getWheelRotation()/-2.5f;
-        System.out.println(current_z);
-        refreshTranslate();
+        System.out.println(ConfigurationManager.current_z);
+        ConfigurationManager.current_z += e.getWheelRotation()/-2.5f;
+        System.out.println(ConfigurationManager.current_z);
+        ConfigurationManager.refreshTranslate();
     }
     
     public void mouseDragged(MouseEvent e) {
@@ -114,9 +111,10 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
             float deltaY = (lastY - curY)/15.0f;
             lastX = curX;
             lastY = curY;
-            current_x -= deltaX;
-            current_y += deltaY;
-            refreshTranslate();
+            
+            ConfigurationManager.current_x -= deltaX;
+            ConfigurationManager.current_y += deltaY;
+            ConfigurationManager.refreshTranslate();
         }
     }
     
@@ -133,9 +131,5 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
             mousePressed = false;
         }
     }
-    public void refreshTranslate() {
-        Transform3D transform = new Transform3D();
-        transform.setTranslation(new Vector3f(current_x,current_y,current_z));
-        m_mainTransformGroup.setTransform(transform);
-    }
+
 }

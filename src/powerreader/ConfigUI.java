@@ -191,6 +191,7 @@ public class ConfigUI extends javax.swing.JFrame {
 
     private void m_okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_okButtonActionPerformed
         ConfigurationManager.setDictionary(m_combo_dictionaryLookup.getSelectedIndex());
+        ConfigurationManager.setImageLookup(m_combo_imageLookup.getSelectedIndex());
         this.setVisible(false);
     }//GEN-LAST:event_m_okButtonActionPerformed
 
