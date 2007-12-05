@@ -144,7 +144,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         );
         m_panel_textAreaLayout.setVerticalGroup(
             m_panel_textAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 573, Short.MAX_VALUE)
+            .add(0, 587, Short.MAX_VALUE)
         );
 
         m_slider_readSpeed.setMajorTickSpacing(50);
@@ -163,6 +163,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_label_readSpeed.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_readSpeed.setText("<--Faster     Read Speed    Slowert-->");
 
+        m_button_play.setIcon(new javax.swing.ImageIcon(getClass().getResource("/powerreader/resources/player_play.png")));
         m_button_play.setText("Play");
         m_button_play.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -170,6 +171,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        m_buton_stop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/powerreader/resources/player_stop.png")));
         m_buton_stop.setText("Stop");
         m_buton_stop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -260,6 +262,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_label_fgColor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_label_fgColor.setText("Foreground Color");
 
+        m_button_open.setIcon(new javax.swing.ImageIcon(getClass().getResource("/powerreader/resources/open.png")));
         m_button_open.setText("Open File");
         m_button_open.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -267,6 +270,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/powerreader/resources/configure.png")));
         jButton1.setText("Options");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -357,7 +361,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 .add(m_checkBox_wordsGrow)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_checkBox_speechEnabled)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
