@@ -83,6 +83,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         createSceneGraph();
         simpleU.getViewingPlatform().setNominalViewingTransform();
         simpleU.addBranchGraph(m_sceneRoot);
+        simpleU.getViewer().getView().setBackClipDistance(100);
         m_panel_textArea.setLayout( new BorderLayout() );
         m_panel_textArea.setOpaque( false );
         m_panel_textArea.add("Center", m_canvas);
