@@ -11,7 +11,6 @@ package powerreader;
 //for image
 import com.sun.j3d.utils.image.TextureLoader;
 import image.ImageFetcher;
-import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -46,14 +45,14 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
     private TransformGroup m_mainTransformGroup;
     private int lastX;
     private int lastY;
-    private Component component;
+    private Canvas3D c3D;
     private static BranchGroup lastPicked;
     private static BranchGroup lastAttached;
     
     private boolean mousePressed;
     
     /** Creates a new instance of Pick */
-    public Pick(Canvas3D canvas3D, BranchGroup sceneRoot, TransformGroup mainTransformGroup, Component mForm) {
+    public Pick(Canvas3D canvas3D, BranchGroup sceneRoot, TransformGroup mainTransformGroup) {
         
         pickCanvas = new PickCanvas(canvas3D, sceneRoot);
         pickCanvas.setMode(PickCanvas.BOUNDS);
@@ -63,8 +62,7 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
         m_sceneRoot = sceneRoot;
         m_mainTransformGroup = mainTransformGroup;
 
-        component=mForm;////////////////////////////////////
-        mousePressed = false;
+         mousePressed = false;
     }
     
     public void mouseClicked(MouseEvent e) {
@@ -87,8 +85,8 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                     String pickedText=pickedObject.getValue();
                     System.out.println(pickedText);
 
-                    // If left click
-                    if(e.getButton() == MouseEvent.BUTTON1) {
+                    // select word
+                    if(e.getButton() == MouseEvent.BUTTON1 || e.getButton() == MouseEvent.BUTTON2) {
                         // Clear the focus highlight
                         Player.getFocusOn().color(false);
                     
@@ -101,8 +99,8 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                     Player.setFocusOn(map.getHirarchyObject(tObj));
                     Player.playOne();
                     }
-                    // If middle click
-                    else if(e.getButton() == MouseEvent.BUTTON2) {
+                    // dictionary meaning and images
+                    if(e.getButton() == MouseEvent.BUTTON2) {
                         DictionaryLookup w = ConfigurationManager.getDictionary();
                         String def =w.getDefinition(pickedText);
                         String toSpeak = "Definition of " + pickedText + ". " + def;
@@ -113,8 +111,8 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         String url = f.getImageURL(pickedText);
                         System.out.println(url);
                         URL mURL= new URL(url);
-                        TextureLoader imageT = new TextureLoader(mURL,component);
-                        Raster imageObj = new Raster(new Point3f(0, 0,10f),
+                        TextureLoader imageT = new TextureLoader(mURL,c3D);
+                        Raster imageObj = new Raster(new Point3f(0, 0,1f),
                                 Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
                                 imageT.getImage(), null);
                         Shape3D shape = new Shape3D(imageObj);

@@ -86,7 +86,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_panel_textArea.add("Center", m_canvas);
 
         // Create picker
-        pick = new Pick(m_canvas,m_sceneRoot,rootTransformGroup,this);
+        pick = new Pick(m_canvas,m_sceneRoot,rootTransformGroup);
         
         // Set configuration manager so we can coordinate zoom level changes
         ConfigurationManager.setMainTransformGroup(rootTransformGroup);
