@@ -98,7 +98,7 @@ public class RawTextParser {
                 // Paragraph break
                 if(line.equals("")) {
                     // Signify paragraph found
-                    System.out.println("< NEW PARAGRAPH >");
+                    //System.out.println("< NEW PARAGRAPH >");
                     
                     // Tell the rendering component to reset text position for new paragraph
                     TextObject3d.startNewParagraph();
@@ -154,7 +154,7 @@ public class RawTextParser {
                         
                         // If we are also at the end of a sentence
                         if(token.contains(".") || token.contains("!") || token.contains("?")) {
-                            System.out.println("Sentence Found: " + sentenceText);
+                            //System.out.println("Sentence Found: " + sentenceText);
                             paragraphText = paragraphText.concat(sentenceText);
                             
                             // Add the sentence object to list of sentence objects

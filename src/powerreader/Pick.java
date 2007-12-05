@@ -40,6 +40,8 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
     private int lastX;
     private int lastY;
     
+    private boolean mousePressed;
+    
     /** Creates a new instance of Pick */
     public Pick(Canvas3D canvas3D, BranchGroup sceneRoot, TransformGroup mainTransformGroup) {
         
@@ -53,6 +55,7 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
         current_x = ConfigurationManager.DEFAULT_X;
         current_y = ConfigurationManager.DEFAULT_Y;
         current_z = ConfigurationManager.DEFAULT_Z;
+        mousePressed = false;
     }
     
     public void mouseClicked(MouseEvent e) {
@@ -89,45 +92,45 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                 else if(e.getButton() == MouseEvent.BUTTON2) {
                     DictionaryLookup w = ConfigurationManager.getDictionary();
                     String def =w.getDefinition(pickedText);
-                    String toSpeak = "Definition of " + pickedText + "." + def;
+                    String toSpeak = "Definition of " + pickedText + ". " + def;
                     System.out.println(toSpeak);
                     Speech.speak(toSpeak);
                     
-                    //FlickrImageFetcher f = new FlickrImageFetcher();
-                    //String url =f.getImageURL(text);
-                    //System.out.println(url);
                 }
             }
         }
     }
     public void mouseWheelMoved(MouseWheelEvent e) {
-        //System.out.println(e.getWheelRotation());
         current_z += e.getWheelRotation()/-2.5f;
-        
+        System.out.println(current_z);
         refreshTranslate();
     }
     
     public void mouseDragged(MouseEvent e) {
-        //if(e.getButton() == MouseEvent.BUTTON3) {
-        // Get amount moved
-        int curX = e.getX();
-        int curY = e.getY();
-        float deltaX = (lastX - curX)/15.0f;
-        float deltaY = (lastY - curY)/15.0f;
-        lastX = curX;
-        lastY = curY;
-//        System.out.println("Change X: " + deltaX + " Y: " + deltaY);
-        current_x -= deltaX;
-        current_y += deltaY;
-        refreshTranslate();
-        //}
+        if(mousePressed) {
+            int curX = e.getX();
+            int curY = e.getY();
+            float deltaX = (lastX - curX)/15.0f;
+            float deltaY = (lastY - curY)/15.0f;
+            lastX = curX;
+            lastY = curY;
+            current_x -= deltaX;
+            current_y += deltaY;
+            refreshTranslate();
+        }
     }
     
     public void mousePressed(MouseEvent e) {
         if(e.getButton() == MouseEvent.BUTTON3) {
+            mousePressed = true;
             lastX = e.getX();
             lastY = e.getY();
-  //          System.out.println("Clicked: X: " + lastX + " Y: " + lastY);
+        }
+    }
+    
+    public void mouseReleased(MouseEvent e) {
+        if(e.getButton() == MouseEvent.BUTTON3) {
+            mousePressed = false;
         }
     }
     public void refreshTranslate() {
