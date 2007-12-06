@@ -56,11 +56,6 @@ public class Speech extends Thread {
                     m_voice.speak(curMsg);
                     m_sync.notify();
                 }
-                
-                // Do notification here
-                if (m_curObJ != null) {
-                    m_curObj = null;
-                }
             }
         }
     }
