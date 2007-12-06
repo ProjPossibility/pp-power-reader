@@ -9,6 +9,8 @@
 
 package powerreader;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -179,8 +181,25 @@ public class Player extends Thread {
                     Pick.removeImages();
                     
                     ImageFetcher f = ConfigurationManager.getImageFetcher();
-                    BufferedImage img = f.getImage(currentObj.getValue());
-                    if (img != null) {
+                    BufferedImage bimg = f.getImage(currentObj.getValue());
+                    if (bimg != null) {
+                    //scale image
+                    //Image img = bimg.getScaledInstance(ConfigurationManager.getImageScale()*100,-1,Image.SCALE_DEFAULT);
+
+                    double scale = (ConfigurationManager.getImageScale()+1)*100/bimg.getWidth();
+                    AffineTransform tx = new AffineTransform();
+                    tx.scale(scale, scale);
+                    BufferedImage img = bimg; // copying default image, in case scaling doesont work
+                    try {
+                        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+                        img = op.filter(bimg, null);
+                        System.out.println("Scaled [w: " + bimg.getWidth() + " , h:"+ bimg.getHeight() +" ] to scale factor: " + ConfigurationManager.getImageScale());
+                    } catch(Exception e) {
+                        System.out.println("Error scaling [w: " + bimg.getWidth() + " , h:"+ bimg.getHeight() +" ] to scale factor: " + ConfigurationManager.getImageScale());
+                        System.out.println(e);
+                    }
+
+                    //render image
                         TextureLoader imageT = new TextureLoader(img);
                         Raster imageObj = new Raster(new Point3f(0, -0.5f,1f),
                                 Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),

@@ -69,12 +69,14 @@ public class ConfigurationManager {
     // Word focus level by default
     static private int m_focusLevel = 3;
     static private int m_detailLevel = 0;
+    static private int m_imageScale=3;
     
     private TransformGroup m_mainTransformGroup = null;
     
     private String fileName = null;
     
     private JSlider m_zoomSlider = null;
+    
     static {
         m_instance = new ConfigurationManager();
         
@@ -244,5 +246,13 @@ public class ConfigurationManager {
     
     static public void setDetailLevel(int level) {
         m_detailLevel = level;
+    }
+
+     static public void setImageScale(int scale) {
+        m_imageScale = scale;
+    }
+     
+    static int getImageScale() {
+        return m_imageScale;
     }
 }

@@ -47,6 +47,7 @@ public class FlickrImageFetcher extends ImageFetcher {
             PhotoList pl = pi.search(sp, 1, 1);
             if (!pl.isEmpty()) {
                 return ((Photo) pl.get(0)).getThumbnailUrl();
+                //return ((Photo) pl.get(0)).getUrl();
             }
         } catch (Exception e) {
             System.out.println(e);

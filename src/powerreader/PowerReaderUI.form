@@ -21,18 +21,19 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <Component id="m_panel_textArea" max="32767" attributes="0"/>
-              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-              <Component id="m_panel_controlArea" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="m_panel_controlArea" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="m_panel_textArea" alignment="0" max="32767" attributes="1"/>
           <Group type="102" attributes="0">
-              <Component id="m_panel_controlArea" max="32767" attributes="0"/>
-              <EmptySpace min="11" pref="11" max="11" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="m_panel_textArea" alignment="1" max="32767" attributes="1"/>
+                  <Component id="m_panel_controlArea" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -46,45 +47,69 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="509" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="520" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="659" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="713" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
     </Container>
     <Container class="javax.swing.JPanel" name="m_panel_controlArea">
+      <Properties>
+        <Property name="focusCycleRoot" type="boolean" value="true"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="m_label_lof" alignment="0" pref="262" max="32767" attributes="1"/>
-                      <Component id="jButton1" alignment="0" pref="262" max="32767" attributes="0"/>
-                      <Component id="m_button_open" alignment="1" pref="262" max="32767" attributes="0"/>
-                      <Component id="m_slider_zoomLevel" alignment="0" pref="262" max="32767" attributes="1"/>
-                      <Component id="m_label_readSpeed" alignment="1" pref="262" max="32767" attributes="3"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jButton1" alignment="0" pref="280" max="32767" attributes="0"/>
+                      <Component id="m_button_open" alignment="1" pref="280" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="m_button_play" pref="127" max="32767" attributes="0"/>
+                          <Component id="m_button_play" pref="145" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="m_buton_stop" min="-2" pref="129" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="m_slider_readSpeed" alignment="0" pref="262" max="32767" attributes="1"/>
-                      <Component id="m_label_zoomLevel" alignment="1" min="-2" pref="260" max="-2" attributes="3"/>
-                      <Component id="m_slider_lof" alignment="0" pref="262" max="32767" attributes="1"/>
-                      <Component id="m_label_lod" alignment="1" pref="262" max="32767" attributes="1"/>
-                      <Component id="m_slider_lod" alignment="0" pref="262" max="32767" attributes="1"/>
-                      <Component id="m_button_bgColor" alignment="0" pref="262" max="32767" attributes="1"/>
-                      <Component id="m_label_hlColor" alignment="0" pref="262" max="32767" attributes="1"/>
-                      <Component id="m_button_hlColor" alignment="0" pref="262" max="32767" attributes="1"/>
-                      <Component id="m_button_fgColor" alignment="1" pref="262" max="32767" attributes="1"/>
-                      <Component id="m_label_bgColor" alignment="0" pref="262" max="32767" attributes="1"/>
-                      <Component id="m_label_fgColor" alignment="0" pref="262" max="32767" attributes="1"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="m_label_lof" pref="102" max="32767" attributes="1"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="m_slider_lof" pref="174" max="32767" attributes="1"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="m_label_lod1" max="32767" attributes="0"/>
+                              <Component id="m_label_lod" alignment="1" pref="110" max="32767" attributes="1"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="m_slider_imageSize" alignment="1" pref="166" max="32767" attributes="0"/>
+                              <Component id="m_slider_lod" alignment="1" pref="166" max="32767" attributes="1"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="m_label_zoomLevel" pref="101" max="32767" attributes="3"/>
+                              <Component id="m_label_readSpeed" pref="101" max="32767" attributes="3"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="m_slider_readSpeed" alignment="1" pref="173" max="32767" attributes="1"/>
+                              <Component id="m_slider_zoomLevel" alignment="1" pref="173" max="32767" attributes="1"/>
+                              <Component id="m_label_readSpeed1" alignment="0" pref="173" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Component id="m_button_bgColor" alignment="0" pref="280" max="32767" attributes="1"/>
+                      <Component id="m_label_hlColor" alignment="0" pref="280" max="32767" attributes="1"/>
+                      <Component id="m_button_hlColor" alignment="0" pref="280" max="32767" attributes="1"/>
+                      <Component id="m_button_fgColor" alignment="1" pref="280" max="32767" attributes="1"/>
+                      <Component id="m_label_bgColor" alignment="0" pref="280" max="32767" attributes="1"/>
+                      <Component id="m_label_fgColor" alignment="0" pref="280" max="32767" attributes="1"/>
                       <Component id="m_checkBox_speechEnabled" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="m_checkBox_wordsGrow" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="m_checkBox_showImages" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -106,23 +131,53 @@
                       <Component id="m_buton_stop" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="m_button_play" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                  <Component id="m_label_readSpeed1" min="-2" pref="29" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="m_label_readSpeed" min="-2" pref="16" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Component id="m_slider_readSpeed" min="-2" pref="29" max="-2" attributes="1"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="m_label_readSpeed" alignment="0" pref="36" max="32767" attributes="1"/>
+                  </Group>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                          <Component id="m_label_zoomLevel" pref="36" max="32767" attributes="1"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="m_slider_zoomLevel" min="-2" pref="29" max="-2" attributes="1"/>
+                      </Group>
+                  </Group>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                          <Component id="m_label_lof" pref="39" max="32767" attributes="1"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="m_slider_lof" min="-2" max="-2" attributes="1"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Component id="m_label_lod" pref="36" max="32767" attributes="1"/>
+                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Component id="m_slider_lod" min="-2" pref="29" max="-2" attributes="1"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="m_slider_readSpeed" min="-2" pref="29" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="m_label_zoomLevel" min="-2" pref="24" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="m_slider_zoomLevel" min="-2" pref="29" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="m_label_lof" min="-2" pref="24" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="m_slider_lof" min="-2" pref="29" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="m_label_lod" min="-2" pref="24" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="m_slider_lod" min="-2" pref="29" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="m_label_lod1" max="32767" attributes="1"/>
+                      <Component id="m_slider_imageSize" alignment="1" pref="29" max="32767" attributes="1"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Component id="m_label_fgColor" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="m_button_fgColor" min="-2" max="-2" attributes="0"/>
@@ -134,7 +189,7 @@
                   <Component id="m_label_hlColor" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="m_button_hlColor" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                   <Component id="m_checkBox_speechEnabled1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="m_checkBox_showImages" min="-2" max="-2" attributes="0"/>
@@ -142,7 +197,7 @@
                   <Component id="m_checkBox_wordsGrow" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="m_checkBox_speechEnabled" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="26" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -150,12 +205,11 @@
       <SubComponents>
         <Component class="javax.swing.JSlider" name="m_slider_readSpeed">
           <Properties>
-            <Property name="majorTickSpacing" type="int" value="50"/>
+            <Property name="majorTickSpacing" type="int" value="58"/>
             <Property name="maximum" type="int" value="3000"/>
             <Property name="minimum" type="int" value="100"/>
             <Property name="paintTicks" type="boolean" value="true"/>
-            <Property name="snapToTicks" type="boolean" value="true"/>
-            <Property name="value" type="int" value="800"/>
+            <Property name="value" type="int" value="1550"/>
             <Property name="name" type="java.lang.String" value="Read Speed"/>
           </Properties>
           <Events>
@@ -167,8 +221,8 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="11" style="1"/>
             </Property>
-            <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="&lt;--Faster          Read Speed          Slower--&gt;"/>
+            <Property name="horizontalAlignment" type="int" value="2"/>
+            <Property name="text" type="java.lang.String" value=" Read Speed"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="m_button_play">
@@ -215,15 +269,16 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="11" style="1"/>
             </Property>
-            <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="&lt;--Less             Level of Detail             More--&gt;"/>
+            <Property name="horizontalAlignment" type="int" value="2"/>
+            <Property name="text" type="java.lang.String" value="Level of Detail"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JSlider" name="m_slider_zoomLevel">
           <Properties>
-            <Property name="majorTickSpacing" type="int" value="1"/>
+            <Property name="majorTickSpacing" type="int" value="2"/>
             <Property name="maximum" type="int" value="1"/>
             <Property name="minimum" type="int" value="-100"/>
+            <Property name="paintTicks" type="boolean" value="true"/>
             <Property name="value" type="int" value="-25"/>
           </Properties>
           <Events>
@@ -235,8 +290,8 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="11" style="1"/>
             </Property>
-            <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="&lt;--Low               Zoom Level               High--&gt;"/>
+            <Property name="horizontalAlignment" type="int" value="2"/>
+            <Property name="text" type="java.lang.String" value="Zoom Level"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="m_button_bgColor">
@@ -409,8 +464,8 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="11" style="1"/>
             </Property>
-            <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="&lt;--Less             Level of Focus             More--&gt;"/>
+            <Property name="horizontalAlignment" type="int" value="2"/>
+            <Property name="text" type="java.lang.String" value="Level of Focus"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JSlider" name="m_slider_lof">
@@ -424,6 +479,37 @@
           <Events>
             <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="m_slider_lofStateChanged"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JSlider" name="m_slider_imageSize">
+          <Properties>
+            <Property name="majorTickSpacing" type="int" value="1"/>
+            <Property name="maximum" type="int" value="5"/>
+            <Property name="minimum" type="int" value="1"/>
+            <Property name="paintTicks" type="boolean" value="true"/>
+            <Property name="snapToTicks" type="boolean" value="true"/>
+            <Property name="value" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="m_slider_imageSizeStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="m_label_lod1">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="11" style="1"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="2"/>
+            <Property name="text" type="java.lang.String" value=" Image Size (width)"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="m_label_readSpeed1">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="11" style="1"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="text" type="java.lang.String" value="(-)     &lt;---    ---&gt;      (+)"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

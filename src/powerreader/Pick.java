@@ -11,7 +11,11 @@ package powerreader;
 //for image
 import com.sun.j3d.utils.image.TextureLoader;
 import image.ImageFetcher;
+import java.awt.Image;
+import java.awt.MediaTracker;
 import java.awt.event.MouseAdapter;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -133,29 +137,7 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         Player.playOne();
                         
                         // Get image
-                        if(ConfigurationManager.showImages()) {
-                            // clear out any existing images from the player
-                            Player.removeImages();
-                            ImageFetcher f = ConfigurationManager.getImageFetcher();
-                            BufferedImage img = f.getImage(pickedText);
-                            if (img != null) {
-                                TextureLoader imageT = new TextureLoader(img,c3D);
-                                Raster imageObj = new Raster(new Point3f(0, 0,1f),
-                                        Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
-                                        imageT.getImage(), null);
-                                Shape3D shape = new Shape3D(imageObj);
-                                imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
-                                BranchGroup node = new BranchGroup();
-                            
-                                node.setCapability(BranchGroup.ALLOW_DETACH);
-                            
-                                node.addChild(shape);
-                                lastPicked = tObj.getTheTextTransformGroup();
-                                lastPicked.addChild(node);
-                            
-                                lastAttached =node;
-                            }
-                        }
+                        displayImage(pickedText, tObj);
                     }
                     // dictionary meaning
                     if(mouseAction == ConfigurationManager.ACTION_DEFINE) {
@@ -169,6 +151,55 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private void displayImage(final String pickedText, final TextObject3d tObj) {        
+       
+        if(ConfigurationManager.showImages()) {
+            // clear out any existing images from the player
+            Player.removeImages();
+            ImageFetcher f = ConfigurationManager.getImageFetcher();
+           
+            BufferedImage bimg = f.getImage(pickedText);
+            
+            if (bimg != null) {
+                //scale image
+                //Image img = bimg.getScaledInstance(ConfigurationManager.getImageScale()*100,-1,Image.SCALE_DEFAULT);
+                
+                double scale = (ConfigurationManager.getImageScale()+1)*100/bimg.getWidth();
+                AffineTransform tx = new AffineTransform();
+                tx.scale(scale, scale);
+                BufferedImage img = bimg; // copying default image, in case scaling doesont work
+                try {
+                    AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+                    img = op.filter(bimg, null);
+                    System.out.println("Scaled [w: " + bimg.getWidth() + " , h:"+ bimg.getHeight() +" ] to scale factor: " + ConfigurationManager.getImageScale());
+                } catch(Exception e) {
+                    System.out.println("Error scaling [w: " + bimg.getWidth() + " , h:"+ bimg.getHeight() +" ] to scale factor: " + ConfigurationManager.getImageScale());
+                    System.out.println(e);
+                }
+                
+                //render image
+                TextureLoader imageT = new TextureLoader(img);
+                Raster imageObj = new Raster(new Point3f(0, -0.1f ,1.0f),
+                        Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
+                        imageT.getImage(), null);
+                Shape3D shape = new Shape3D(imageObj);
+                imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
+                BranchGroup node = new BranchGroup();
+            
+                node.setCapability(BranchGroup.ALLOW_DETACH);
+            
+                node.addChild(shape);
+                
+                
+                lastPicked = tObj.getTheTextTransformGroup();
+                lastPicked.addChild(node);
+            
+                //track the image so that it can be removed
+                lastAttached =node;
+            }
         }
     }
     
