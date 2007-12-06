@@ -1,11 +1,10 @@
 package speech;
 
-import java.util.*;
 
 import com.sun.speech.freetts.*;
-import com.sun.speech.freetts.en.*;
 
 import misc.*;
+import util.HierarchyObject;
 
 public class Speech extends Thread {
     static private Speech m_instance = null;
@@ -15,6 +14,9 @@ public class Speech extends Thread {
     private Object m_ready = null;
     private Object m_sync = null;
     private boolean m_mute = false;
+    
+    private HierarchyObject m_curObj = null;
+    
     
     static {
         m_instance = new Speech();
@@ -54,6 +56,11 @@ public class Speech extends Thread {
                     m_voice.speak(curMsg);
                     m_sync.notify();
                 }
+                
+                // Do notification here
+                if (m_curObJ != null) {
+                    m_curObj = null;
+                }
             }
         }
     }
@@ -66,12 +73,23 @@ public class Speech extends Thread {
         }
     }
     
+    public void setObj(HierarchyObject obj) {
+        synchronized(m_ready) {
+            m_voice.getAudioPlayer().cancel();
+            m_msg = obj.getValue();
+            m_ready.notify();
+        }
+    }
     static public void setSpeed(float speed) {
         m_instance.m_voice.setRate(speed);
     }
     
     static public void speak(String msg) {
         m_instance.setMessage(msg);
+    }
+
+    static public void speakObj(HierarchyObject obj) {
+        m_instance.setObj(obj);
     }
     
     static public void cancel() {
