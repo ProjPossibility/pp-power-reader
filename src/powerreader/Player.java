@@ -23,12 +23,9 @@ import util.TextObject3d;
  */
 public class Player extends Thread {
     public static int WPM_FACTOR = 120000;
-    public static int DEFAULT_SLEEP_DELAY = 800;
     
     private HierarchyObject m_root;
     private int m_focusLevel;
-    
-    private int m_sleepDelay;
     
     private boolean m_growEnabled;
     private float m_highlightColorR;
@@ -37,12 +34,11 @@ public class Player extends Thread {
     private float m_baseColorR;
     private float m_baseColorB;
     private float m_baseColorG;
+    private Object m_ready;
     
     // The objects to speak, and the item we are focused on
     private ArrayList m_objectsToSpeak;
     private int m_focusIndex;
-    
-    private Object m_ready;
     
     static private Player m_instance = null;
     
@@ -68,11 +64,11 @@ public class Player extends Thread {
         m_objectsToSpeak = new ArrayList();
         
         m_ready = new Object();
-        
-        m_sleepDelay = DEFAULT_SLEEP_DELAY;
-        
+                
         // Default to an empty document
         m_root = new HierarchyObject(RawTextParser.LEVEL_DOCUMENT_ID,RawTextParser.LEVEL_DOCUMENT_STR);
+        
+        Object m_ready = Speech.getSync();
     }
     
     static public void setHierarchyRoot(HierarchyObject root) {
@@ -81,9 +77,8 @@ public class Player extends Thread {
         m_instance.m_objectsToSpeak = m_instance.m_root.getAllChildrenOfLevel(m_instance.m_focusLevel);
     }
     
-    static public void setSleepDelay(int delay) {
-        m_instance.m_sleepDelay = delay;
-        Speech.setSpeed(WPM_FACTOR/delay);
+    static public void setSleepDelay(int factor) {
+        Speech.setSpeed(WPM_FACTOR/factor);
     }
     
     static public HierarchyObject getFocusOn() {
@@ -117,7 +112,7 @@ public class Player extends Thread {
                 
                 // Set the index
                 m_instance.m_focusIndex = searchIndex;
-                        
+                
                 return true;
             }
             searchIndex++;
@@ -146,6 +141,7 @@ public class Player extends Thread {
         HierarchyObject currentObj = null;
         Transform3D moveScene = new Transform3D();
         TextObject3d theText = null;
+        
         for(;;) {
 //            synchronized(m_ready) {
             for(int i = m_focusIndex; i < m_objectsToSpeak.size(); i++) {
@@ -154,9 +150,6 @@ public class Player extends Thread {
                 
                 // Highlight/grow the current object
                 currentObj.color(true);
-                
-                // Start speaking the object
-                Speech.speak(currentObj.getValue());
                 
                 // Disable render on everything but the current object
                 disableRenderExcept(currentObj);
@@ -172,12 +165,17 @@ public class Player extends Thread {
                 }
 //                m_instance.m_root.getTransformGroup().setTransform(moveScene);
                 
-                try {
-                    
-                    // Until speaking is done
-                    Thread.sleep(m_sleepDelay);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                
+                
+                synchronized(Speech.getSync()) {
+                    try {
+                        Speech.speak(currentObj.getValue());
+                        Speech.getSync().wait();
+                        // Start speaking the object
+                        
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
                 }
                 
                 // Shrink the current object
@@ -256,11 +254,7 @@ public class Player extends Thread {
             disableRenderOfChildren(sentenceParent,object);
         }
     }
-    
-    public int getDEFAULT_SLEEP_DELAY() {
-        return DEFAULT_SLEEP_DELAY;
-    }
-    
+        
     static public void enableRenderOfChildren(HierarchyObject parent) {
         ArrayList children;
         Iterator it;

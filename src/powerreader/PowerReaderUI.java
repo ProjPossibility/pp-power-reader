@@ -148,8 +148,8 @@ public class PowerReaderUI extends javax.swing.JFrame {
         );
 
         m_slider_readSpeed.setMajorTickSpacing(50);
-        m_slider_readSpeed.setMaximum(1350);
-        m_slider_readSpeed.setMinimum(250);
+        m_slider_readSpeed.setMaximum(3000);
+        m_slider_readSpeed.setMinimum(100);
         m_slider_readSpeed.setPaintTicks(true);
         m_slider_readSpeed.setSnapToTicks(true);
         m_slider_readSpeed.setValue(800);
@@ -313,7 +313,6 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_slider_lof.setMaximum(3);
         m_slider_lof.setPaintTicks(true);
         m_slider_lof.setSnapToTicks(true);
-        m_slider_lof.setValue(3);
         m_slider_lof.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 m_slider_lofStateChanged(evt);

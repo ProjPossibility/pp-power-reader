@@ -150,8 +150,8 @@
         <Component class="javax.swing.JSlider" name="m_slider_readSpeed">
           <Properties>
             <Property name="majorTickSpacing" type="int" value="50"/>
-            <Property name="maximum" type="int" value="1350"/>
-            <Property name="minimum" type="int" value="250"/>
+            <Property name="maximum" type="int" value="3000"/>
+            <Property name="minimum" type="int" value="100"/>
             <Property name="paintTicks" type="boolean" value="true"/>
             <Property name="snapToTicks" type="boolean" value="true"/>
             <Property name="value" type="int" value="800"/>

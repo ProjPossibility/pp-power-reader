@@ -13,6 +13,7 @@ public class Speech extends Thread {
     private Voice m_voice = null;
     private String m_msg = null;
     private Object m_ready = null;
+    private Object m_sync = null;
     private boolean m_mute = false;
     
     static {
@@ -29,6 +30,7 @@ public class Speech extends Thread {
         }
         m_voice.allocate();
         m_ready = new Object();
+        m_sync = new Object();
         start();
     }
     
@@ -48,7 +50,10 @@ public class Speech extends Thread {
                 m_msg = null;
             }
             if(!m_mute) {
-                m_voice.speak(curMsg);
+                synchronized(m_sync) {
+                    m_voice.speak(curMsg);
+                    m_sync.notify();
+                }
             }
         }
     }
@@ -78,5 +83,8 @@ public class Speech extends Thread {
     }
     static public void unmute() {
         m_instance.m_mute = false;
+    }
+    static public Object getSync() {
+        return m_instance.m_sync;
     }
 }
