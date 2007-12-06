@@ -110,8 +110,14 @@ public class Player extends Thread {
                 m_instance.m_focusIndex = searchIndex;
                 
                 // Highlight the focused
-                getFocusOn().color(true);
+                hObj.color(true);
                 
+                // Set the objects to speach os the objects that were searched
+                m_instance.m_objectsToSpeak = objectsToSearch;
+                
+                // Set the index
+                m_instance.m_focusIndex = searchIndex;
+                        
                 return true;
             }
             searchIndex++;
