@@ -9,13 +9,22 @@
 
 package powerreader;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Canvas3D;
+import javax.media.j3d.Raster;
+import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.vecmath.Point3f;
 import speech.Speech;
 import util.HierarchyObject;
 import util.RawTextParser;
 import util.TextObject3d;
+import com.sun.j3d.utils.image.TextureLoader;
+import image.ImageFetcher;
 
 /**
  *
@@ -35,7 +44,10 @@ public class Player extends Thread {
     private float m_baseColorB;
     private float m_baseColorG;
     private Object m_ready;
-    
+
+    private static TransformGroup lastAttachedTo;
+    private static BranchGroup lastAttached;
+
     // The objects to speak, and the item we are focused on
     private ArrayList m_objectsToSpeak;
     private int m_focusIndex;
@@ -149,6 +161,32 @@ public class Player extends Thread {
                 
                 // Highlight/grow the current object
                 currentObj.color(true);
+                    // Get image
+                    if(ConfigurationManager.showImages()) {
+                        ImageFetcher f = ConfigurationManager.getImageFetcher();
+                        BufferedImage img = f.getImage(currentObj.getValue());
+                        if (img != null) {
+                            TextureLoader imageT = new TextureLoader(img);
+                            Raster imageObj = new Raster(new Point3f(0, -0.5f,1f),
+                                    Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
+                                    imageT.getImage(), null);
+                            Shape3D shape = new Shape3D(imageObj);
+                            imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
+                            BranchGroup node = new BranchGroup();
+
+                            node.setCapability(BranchGroup.ALLOW_DETACH);
+
+                            node.addChild(shape);
+
+                            if(lastAttachedTo != null && lastAttached != null) {
+                                lastAttachedTo.removeChild(lastAttached);
+                            }
+                            lastAttachedTo = ((TextObject3d) currentObj.getTransformGroup()).getTheTextTransformGroup();
+                            lastAttachedTo.addChild(node);
+
+                            lastAttached = node;
+                        }
+                    }
                 
                 // Disable render on everything but the current object
                 disableRenderExcept(currentObj);

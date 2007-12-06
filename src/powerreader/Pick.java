@@ -9,8 +9,6 @@
 package powerreader;
 
 //for image
-import com.sun.j3d.utils.image.TextureLoader;
-import image.ImageFetcher;
 import java.awt.event.MouseAdapter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -133,25 +131,6 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         String toSpeak = "Definition of " + pickedText + ". " + def;
                         System.out.println(toSpeak);
                         Speech.speak(toSpeak);
-                    }
-                    // Get image
-                    if(ConfigurationManager.showImages()) {
-                        ImageFetcher f = ConfigurationManager.getImageFetcher();
-                        TextureLoader imageT = new TextureLoader(f.getImage(pickedText),c3D);
-                        Raster imageObj = new Raster(new Point3f(0, 0,1f),
-                                Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
-                                imageT.getImage(), null);
-                        Shape3D shape = new Shape3D(imageObj);
-                        imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
-                        BranchGroup node = new BranchGroup();
-                        
-                        node.setCapability(BranchGroup.ALLOW_DETACH);
-                        
-                        node.addChild(shape);
-                        lastPicked = tObj.getTheTextTransformGroup();
-                        lastPicked.addChild(node);
-                        
-                        lastAttached =node;
                     }
                 }
             }
