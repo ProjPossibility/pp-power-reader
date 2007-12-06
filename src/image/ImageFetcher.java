@@ -33,7 +33,7 @@ public abstract class ImageFetcher {
             return (BufferedImage) imageCache.get(text);
         }
         BufferedImage img;
-        String imgURL = getImageURL(URLEncoder.encode(text));
+        String imgURL = getImageURL(text);
         System.out.println("Fetching image from " + imgURL);
         try {
             URL url = new URL(imgURL);

@@ -27,7 +27,7 @@ public class YahooImageFetcher extends ImageFetcher {
         String imgURL = "";
         try {
             // Create an URL instance
-            URL url = new URL("http://images.search.yahoo.com/search/images?p=" + text);
+            URL url = new URL("http://images.search.yahoo.com/search/images?p=" + URLEncoder.encode(text));
             URLConnection connection = url.openConnection();
             DataInputStream in = new DataInputStream(connection.getInputStream());
             String line;

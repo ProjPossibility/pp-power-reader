@@ -29,7 +29,7 @@ public class GoogleImageFetcher extends ImageFetcher {
         try {
             Socket s = new Socket("images.google.com",80);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
-            bw.write("GET /images?q=" + text + " HTTP/1.0\r\n");
+            bw.write("GET /images?q=" + URLEncoder.encode(text) + " HTTP/1.0\r\n");
             bw.write("User-Agent: Mozilla/1.0 (compatible; NCSA Mosaic; Atari 800-ST)\r\n");
             bw.write("Connection: close\r\n\r\n");
             bw.flush();
