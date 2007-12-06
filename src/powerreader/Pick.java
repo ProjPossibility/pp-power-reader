@@ -99,7 +99,7 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                     else if(ConfigurationManager.getFocusLevel() == RawTextParser.LEVEL_DOCUMENT_ID) {
                         pickedObject = pickedObject.getParent().getParent().getParent();
                     }
-                                        
+                    
                     String pickedText=pickedObject.getValue();
                     System.out.println(pickedText);
                     
@@ -122,11 +122,16 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         Player.reset();
                         
                         // Reboot the player
-                        HierarchyObject root = pickedObject.getParent(RawTextParser.LEVEL_DOCUMENT_ID);
+                        HierarchyObject root;
+                        if(pickedObject.getLevel() == RawTextParser.LEVEL_DOCUMENT_ID) {
+                            root = pickedObject;
+                        } else {
+                            root = pickedObject.getParent(RawTextParser.LEVEL_DOCUMENT_ID);
+                        }
                         Player.setHierarchyRoot(root);
                         Player.setFocusOn(pickedObject);
                         Player.playOne();
-
+                        
                         // Get image
                         if(ConfigurationManager.showImages()) {
                             // clear out any existing images from the player
@@ -141,13 +146,13 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                                 Shape3D shape = new Shape3D(imageObj);
                                 imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
                                 BranchGroup node = new BranchGroup();
-
+                            
                                 node.setCapability(BranchGroup.ALLOW_DETACH);
-
+                            
                                 node.addChild(shape);
                                 lastPicked = tObj.getTheTextTransformGroup();
                                 lastPicked.addChild(node);
-
+                            
                                 lastAttached =node;
                             }
                         }
