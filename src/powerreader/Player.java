@@ -47,6 +47,8 @@ public class Player extends Thread {
     private float m_baseColorG;
     private Object m_ready;
     
+    private boolean m_playOne = false;
+    
     private static TransformGroup lastAttachedTo;
     private static BranchGroup lastAttached;
     
@@ -83,6 +85,7 @@ public class Player extends Thread {
         m_root = new HierarchyObject(RawTextParser.LEVEL_DOCUMENT_ID,RawTextParser.LEVEL_DOCUMENT_STR);
         
         Object m_ready = Speech.getSync();
+        
     }
     
     static public void setHierarchyRoot(HierarchyObject root) {
@@ -146,9 +149,9 @@ public class Player extends Thread {
             }
         }
         if (success) {
-            if(ConfigurationManager.showImages()) {
-                m_instance.displayImage(hObj.getValue(),hObj);
-            }
+            // Start the thread and play one
+            m_instance.m_playOne = true;
+            play();
         }
         return success;
     }
@@ -200,7 +203,7 @@ public class Player extends Thread {
                     
                 }
                 
-                // Speak the current object
+                // Speak the current object--synchronize with the speech API
                 synchronized(Speech.getSync()) {
                     try {
                         Speech.speak(currentObj.getValue());
@@ -208,6 +211,18 @@ public class Player extends Thread {
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
+                }
+                
+                // Hacky, but syncrhonize on the Speech object
+                synchronized(Speech.getSync()) {
+                    if(m_playOne) {
+                        try {
+                            Speech.getSync().wait();
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    m_playOne = false;
                 }
                 
                 // Now Shrink the current object
@@ -220,6 +235,9 @@ public class Player extends Thread {
     }
     
     static public void playOne() {
+        // Suspend the current instance if it is active
+        m_instance.suspend();
+        
         HierarchyObject currentObj = null;
         
         // Get current obj
@@ -253,6 +271,11 @@ public class Player extends Thread {
     
     static public void play() {
         if(m_instance.isAlive()) {
+            synchronized(Speech.getSync()) {
+                
+                Speech.getSync().notify();
+                
+            }
             Speech.cancel();
             m_instance.resume();
         } else {

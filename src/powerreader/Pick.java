@@ -105,7 +105,6 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                     }
                     
                     String pickedText=pickedObject.getValue();
-                    System.out.println(pickedText);
                     
                     // determine action for the button
                     int mouseAction = ConfigurationManager.ACTION_NOTHING;
@@ -122,9 +121,6 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         // Clear the focus highlight
                         Player.getFocusOn().color(false);
                         
-                        // Kill the current player
-                        Player.reset();
-                        
                         // Reboot the player
                         HierarchyObject root;
                         if(pickedObject.getLevel() == RawTextParser.LEVEL_DOCUMENT_ID) {
@@ -132,10 +128,8 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         } else {
                             root = pickedObject.getParent(RawTextParser.LEVEL_DOCUMENT_ID);
                         }
-                        Player.setHierarchyRoot(root);
+                        Player.restart(root,pickedObject.getLevel());
                         Player.setFocusOn(pickedObject);
-                        Player.playOne();
-                        
                     }
                     // dictionary meaning
                     if(mouseAction == ConfigurationManager.ACTION_DEFINE) {
@@ -151,7 +145,7 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
             ex.printStackTrace();
         }
     }
-
+    
     public void mouseWheelMoved(MouseWheelEvent e) {
         ConfigurationManager.current_z += e.getWheelRotation()/-2.5f;
         ConfigurationManager.refreshTranslate();
@@ -195,6 +189,6 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
             mousePressed = false;
         }
     }
-   
+    
     
 }
