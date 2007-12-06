@@ -12,6 +12,7 @@ package powerreader;
 import com.sun.j3d.utils.image.TextureLoader;
 import image.ImageFetcher;
 import java.awt.event.MouseAdapter;
+import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.media.j3d.Raster;
@@ -131,21 +132,24 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                             // clear out any existing images from the player
                             Player.removeImages();
                             ImageFetcher f = ConfigurationManager.getImageFetcher();
-                            TextureLoader imageT = new TextureLoader(f.getImage(pickedText),c3D);
-                            Raster imageObj = new Raster(new Point3f(0, 0,1f),
-                                    Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
-                                    imageT.getImage(), null);
-                            Shape3D shape = new Shape3D(imageObj);
-                            imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
-                            BranchGroup node = new BranchGroup();
+                            BufferedImage img = f.getImage(pickedText);
+                            if (img != null) {
+                                TextureLoader imageT = new TextureLoader(img,c3D);
+                                Raster imageObj = new Raster(new Point3f(0, 0,1f),
+                                        Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
+                                        imageT.getImage(), null);
+                                Shape3D shape = new Shape3D(imageObj);
+                                imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
+                                BranchGroup node = new BranchGroup();
 
-                            node.setCapability(BranchGroup.ALLOW_DETACH);
+                                node.setCapability(BranchGroup.ALLOW_DETACH);
 
-                            node.addChild(shape);
-                            lastPicked = tObj.getTheTextTransformGroup();
-                            lastPicked.addChild(node);
+                                node.addChild(shape);
+                                lastPicked = tObj.getTheTextTransformGroup();
+                                lastPicked.addChild(node);
 
-                            lastAttached =node;
+                                lastAttached =node;
+                            }
                         }
                     }
                     // dictionary meaning
