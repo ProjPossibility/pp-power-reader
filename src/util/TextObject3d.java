@@ -3,8 +3,8 @@
  *
  * Created on December 3, 2007, 5:19 PM
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * We assume that the default colors have already been set by another class using
+ * setHighlightColor, etc.
  */
 
 package util;
@@ -36,37 +36,37 @@ public class TextObject3d extends TransformGroup {
     private static Vector3f nextLocationStart = new Vector3f(-10f,10f,0);
     private static Vector3f nextLocationIncrementWordSentence = new Vector3f(0.3f,-1.5f,0);
     private static float nextLocationIncrementParagraph = -2.5f;
-    
-    private static Color3f highlightColor = new Color3f(1.0f, 0, 0);
-    private static Color3f baseColor = new Color3f(0, 1.0f, 1.0f);
+    private static Appearance m_textAppearanceHighlight;
+    private static Appearance m_textAppearanceBaseColor;
+
     private static float m_lineWidth = 20.0f;
     
     private TransformGroup theText;
     private Material m_textMaterial;
+    private Shape3D m_textShape;
     
     private Vector3f currentLocation;
     
     /** Creates a new instance of TextObject */
     public TextObject3d(String text) {
         super();
-
+        
         // face it in the scene graph
         Transform3D rotation = new Transform3D();
         TransformGroup rotation_group = new TransformGroup( rotation );
         this.addChild( rotation_group );
         
-        // create the 3d text
-        Appearance textAppear = new Appearance();
-        m_textMaterial = new Material();
-        m_textMaterial.setCapability(Material.ALLOW_COMPONENT_WRITE);
-        m_textMaterial.setEmissiveColor(baseColor);
-        textAppear.setMaterial(m_textMaterial);
+        // Set up 3d geometry
         FontExtrusion fontExtrusion = new FontExtrusion();
         Font3D font3D = new Font3D(
                 new Font("Helvetica", Font.PLAIN, 1),
                 new FontExtrusion());
         Text3D textGeom = new Text3D(font3D,text);
+        
+        // Set alignment
         textGeom.setAlignment(Text3D.ALIGN_FIRST);
+        
+        // Set up bounding box
         BoundingBox bb = new BoundingBox();
         textGeom.getBoundingBox(bb);
         Point3d up= new Point3d();
@@ -85,19 +85,33 @@ public class TextObject3d extends TransformGroup {
         
         nextLocation.x += up.x + nextLocationIncrementWordSentence.x;
         
-        Shape3D textShape = new Shape3D();
-        textShape.setGeometry(textGeom);
-        textShape.setAppearance(textAppear);
+        m_textShape = new Shape3D();
+        m_textShape.setGeometry(textGeom);
+        m_textShape.setAppearance(m_textAppearanceBaseColor);
+        m_textShape.setCapability(Shape3D.ALLOW_APPEARANCE_OVERRIDE_WRITE);
+        m_textShape.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
         
         // attach it
         theText = new TransformGroup();
         theText.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         theText.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
         theText.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
-        theText.addChild(textShape);
+        theText.addChild(m_textShape);
         rotation_group.addChild( theText );
         
         
+    }
+    
+    public static Appearance createAppearance(Color3f color) {
+        // create the 3d text
+        Appearance textAppear = new Appearance();
+        Material textMaterial = new Material();
+        textMaterial.setCapability(Material.ALLOW_COMPONENT_WRITE);
+        textMaterial.setCapability(Material.ALLOW_COMPONENT_READ);
+        textMaterial.setCapability(Material.EMISSIVE);
+        textMaterial.setEmissiveColor(color);
+        textAppear.setMaterial(textMaterial);
+        return textAppear;
     }
     
     public static void setLineWidth(float width) {
@@ -105,7 +119,7 @@ public class TextObject3d extends TransformGroup {
         nextLocationStart.x = -1.0f * width/2.0f;
         nextLocationStart.y = width/2.0f;
     }
-    public static float getLineWidth () {
+    public static float getLineWidth() {
         return m_lineWidth;
     }
     
@@ -128,15 +142,15 @@ public class TextObject3d extends TransformGroup {
     }
     
     public static void setHighlightColor(Color3f color) {
-        highlightColor = color;
+        m_textAppearanceHighlight = createAppearance(color);
     }
     
     public static void setBaseColor(Color3f color) {
-        baseColor = color;
+        m_textAppearanceBaseColor = createAppearance(color);
     }
     
     public void highLight() {
-        m_textMaterial.setEmissiveColor(new Color3f(highlightColor));
+        m_textShape.setAppearance(m_textAppearanceHighlight);
         if(ConfigurationManager.wordsGrow()) {
             Transform3D scale = new Transform3D();
             scale.setScale(new Vector3d(1.0f,1.6f,1.0f));
@@ -146,7 +160,8 @@ public class TextObject3d extends TransformGroup {
         }
     }
     public void unHighLight() {
-        m_textMaterial.setEmissiveColor(new Color3f(baseColor));
+        m_textShape.setAppearance(m_textAppearanceBaseColor);
+        
         Transform3D scale = new Transform3D();
         scale.setScale(new Vector3d(1.0f,1.0f,1.0f));
         theText.setTransform(scale);

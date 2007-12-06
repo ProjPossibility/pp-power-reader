@@ -30,12 +30,7 @@ import util.WordHashMap;
  * @author  cleung
  */
 public class PowerReaderUI extends javax.swing.JFrame {
-    
-    public static int DEFAULT_ZOOM = -25;
-    private Color DEFAULT_BG_COLOR = Color.ORANGE;
-    private Color DEFAULT_FG_COLOR = Color.BLUE;
-    private Color DEFAULT_HL_COLOR = Color.RED;
-    
+        
     // Manually added variables
     private Canvas3D m_canvas;
     private Background m_background;
@@ -60,12 +55,12 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_configPanel.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         
         // Set default button colors
-        m_button_bgColor.setBackground(DEFAULT_BG_COLOR);
-        m_button_fgColor.setBackground(DEFAULT_FG_COLOR);
-        m_button_hlColor.setBackground(DEFAULT_HL_COLOR);
+        m_button_bgColor.setBackground(ConfigurationManager.DEFAULT_BG_COLOR);
+        m_button_fgColor.setBackground(ConfigurationManager.DEFAULT_FG_COLOR);
+        m_button_hlColor.setBackground(ConfigurationManager.DEFAULT_HL_COLOR);
         
-        TextObject3d.setBaseColor(new Color3f(DEFAULT_FG_COLOR));
-        TextObject3d.setHighlightColor(new Color3f(DEFAULT_HL_COLOR));
+        TextObject3d.setBaseColor(new Color3f(ConfigurationManager.DEFAULT_FG_COLOR));
+        TextObject3d.setHighlightColor(new Color3f(ConfigurationManager.DEFAULT_HL_COLOR));
         
         // Now initialize the 3D Canvas
         create3dCanvas();
@@ -144,7 +139,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         );
         m_panel_textAreaLayout.setVerticalGroup(
             m_panel_textAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 646, Short.MAX_VALUE)
+            .add(0, 659, Short.MAX_VALUE)
         );
 
         m_slider_readSpeed.setMajorTickSpacing(50);
@@ -162,7 +157,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
 
         m_label_readSpeed.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_label_readSpeed.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_label_readSpeed.setText("<--Faster     Read Speed    Slowert-->");
+        m_label_readSpeed.setText("<--Faster          Read Speed          Slower-->");
 
         m_button_play.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_button_play.setIcon(new javax.swing.ImageIcon(getClass().getResource("/powerreader/resources/player_play.png")));
@@ -336,20 +331,20 @@ public class PowerReaderUI extends javax.swing.JFrame {
                         .add(m_buton_stop, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 129, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(m_slider_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 260, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(m_label_lof, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_slider_lof, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_slider_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_label_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_button_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_label_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_button_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_label_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                     .add(m_checkBox_speechEnabled)
                     .add(m_checkBox_wordsGrow)
                     .add(m_checkBox_showImages)
-                    .add(m_checkBox_speechEnabled1)
-                    .add(m_label_lof, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_slider_lof, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_label_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
+                    .add(m_checkBox_speechEnabled1))
                 .addContainerGap())
         );
         m_panel_controlAreaLayout.setVerticalGroup(
@@ -375,7 +370,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 .add(m_label_lof, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 24, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_slider_lof, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 29, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_label_lod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 24, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_slider_lod, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 29, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -391,14 +386,15 @@ public class PowerReaderUI extends javax.swing.JFrame {
                 .add(m_label_hlColor)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_button_hlColor)
-                .add(23, 23, 23)
+                .add(15, 15, 15)
                 .add(m_checkBox_speechEnabled1)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_checkBox_showImages)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(m_checkBox_wordsGrow)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(m_checkBox_speechEnabled))
+                .add(m_checkBox_speechEnabled)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -429,7 +425,9 @@ public class PowerReaderUI extends javax.swing.JFrame {
             m_slider_lod.setValue(ConfigurationManager.getFocusLevel());
         }
         ConfigurationManager.setDetailLevel(3 - m_slider_lod.getValue());
-
+        
+        // Refresh the scene
+        Player.disableRenderExcept(Player.getFocusOn());
     }//GEN-LAST:event_m_slider_lodStateChanged
     
     private void m_slider_lofStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_lofStateChanged

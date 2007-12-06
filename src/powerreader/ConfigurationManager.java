@@ -16,6 +16,7 @@ import image.FlickrImageFetcher;
 import image.GoogleImageFetcher;
 import image.ImageFetcher;
 import image.YahooImageFetcher;
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
@@ -28,6 +29,11 @@ import speech.Speech;
  * @author Christopher Leung
  */
 public class ConfigurationManager {
+    
+    public static int DEFAULT_ZOOM = -25;
+    public static Color DEFAULT_BG_COLOR = Color.ORANGE;
+    public static Color DEFAULT_FG_COLOR = Color.BLUE;
+    public static Color DEFAULT_HL_COLOR = Color.RED;
     
     static float DEFAULT_X = 0.0f;
     static float DEFAULT_Y = 0.0f;

@@ -78,10 +78,27 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                 Shape3D s3 = (Shape3D)result.getNode(PickResult.SHAPE3D);
                 
                 if (s3 != null) {
-                    TextObject3d tObj = (TextObject3d) s3.getParent().getParent().getParent();
-                    WordHashMap map = WordHashMap.getInstance();
                     
+                    // Get the textobject picked
+                    TextObject3d tObj = (TextObject3d) s3.getParent().getParent().getParent();
+                    
+                    // Get its hierarchy object of the word
+                    WordHashMap map = WordHashMap.getInstance();
                     HierarchyObject pickedObject = map.getHirarchyObject(tObj);
+                    
+                    // If our focus is sentence, set the pickedObject to the sentence
+                    if(ConfigurationManager.getFocusLevel() == RawTextParser.LEVEL_SENTENCE_ID) {
+                        pickedObject = pickedObject.getParent();
+                    }
+                    // Else if our focus is paragraph, set the pickedObject to the paragraph
+                    else if(ConfigurationManager.getFocusLevel() == RawTextParser.LEVEL_PARAGRAPH_ID) {
+                        pickedObject = pickedObject.getParent().getParent();
+                    }
+                    // You get it by now
+                    else if(ConfigurationManager.getFocusLevel() == RawTextParser.LEVEL_DOCUMENT_ID) {
+                        pickedObject = pickedObject.getParent().getParent().getParent();
+                    }
+                                        
                     String pickedText=pickedObject.getValue();
                     System.out.println(pickedText);
                     
@@ -106,7 +123,7 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         // Reboot the player
                         HierarchyObject root = pickedObject.getParent(RawTextParser.LEVEL_DOCUMENT_ID);
                         Player.setHierarchyRoot(root);
-                        Player.setFocusOn(map.getHirarchyObject(tObj));
+                        Player.setFocusOn(pickedObject);
                         Player.playOne();
                     }
                     // dictionary meaning and images

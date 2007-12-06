@@ -64,7 +64,7 @@ public class Player extends Thread {
         m_objectsToSpeak = new ArrayList();
         
         m_ready = new Object();
-                
+        
         // Default to an empty document
         m_root = new HierarchyObject(RawTextParser.LEVEL_DOCUMENT_ID,RawTextParser.LEVEL_DOCUMENT_STR);
         
@@ -106,7 +106,7 @@ public class Player extends Thread {
                 
                 // Highlight the focused
                 hObj.color(true);
-                
+               
                 // Set the objects to speach os the objects that were searched
                 m_instance.m_objectsToSpeak = objectsToSearch;
                 
@@ -143,7 +143,6 @@ public class Player extends Thread {
         TextObject3d theText = null;
         
         for(;;) {
-//            synchronized(m_ready) {
             for(int i = m_focusIndex; i < m_objectsToSpeak.size(); i++) {
                 // Get current obj
                 currentObj = (HierarchyObject)m_objectsToSpeak.get(i);
@@ -163,28 +162,23 @@ public class Player extends Thread {
                     ConfigurationManager.refreshTranslate();
                     
                 }
-//                m_instance.m_root.getTransformGroup().setTransform(moveScene);
                 
-                
-                
+                // Speak the current object
                 synchronized(Speech.getSync()) {
                     try {
                         Speech.speak(currentObj.getValue());
                         Speech.getSync().wait();
-                        // Start speaking the object
-                        
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
                 }
                 
-                // Shrink the current object
+                // Now Shrink the current object
                 currentObj.color(false);
                 
                 m_focusIndex++;
             }
             m_focusIndex = 0;
-            //}
         }
     }
     
@@ -229,32 +223,27 @@ public class Player extends Thread {
     
     static public void disableRenderExcept(HierarchyObject object) {
         
-        // Start with the document level
-        HierarchyObject documentParent = object.getParent(RawTextParser.LEVEL_DOCUMENT_ID);
-        HierarchyObject paragraphParent = object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID);
-        HierarchyObject sentenceParent = object.getParent(RawTextParser.LEVEL_SENTENCE_ID);
-        
         // Enable depending on level of detail
         if (ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_DOCUMENT_ID) {
-            enableRenderOfChildren(documentParent);
+            enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_DOCUMENT_ID));
         } else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_PARAGRAPH_ID) {
-            enableRenderOfChildren(paragraphParent);
+            enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID));
         } else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_SENTENCE_ID) {
-            enableRenderOfChildren(sentenceParent);
+            enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID));
         }
         
         // Disable Show depending on level of detail
         if (ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_DOCUMENT_ID) {
-            disableRenderOfChildren(documentParent,paragraphParent);
+            disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_DOCUMENT_ID),object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID));
         }
         if(ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_PARAGRAPH_ID ) {
-            disableRenderOfChildren(paragraphParent,sentenceParent);
+            disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID),object.getParent(RawTextParser.LEVEL_SENTENCE_ID));
         }
         if(ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_SENTENCE_ID) {
-            disableRenderOfChildren(sentenceParent,object);
+            disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID),object);
         }
     }
-        
+    
     static public void enableRenderOfChildren(HierarchyObject parent) {
         ArrayList children;
         Iterator it;
