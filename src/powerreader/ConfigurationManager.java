@@ -52,6 +52,14 @@ public class ConfigurationManager {
     private boolean wordsGrow = false;
     private boolean followFocus = false;
     
+    public static final int ACTION_FOCUS = 0;
+    public static final int ACTION_DRAG = 1;
+    public static final int ACTION_DEFINE = 2;
+    public static final int ACTION_NOTHING = 3;
+    static private int leftClickAction = ACTION_FOCUS;
+    static private int middleClickAction = ACTION_DEFINE;
+    static private int rightClickAction = ACTION_DRAG;
+    
     // Word focus level by default
     static private int m_focusLevel = 3;
     static private int m_detailLevel = 0;
@@ -169,6 +177,25 @@ public class ConfigurationManager {
     }
     static public boolean followFocus() {
         return m_instance.followFocus;
+    }
+    
+    static public void setLeftClickAction(int a) {
+        leftClickAction = a;
+    }
+    static public int getLeftClickAction() {
+        return leftClickAction;
+    }
+    static public void setMiddleClickAction(int a) {
+        middleClickAction = a;
+    }
+    static public int getMiddleClickAction() {
+        return middleClickAction;
+    }
+    static public void setRightClickAction(int a) {
+        rightClickAction = a;
+    }
+    static public int getRightClickAction() {
+        return rightClickAction;
     }
     
     static public void refreshTranslate() {

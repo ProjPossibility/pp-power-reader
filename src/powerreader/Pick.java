@@ -85,8 +85,18 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                     String pickedText=pickedObject.getValue();
                     System.out.println(pickedText);
                     
+                    // determine action for the button
+                    int mouseAction = ConfigurationManager.ACTION_NOTHING;
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        mouseAction = ConfigurationManager.getLeftClickAction();
+                    } else if (e.getButton() == MouseEvent.BUTTON2) {
+                        mouseAction = ConfigurationManager.getMiddleClickAction();
+                    } else if (e.getButton() == MouseEvent.BUTTON3) {
+                        mouseAction = ConfigurationManager.getRightClickAction();
+                    }
                     // select word
-                    if(e.getButton() == MouseEvent.BUTTON1 || e.getButton() == MouseEvent.BUTTON2) {
+                    if(mouseAction == ConfigurationManager.ACTION_FOCUS ||
+                            mouseAction == ConfigurationManager.ACTION_DEFINE) {
                         // Clear the focus highlight
                         Player.getFocusOn().color(false);
                         
@@ -100,41 +110,35 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         Player.playOne();
                     }
                     // dictionary meaning and images
-                    if(e.getButton() == MouseEvent.BUTTON2) {
-                        
-                        // Get and speak dictionary definition
+                    if(mouseAction == ConfigurationManager.ACTION_DEFINE) {
                         DictionaryLookup w = ConfigurationManager.getDictionary();
                         String def = w.getDefinition(pickedText);
                         String toSpeak = "Definition of " + pickedText + ". " + def;
                         System.out.println(toSpeak);
                         Speech.speak(toSpeak);
+                    }
+                    // Get image
+                    if(ConfigurationManager.showImages()) {
+                        ImageFetcher f = ConfigurationManager.getImageFetcher();
+                        TextureLoader imageT = new TextureLoader(f.getImage(pickedText),c3D);
+                        Raster imageObj = new Raster(new Point3f(0, 0,1f),
+                                Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
+                                imageT.getImage(), null);
+                        Shape3D shape = new Shape3D(imageObj);
+                        imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
+                        BranchGroup node = new BranchGroup();
                         
-                        // Get image
-                        if(ConfigurationManager.showImages()) {
-                            ImageFetcher f = ConfigurationManager.getImageFetcher();
-                            String url = f.getImageURL(pickedText);
-                            System.out.println(url);
-                            URL mURL= new URL(url);
-                            TextureLoader imageT = new TextureLoader(mURL,c3D);
-                            Raster imageObj = new Raster(new Point3f(0, 0,1f),
-                                    Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
-                                    imageT.getImage(), null);
-                            Shape3D shape = new Shape3D(imageObj);
-                            imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
-                            BranchGroup node = new BranchGroup();
-                            
-                            node.setCapability(BranchGroup.ALLOW_DETACH);
-                            
-                            node.addChild(shape);
-                            lastPicked = tObj.getTheTextTransformGroup();
-                            lastPicked.addChild(node);
-                            
-                            lastAttached =node;
-                        }
+                        node.setCapability(BranchGroup.ALLOW_DETACH);
+                        
+                        node.addChild(shape);
+                        lastPicked = tObj.getTheTextTransformGroup();
+                        lastPicked.addChild(node);
+                        
+                        lastAttached =node;
                     }
                 }
             }
-        } catch (MalformedURLException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -160,7 +164,12 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
     }
     
     public void mousePressed(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON3) {
+        if((e.getButton() == MouseEvent.BUTTON1 &&
+                ConfigurationManager.getLeftClickAction() == ConfigurationManager.ACTION_DRAG) ||
+                (e.getButton() == MouseEvent.BUTTON2 &&
+                ConfigurationManager.getMiddleClickAction() == ConfigurationManager.ACTION_DRAG) ||
+                (e.getButton() == MouseEvent.BUTTON3 &&
+                ConfigurationManager.getRightClickAction() == ConfigurationManager.ACTION_DRAG)) {
             mousePressed = true;
             lastX = e.getX();
             lastY = e.getY();
@@ -168,7 +177,12 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
     }
     
     public void mouseReleased(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON3) {
+        if((e.getButton() == MouseEvent.BUTTON1 &&
+                ConfigurationManager.getLeftClickAction() == ConfigurationManager.ACTION_DRAG) ||
+                (e.getButton() == MouseEvent.BUTTON2 &&
+                ConfigurationManager.getMiddleClickAction() == ConfigurationManager.ACTION_DRAG) ||
+                (e.getButton() == MouseEvent.BUTTON3 &&
+                ConfigurationManager.getRightClickAction() == ConfigurationManager.ACTION_DRAG)) {
             mousePressed = false;
         }
     }

@@ -64,11 +64,13 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         });
 
-        m_combo_leftClick.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Focus On Item" }));
+        m_combo_leftClick.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Focus on item", "Drag and scroll", "Read dictionary definition", "Do nothing" }));
 
-        m_combo_middleClick.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Read Dictionary Definition" }));
+        m_combo_middleClick.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Focus on item", "Drag and scroll", "Read dictionary definition", "Do nothing" }));
+        m_combo_middleClick.setSelectedIndex(2);
 
-        m_combo_rightClick.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Drag and Scroll" }));
+        m_combo_rightClick.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Focus on item", "Drag and scroll", "Read dictionary definition", "Do nothing" }));
+        m_combo_rightClick.setSelectedIndex(1);
 
         m_okButton.setText("OK");
         m_okButton.addActionListener(new java.awt.event.ActionListener() {
@@ -114,7 +116,6 @@ public class ConfigUI extends javax.swing.JFrame {
         m_label_rightClick1.setText("Line Width ");
         m_label_rightClick1.setName("Line Width");
 
-        m_slider_lineWidth.setFont(new java.awt.Font("Tahoma", 0, 11));
         m_slider_lineWidth.setMajorTickSpacing(10);
         m_slider_lineWidth.setMinimum(5);
         m_slider_lineWidth.setMinorTickSpacing(20);
@@ -233,6 +234,9 @@ public class ConfigUI extends javax.swing.JFrame {
         }
         ConfigurationManager.setDictionary(m_combo_dictionaryLookup.getSelectedIndex());
         ConfigurationManager.setImageLookup(m_combo_imageLookup.getSelectedIndex());
+        ConfigurationManager.setLeftClickAction(m_combo_leftClick.getSelectedIndex());
+        ConfigurationManager.setMiddleClickAction(m_combo_middleClick.getSelectedIndex());
+        ConfigurationManager.setRightClickAction(m_combo_rightClick.getSelectedIndex());
         this.setVisible(false);
     }//GEN-LAST:event_m_okButtonActionPerformed
 
