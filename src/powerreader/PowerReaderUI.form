@@ -61,9 +61,10 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="m_label_lof" alignment="0" pref="262" max="32767" attributes="1"/>
                       <Component id="jButton1" alignment="0" pref="262" max="32767" attributes="0"/>
                       <Component id="m_button_open" alignment="1" pref="262" max="32767" attributes="0"/>
                       <Component id="m_slider_zoomLevel" alignment="0" pref="262" max="32767" attributes="1"/>
@@ -75,7 +76,6 @@
                       </Group>
                       <Component id="m_slider_readSpeed" alignment="0" pref="262" max="32767" attributes="1"/>
                       <Component id="m_label_zoomLevel" alignment="1" min="-2" pref="260" max="-2" attributes="3"/>
-                      <Component id="m_label_lof" alignment="0" pref="262" max="32767" attributes="1"/>
                       <Component id="m_slider_lof" alignment="0" pref="262" max="32767" attributes="1"/>
                       <Component id="m_label_lod" alignment="1" pref="262" max="32767" attributes="1"/>
                       <Component id="m_slider_lod" alignment="0" pref="262" max="32767" attributes="1"/>
@@ -216,7 +216,7 @@
               <Font name="Tahoma" size="11" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="&lt;--Low             Level of Detail             High--&gt;"/>
+            <Property name="text" type="java.lang.String" value="&lt;--Less             Level of Detail             More--&gt;"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JSlider" name="m_slider_zoomLevel">
@@ -410,7 +410,7 @@
               <Font name="Tahoma" size="11" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="&lt;--Low             Level of Focus             High--&gt;"/>
+            <Property name="text" type="java.lang.String" value="&lt;--Less             Level of Focus             More--&gt;"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JSlider" name="m_slider_lof">
@@ -419,6 +419,7 @@
             <Property name="maximum" type="int" value="3"/>
             <Property name="paintTicks" type="boolean" value="true"/>
             <Property name="snapToTicks" type="boolean" value="true"/>
+            <Property name="value" type="int" value="0"/>
           </Properties>
           <Events>
             <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="m_slider_lofStateChanged"/>

@@ -30,7 +30,7 @@ import util.WordHashMap;
  * @author  cleung
  */
 public class PowerReaderUI extends javax.swing.JFrame {
-        
+    
     // Manually added variables
     private Canvas3D m_canvas;
     private Background m_background;
@@ -189,7 +189,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
 
         m_label_lod.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_label_lod.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_label_lod.setText("<--Low             Level of Detail             High-->");
+        m_label_lod.setText("<--Less             Level of Detail             More-->");
 
         m_slider_zoomLevel.setMajorTickSpacing(1);
         m_slider_zoomLevel.setMaximum(1);
@@ -302,12 +302,13 @@ public class PowerReaderUI extends javax.swing.JFrame {
 
         m_label_lof.setFont(new java.awt.Font("Tahoma", 1, 11));
         m_label_lof.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        m_label_lof.setText("<--Low             Level of Focus             High-->");
+        m_label_lof.setText("<--Less             Level of Focus             More-->");
 
         m_slider_lof.setMajorTickSpacing(1);
         m_slider_lof.setMaximum(3);
         m_slider_lof.setPaintTicks(true);
         m_slider_lof.setSnapToTicks(true);
+        m_slider_lof.setValue(0);
         m_slider_lof.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 m_slider_lofStateChanged(evt);
@@ -318,33 +319,33 @@ public class PowerReaderUI extends javax.swing.JFrame {
         m_panel_controlArea.setLayout(m_panel_controlAreaLayout);
         m_panel_controlAreaLayout.setHorizontalGroup(
             m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(m_panel_controlAreaLayout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, m_panel_controlAreaLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jButton1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_open, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_slider_zoomLevel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_panel_controlAreaLayout.createSequentialGroup()
+                .add(m_panel_controlAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_label_lof, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jButton1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_button_open, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_slider_zoomLevel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_label_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_panel_controlAreaLayout.createSequentialGroup()
                         .add(m_button_play, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(m_buton_stop, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 129, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(m_slider_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 260, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(m_label_lof, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_slider_lof, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_label_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_slider_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_button_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_label_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_button_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_label_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .add(m_checkBox_speechEnabled)
-                    .add(m_checkBox_wordsGrow)
-                    .add(m_checkBox_showImages)
-                    .add(m_checkBox_speechEnabled1))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_slider_readSpeed, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_label_zoomLevel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 260, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_slider_lof, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_label_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_slider_lod, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_button_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_label_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_button_hlColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(m_button_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_label_bgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_label_fgColor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_checkBox_speechEnabled)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_checkBox_wordsGrow)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_checkBox_showImages)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, m_checkBox_speechEnabled1))
                 .addContainerGap())
         );
         m_panel_controlAreaLayout.setVerticalGroup(
@@ -420,9 +421,9 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private void m_slider_lodStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_lodStateChanged
         
         // If LOD is 'lower' than level of focus (i.e. detail level is word when focus level is sentence)
-        if(m_slider_lod.getValue() > ConfigurationManager.getFocusLevel()) {
+        if(m_slider_lod.getValue() < m_slider_lof.getValue()) {
             // Force the level of detail equal to the level of focus
-            m_slider_lod.setValue(ConfigurationManager.getFocusLevel());
+            m_slider_lod.setValue(m_slider_lof.getValue());
         }
         ConfigurationManager.setDetailLevel(3 - m_slider_lod.getValue());
         
@@ -431,22 +432,25 @@ public class PowerReaderUI extends javax.swing.JFrame {
     }//GEN-LAST:event_m_slider_lodStateChanged
     
     private void m_slider_lofStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_lofStateChanged
-        int currentFocusLevel = m_slider_lof.getValue();
+        // Make sure sliders don't pass each other
+        if(m_slider_lod.getValue() < m_slider_lof.getValue()) {
+            m_slider_lof.setValue(m_slider_lod.getValue());
+        }
+        int currentFocusLevel = (3 - m_slider_lof.getValue());
         ConfigurationManager.setFocusLevel(currentFocusLevel);
         HierarchyObject currentObj = Player.getFocusOn();
-
+        
         Player.restart(m_hierarchyRoot,ConfigurationManager.getFocusLevel());
         
         // Set the focus at the correct level now
         if(currentFocusLevel < currentObj.getLevel()) {
             Player.setFocusOn(currentObj.getParent(currentFocusLevel));
-        }
-        else if (currentFocusLevel > currentObj.getLevel()) {
+        } else if (currentFocusLevel > currentObj.getLevel()) {
             Player.setFocusOn((HierarchyObject)currentObj.getChildren().get(0));
-        }
-        else {
+        } else {
             Player.setFocusOn(currentObj);
         }
+        
     }//GEN-LAST:event_m_slider_lofStateChanged
     
     private void m_checkBox_showImagesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_showImagesActionPerformed

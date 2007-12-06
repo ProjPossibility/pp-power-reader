@@ -284,27 +284,26 @@ public class Player extends Thread {
     
     static public void disableRenderExcept(HierarchyObject object) {
         
-        if(object.getLevel() != RawTextParser.LEVEL_DOCUMENT_ID)  {
-            // Enable depending on level of detail
-            if (ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_DOCUMENT_ID) {
-                enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_DOCUMENT_ID));
-            } else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_PARAGRAPH_ID) {
-                enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID));
-            } else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_SENTENCE_ID) {
-                enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID));
-            }
-
-            // Disable Show depending on level of detail
-            if (ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_DOCUMENT_ID) {
-                disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_DOCUMENT_ID),object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID));
-            }
-            if(ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_PARAGRAPH_ID ) {
-                disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID),object.getParent(RawTextParser.LEVEL_SENTENCE_ID));
-            }
-            if(ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_SENTENCE_ID) {
-                disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID),object);
-            }
+        // Enable depending on level of detail
+        if (ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_DOCUMENT_ID && object.getLevel() != RawTextParser.LEVEL_DOCUMENT_ID) {
+            enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_DOCUMENT_ID));
+        } else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_PARAGRAPH_ID && object.getLevel() != RawTextParser.LEVEL_PARAGRAPH_ID) {
+            enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID));
+        } else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_SENTENCE_ID && object.getLevel() != RawTextParser.LEVEL_SENTENCE_ID) {
+            enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID));
         }
+        
+        // Disable Show depending on level of detail
+        if (ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_DOCUMENT_ID && object.getLevel() != RawTextParser.LEVEL_DOCUMENT_ID&& object.getLevel() != RawTextParser.LEVEL_PARAGRAPH_ID) {
+            disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_DOCUMENT_ID),object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID));
+        }
+        if(ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_PARAGRAPH_ID && object.getLevel() != RawTextParser.LEVEL_PARAGRAPH_ID && object.getLevel() != RawTextParser.LEVEL_SENTENCE_ID) {
+            disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID),object.getParent(RawTextParser.LEVEL_SENTENCE_ID));
+        }
+        if(ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_SENTENCE_ID && object.getLevel() != RawTextParser.LEVEL_SENTENCE_ID) {
+            disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID),object);
+        }
+        
     }
     
     static public void enableRenderOfChildren(HierarchyObject parent) {
