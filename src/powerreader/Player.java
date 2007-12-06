@@ -44,10 +44,10 @@ public class Player extends Thread {
     private float m_baseColorB;
     private float m_baseColorG;
     private Object m_ready;
-
+    
     private static TransformGroup lastAttachedTo;
     private static BranchGroup lastAttached;
-
+    
     // The objects to speak, and the item we are focused on
     private ArrayList m_objectsToSpeak;
     private int m_focusIndex;
@@ -111,32 +111,31 @@ public class Player extends Thread {
             m_instance.m_focusLevel = RawTextParser.LEVEL_DOCUMENT_ID;
             m_instance.m_focusIndex = 0;
             return true;
-        }
-        else {
+        } else {
             int findOnLevel = hObj.getLevel();
             ArrayList objectsToSearch = m_instance.m_root.getAllChildrenOfLevel(findOnLevel);
             Iterator it = objectsToSearch.iterator();
             int searchIndex = 0;
-
+            
             while(it.hasNext()) {
                 Object objToTest = it.next();
                 if(objToTest.equals(hObj)) {
-
+                    
                     m_instance.m_focusLevel = findOnLevel;
                     m_instance.m_focusIndex = searchIndex;
-
+                    
                     // Unhighlight everything just in case
                     m_instance.m_root.color(false);
-
+                    
                     // Highlight the focused
                     hObj.color(true);
-
+                    
                     // Set the objects to speach os the objects that were searched
                     m_instance.m_objectsToSpeak = objectsToSearch;
-
+                    
                     // Set the index
                     m_instance.m_focusIndex = searchIndex;
-
+                    
                     return true;
                 }
                 searchIndex++;
@@ -174,35 +173,35 @@ public class Player extends Thread {
                 
                 // Highlight/grow the current object
                 currentObj.color(true);
-                    // Get image
-                    if(ConfigurationManager.showImages()) {
-                        // clear out any existing images from mouse picking
-                        Pick.removeImages();
-
-                        ImageFetcher f = ConfigurationManager.getImageFetcher();
-                        BufferedImage img = f.getImage(currentObj.getValue());
-                        if (img != null) {
-                            TextureLoader imageT = new TextureLoader(img);
-                            Raster imageObj = new Raster(new Point3f(0, -0.5f,1f),
-                                    Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
-                                    imageT.getImage(), null);
-                            Shape3D shape = new Shape3D(imageObj);
-                            imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
-                            BranchGroup node = new BranchGroup();
-
-                            node.setCapability(BranchGroup.ALLOW_DETACH);
-
-                            node.addChild(shape);
-
-                            if(lastAttachedTo != null && lastAttached != null) {
-                                lastAttachedTo.removeChild(lastAttached);
-                            }
-                            lastAttachedTo = ((TextObject3d) currentObj.getTransformGroup()).getTheTextTransformGroup();
-                            lastAttachedTo.addChild(node);
-
-                            lastAttached = node;
+                // Get image
+                if(ConfigurationManager.showImages()) {
+                    // clear out any existing images from mouse picking
+                    Pick.removeImages();
+                    
+                    ImageFetcher f = ConfigurationManager.getImageFetcher();
+                    BufferedImage img = f.getImage(currentObj.getValue());
+                    if (img != null) {
+                        TextureLoader imageT = new TextureLoader(img);
+                        Raster imageObj = new Raster(new Point3f(0, -0.5f,1f),
+                                Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
+                                imageT.getImage(), null);
+                        Shape3D shape = new Shape3D(imageObj);
+                        imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
+                        BranchGroup node = new BranchGroup();
+                        
+                        node.setCapability(BranchGroup.ALLOW_DETACH);
+                        
+                        node.addChild(shape);
+                        
+                        if(lastAttachedTo != null && lastAttached != null) {
+                            lastAttachedTo.removeChild(lastAttached);
                         }
+                        lastAttachedTo = ((TextObject3d) currentObj.getTransformGroup()).getTheTextTransformGroup();
+                        lastAttachedTo.addChild(node);
+                        
+                        lastAttached = node;
                     }
+                }
                 
                 // Disable render on everything but the current object
                 disableRenderExcept(currentObj);
@@ -249,11 +248,11 @@ public class Player extends Thread {
         currentObj.color(true);
         
     }
-   
+    
     static public void restart(HierarchyObject root,int focusLevel) {
         reset();
         m_instance.setHierarchyRoot(root);
-        m_instance.setFocusLevel(focusLevel); 
+        m_instance.setFocusLevel(focusLevel);
     }
     
     static public void reset() {
@@ -292,6 +291,19 @@ public class Player extends Thread {
         } else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_SENTENCE_ID && object.getLevel() != RawTextParser.LEVEL_SENTENCE_ID) {
             enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID));
         }
+        // Deal with special cases where focused object is equal to the level of detail
+        if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_DOCUMENT_ID && object.getLevel() == RawTextParser.LEVEL_DOCUMENT_ID) {
+            enableRenderOfChildren(object);
+        }
+        // Deal with special cases where focused object is equal to the level of detail
+        else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_PARAGRAPH_ID && object.getLevel() == RawTextParser.LEVEL_PARAGRAPH_ID) {
+            disableRenderOfChildren(object.getParent(),object);
+        }
+        // Deal with special cases where focused object is equal to the level of detail
+        else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_SENTENCE_ID && object.getLevel() == RawTextParser.LEVEL_SENTENCE_ID) {
+            disableRenderOfChildren(object.getParent().getParent(),object.getParent());
+            disableRenderOfChildren(object.getParent(),object);
+        }
         
         // Disable Show depending on level of detail
         if (ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_DOCUMENT_ID && object.getLevel() != RawTextParser.LEVEL_DOCUMENT_ID&& object.getLevel() != RawTextParser.LEVEL_PARAGRAPH_ID) {
@@ -303,6 +315,7 @@ public class Player extends Thread {
         if(ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_SENTENCE_ID && object.getLevel() != RawTextParser.LEVEL_SENTENCE_ID) {
             disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID),object);
         }
+        
         
     }
     
