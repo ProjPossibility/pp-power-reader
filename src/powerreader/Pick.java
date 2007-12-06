@@ -9,6 +9,8 @@
 package powerreader;
 
 //for image
+import com.sun.j3d.utils.image.TextureLoader;
+import image.ImageFetcher;
 import java.awt.event.MouseAdapter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -123,8 +125,30 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                         Player.setHierarchyRoot(root);
                         Player.setFocusOn(pickedObject);
                         Player.playOne();
+
+                        // Get image
+                        if(ConfigurationManager.showImages()) {
+                            // clear out any existing images from the player
+                            Player.removeImages();
+                            ImageFetcher f = ConfigurationManager.getImageFetcher();
+                            TextureLoader imageT = new TextureLoader(f.getImage(pickedText),c3D);
+                            Raster imageObj = new Raster(new Point3f(0, 0,1f),
+                                    Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
+                                    imageT.getImage(), null);
+                            Shape3D shape = new Shape3D(imageObj);
+                            imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
+                            BranchGroup node = new BranchGroup();
+
+                            node.setCapability(BranchGroup.ALLOW_DETACH);
+
+                            node.addChild(shape);
+                            lastPicked = tObj.getTheTextTransformGroup();
+                            lastPicked.addChild(node);
+
+                            lastAttached =node;
+                        }
                     }
-                    // dictionary meaning and images
+                    // dictionary meaning
                     if(mouseAction == ConfigurationManager.ACTION_DEFINE) {
                         DictionaryLookup w = ConfigurationManager.getDictionary();
                         String def = w.getDefinition(pickedText);
@@ -180,6 +204,12 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
                 (e.getButton() == MouseEvent.BUTTON3 &&
                 ConfigurationManager.getRightClickAction() == ConfigurationManager.ACTION_DRAG)) {
             mousePressed = false;
+        }
+    }
+    
+    public static void removeImages() {
+        if(lastPicked != null && lastAttached != null) {
+            lastPicked.removeChild(lastAttached);
         }
     }
     

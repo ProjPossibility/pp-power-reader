@@ -176,6 +176,9 @@ public class Player extends Thread {
                 currentObj.color(true);
                     // Get image
                     if(ConfigurationManager.showImages()) {
+                        // clear out any existing images from mouse picking
+                        Pick.removeImages();
+
                         ImageFetcher f = ConfigurationManager.getImageFetcher();
                         BufferedImage img = f.getImage(currentObj.getValue());
                         if (img != null) {
@@ -330,6 +333,12 @@ public class Player extends Thread {
                 obj.enabledRender();
             }
             i++;
+        }
+    }
+    
+    static public void removeImages() {
+        if(lastAttachedTo != null && lastAttached != null) {
+            lastAttachedTo.removeChild(lastAttached);
         }
     }
 }
