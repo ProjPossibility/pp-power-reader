@@ -106,13 +106,15 @@ public class Player extends Thread {
     }
     
     static public boolean setFocusOn(HierarchyObject hObj) {
+        boolean success = false;
         if(hObj.getLevel() == RawTextParser.LEVEL_DOCUMENT_ID) {
             hObj.color(true);
             m_instance.m_objectsToSpeak = new ArrayList();
             m_instance.m_objectsToSpeak.add(hObj);
             m_instance.m_focusLevel = RawTextParser.LEVEL_DOCUMENT_ID;
             m_instance.m_focusIndex = 0;
-            return true;
+            
+            success = true;
         } else {
             int findOnLevel = hObj.getLevel();
             ArrayList objectsToSearch = m_instance.m_root.getAllChildrenOfLevel(findOnLevel);
@@ -138,12 +140,17 @@ public class Player extends Thread {
                     // Set the index
                     m_instance.m_focusIndex = searchIndex;
                     
-                    return true;
+                    success = true;
                 }
                 searchIndex++;
             }
         }
-        return false;
+        if (success) {
+            if(ConfigurationManager.showImages()) {
+                m_instance.displayImage(hObj.getValue(),hObj);
+            }
+        }
+        return success;
     }
     
     static public void setGrowEnable(boolean active) {
@@ -177,49 +184,7 @@ public class Player extends Thread {
                 currentObj.color(true);
                 // Get image
                 if(ConfigurationManager.showImages()) {
-                    // clear out any existing images from mouse picking
-                    Pick.removeImages();
-                    
-                    ImageFetcher f = ConfigurationManager.getImageFetcher();
-                    BufferedImage bimg = f.getImage(currentObj.getValue());
-                    if (bimg != null) {
-                    //scale image
-                    //Image img = bimg.getScaledInstance(ConfigurationManager.getImageScale()*100,-1,Image.SCALE_DEFAULT);
-
-                    double scale = (ConfigurationManager.getImageScale()+1)*100/bimg.getWidth();
-                    AffineTransform tx = new AffineTransform();
-                    tx.scale(scale, scale);
-                    BufferedImage img = bimg; // copying default image, in case scaling doesont work
-                    try {
-                        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-                        img = op.filter(bimg, null);
-                        System.out.println("Scaled [w: " + bimg.getWidth() + " , h:"+ bimg.getHeight() +" ] to scale factor: " + ConfigurationManager.getImageScale());
-                    } catch(Exception e) {
-                        System.out.println("Error scaling [w: " + bimg.getWidth() + " , h:"+ bimg.getHeight() +" ] to scale factor: " + ConfigurationManager.getImageScale());
-                        System.out.println(e);
-                    }
-
-                    //render image
-                        TextureLoader imageT = new TextureLoader(img);
-                        Raster imageObj = new Raster(new Point3f(0, -0.5f,1f),
-                                Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
-                                imageT.getImage(), null);
-                        Shape3D shape = new Shape3D(imageObj);
-                        imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
-                        BranchGroup node = new BranchGroup();
-                        
-                        node.setCapability(BranchGroup.ALLOW_DETACH);
-                        
-                        node.addChild(shape);
-                        
-                        if(lastAttachedTo != null && lastAttached != null) {
-                            lastAttachedTo.removeChild(lastAttached);
-                        }
-                        lastAttachedTo = ((TextObject3d) currentObj.getTransformGroup()).getTheTextTransformGroup();
-                        lastAttachedTo.addChild(node);
-                        
-                        lastAttached = node;
-                    }
+                    displayImage(currentObj.getValue(),currentObj);
                 }
                 
                 // Disable render on everything but the current object
@@ -372,4 +337,54 @@ public class Player extends Thread {
             lastAttachedTo.removeChild(lastAttached);
         }
     }
+    
+    
+    private void displayImage(final String pickedText, final HierarchyObject tObj) {
+        
+        // clear out any existing images from mouse picking
+        removeImages();
+        
+        ImageFetcher f = ConfigurationManager.getImageFetcher();
+        BufferedImage bimg = f.getImage(tObj.getValue());
+        if (bimg != null) {
+            //scale image
+            //Image img = bimg.getScaledInstance(ConfigurationManager.getImageScale()*100,-1,Image.SCALE_DEFAULT);
+            
+            double scale = (ConfigurationManager.getImageScale()+1)*100/bimg.getWidth();
+            AffineTransform tx = new AffineTransform();
+            tx.scale(scale, scale);
+            BufferedImage img = bimg; // copying default image, in case scaling doesont work
+            try {
+                AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+                img = op.filter(bimg, null);
+                System.out.println("Scaled [w: " + bimg.getWidth() + " , h:"+ bimg.getHeight() +" ] to scale factor: " + ConfigurationManager.getImageScale());
+            } catch(Exception e) {
+                System.out.println("Error scaling [w: " + bimg.getWidth() + " , h:"+ bimg.getHeight() +" ] to scale factor: " + ConfigurationManager.getImageScale());
+                System.out.println(e);
+            }
+            
+            //render image
+            TextureLoader imageT = new TextureLoader(img);
+            Raster imageObj = new Raster(new Point3f(0, -0.5f,1f),
+                    Raster.RASTER_COLOR, 0, 0, imageT.getImage().getWidth(), imageT.getImage().getHeight(),
+                    imageT.getImage(), null);
+            Shape3D shape = new Shape3D(imageObj);
+            imageObj.setCapability(Raster.ALLOW_IMAGE_WRITE);
+            BranchGroup node = new BranchGroup();
+            
+            node.setCapability(BranchGroup.ALLOW_DETACH);
+            
+            node.addChild(shape);
+            
+            if(lastAttachedTo != null && lastAttached != null) {
+                lastAttachedTo.removeChild(lastAttached);
+            }
+            lastAttachedTo = ((TextObject3d) tObj.getTransformGroup()).getTheTextTransformGroup();
+            lastAttachedTo.addChild(node);
+            
+            lastAttached = node;
+        }
+        
+    }
+    
 }
