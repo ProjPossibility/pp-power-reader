@@ -104,30 +104,43 @@ public class Player extends Thread {
     }
     
     static public boolean setFocusOn(HierarchyObject hObj) {
-        int findOnLevel = hObj.getLevel();
-        ArrayList objectsToSearch = m_instance.m_root.getAllChildrenOfLevel(findOnLevel);
-        Iterator it = objectsToSearch.iterator();
-        int searchIndex = 0;
-        
-        while(it.hasNext()) {
-            Object objToTest = it.next();
-            if(objToTest.equals(hObj)) {
-                
-                m_instance.m_focusLevel = findOnLevel;
-                m_instance.m_focusIndex = searchIndex;
-                
-                // Highlight the focused
-                hObj.color(true);
-               
-                // Set the objects to speach os the objects that were searched
-                m_instance.m_objectsToSpeak = objectsToSearch;
-                
-                // Set the index
-                m_instance.m_focusIndex = searchIndex;
-                
-                return true;
+        if(hObj.getLevel() == RawTextParser.LEVEL_DOCUMENT_ID) {
+            hObj.color(true);
+            m_instance.m_objectsToSpeak = new ArrayList();
+            m_instance.m_objectsToSpeak.add(hObj);
+            m_instance.m_focusLevel = RawTextParser.LEVEL_DOCUMENT_ID;
+            m_instance.m_focusIndex = 0;
+            return true;
+        }
+        else {
+            int findOnLevel = hObj.getLevel();
+            ArrayList objectsToSearch = m_instance.m_root.getAllChildrenOfLevel(findOnLevel);
+            Iterator it = objectsToSearch.iterator();
+            int searchIndex = 0;
+
+            while(it.hasNext()) {
+                Object objToTest = it.next();
+                if(objToTest.equals(hObj)) {
+
+                    m_instance.m_focusLevel = findOnLevel;
+                    m_instance.m_focusIndex = searchIndex;
+
+                    // Unhighlight everything just in case
+                    m_instance.m_root.color(false);
+
+                    // Highlight the focused
+                    hObj.color(true);
+
+                    // Set the objects to speach os the objects that were searched
+                    m_instance.m_objectsToSpeak = objectsToSearch;
+
+                    // Set the index
+                    m_instance.m_focusIndex = searchIndex;
+
+                    return true;
+                }
+                searchIndex++;
             }
-            searchIndex++;
         }
         return false;
     }
@@ -233,7 +246,13 @@ public class Player extends Thread {
         currentObj.color(true);
         
     }
-    // TODO : Stop
+   
+    static public void restart(HierarchyObject root,int focusLevel) {
+        reset();
+        m_instance.setHierarchyRoot(root);
+        m_instance.setFocusLevel(focusLevel); 
+    }
+    
     static public void reset() {
         Speech.cancel();
         if(m_instance.isAlive()) {
@@ -248,6 +267,7 @@ public class Player extends Thread {
     
     static public void play() {
         if(m_instance.isAlive()) {
+            Speech.cancel();
             m_instance.resume();
         } else {
             m_instance.start();
@@ -261,24 +281,26 @@ public class Player extends Thread {
     
     static public void disableRenderExcept(HierarchyObject object) {
         
-        // Enable depending on level of detail
-        if (ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_DOCUMENT_ID) {
-            enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_DOCUMENT_ID));
-        } else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_PARAGRAPH_ID) {
-            enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID));
-        } else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_SENTENCE_ID) {
-            enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID));
-        }
-        
-        // Disable Show depending on level of detail
-        if (ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_DOCUMENT_ID) {
-            disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_DOCUMENT_ID),object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID));
-        }
-        if(ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_PARAGRAPH_ID ) {
-            disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID),object.getParent(RawTextParser.LEVEL_SENTENCE_ID));
-        }
-        if(ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_SENTENCE_ID) {
-            disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID),object);
+        if(object.getLevel() != RawTextParser.LEVEL_DOCUMENT_ID)  {
+            // Enable depending on level of detail
+            if (ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_DOCUMENT_ID) {
+                enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_DOCUMENT_ID));
+            } else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_PARAGRAPH_ID) {
+                enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID));
+            } else if(ConfigurationManager.getDetailLevel() == RawTextParser.LEVEL_SENTENCE_ID) {
+                enableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID));
+            }
+
+            // Disable Show depending on level of detail
+            if (ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_DOCUMENT_ID) {
+                disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_DOCUMENT_ID),object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID));
+            }
+            if(ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_PARAGRAPH_ID ) {
+                disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_PARAGRAPH_ID),object.getParent(RawTextParser.LEVEL_SENTENCE_ID));
+            }
+            if(ConfigurationManager.getDetailLevel() > RawTextParser.LEVEL_SENTENCE_ID) {
+                disableRenderOfChildren(object.getParent(RawTextParser.LEVEL_SENTENCE_ID),object);
+            }
         }
     }
     

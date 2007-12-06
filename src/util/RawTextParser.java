@@ -70,6 +70,7 @@ public class RawTextParser {
         String token = null;
         String sentenceText = new String();
         String paragraphText = new String();
+        String documentText = new String();
         String senToken = null;
         
         HierarchyObject docuObj = new HierarchyObject(LEVEL_DOCUMENT_ID, LEVEL_DOCUMENT_STR);
@@ -110,6 +111,9 @@ public class RawTextParser {
                     paraObj.setValue(paragraphText);
                     
                     paraObj.setParents(currentParagraphParent);
+                    
+                    // Add the paragraph to the document
+                    documentText = documentText.concat(paragraphText);
                     
                     // Clear the paragraph string
                     paragraphText = new String();
@@ -186,15 +190,21 @@ public class RawTextParser {
             // Add any more paragraphs to the document
             paraObj.setValue(paragraphText);
             
+            
             // Set the paragraph's parents
             paraObj.setParents(currentParagraphParent);
             
             // Add the paragraph object to list of paragraphs
             docuObj.addChild(paraObj);
             
+            // Complete the document text
+            documentText = documentText.concat(paragraphText);
+            docuObj.setValue(documentText);
+            
             // Set parser values
             m_hierarchyRoot = docuObj;
             m_rootNode = docuObj.getBranchGroup();
+            
             
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();

@@ -431,7 +431,22 @@ public class PowerReaderUI extends javax.swing.JFrame {
     }//GEN-LAST:event_m_slider_lodStateChanged
     
     private void m_slider_lofStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_lofStateChanged
-        ConfigurationManager.setFocusLevel(m_slider_lof.getValue());
+        int currentFocusLevel = m_slider_lof.getValue();
+        ConfigurationManager.setFocusLevel(currentFocusLevel);
+        HierarchyObject currentObj = Player.getFocusOn();
+
+        Player.restart(m_hierarchyRoot,ConfigurationManager.getFocusLevel());
+        
+        // Set the focus at the correct level now
+        if(currentFocusLevel < currentObj.getLevel()) {
+            Player.setFocusOn(currentObj.getParent(currentFocusLevel));
+        }
+        else if (currentFocusLevel > currentObj.getLevel()) {
+            Player.setFocusOn((HierarchyObject)currentObj.getChildren().get(0));
+        }
+        else {
+            Player.setFocusOn(currentObj);
+        }
     }//GEN-LAST:event_m_slider_lofStateChanged
     
     private void m_checkBox_showImagesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_showImagesActionPerformed
@@ -519,10 +534,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         
         m_sceneRoot.addChild(m_hierarchyRoot.getBranchGroup());
         
-        Player.reset();
-        Player.setHierarchyRoot(m_hierarchyRoot);
-        Player.setFocusLevel(RawTextParser.LEVEL_WORD_ID);
-        
+        Player.restart(m_hierarchyRoot,ConfigurationManager.getFocusLevel());
     }
     
     private void m_button_hlColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_button_hlColorActionPerformed
