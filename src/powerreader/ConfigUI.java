@@ -135,7 +135,6 @@ public class ConfigUI extends javax.swing.JFrame {
         m_slider_textDepth.setMinimum(1);
         m_slider_textDepth.setPaintLabels(true);
         m_slider_textDepth.setPaintTicks(true);
-        m_slider_textDepth.setSnapToTicks(true);
         m_slider_textDepth.setValue(1);
         m_slider_textDepth.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -188,12 +187,12 @@ public class ConfigUI extends javax.swing.JFrame {
                             .addComponent(jLabel3)
                             .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(m_slider_textDepth, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(m_checkBox_mouseWheel, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(m_combo_rightClick, 0, 182, Short.MAX_VALUE))
-                            .addComponent(m_slider_lineWidth, javax.swing.GroupLayout.Alignment.TRAILING, 0, 0, Short.MAX_VALUE)))
+                            .addComponent(m_slider_lineWidth, 0, 0, Short.MAX_VALUE)
+                            .addComponent(m_slider_textDepth, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(m_okButton, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -234,7 +233,7 @@ public class ConfigUI extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(m_checkBox_mouseWheel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(m_label_rightClick1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -244,12 +243,12 @@ public class ConfigUI extends javax.swing.JFrame {
                     .addComponent(m_slider_lineWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(m_slider_textDepth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(m_slider_textDepth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(m_okButton)
                     .addComponent(m_cancelButton))
@@ -259,8 +258,8 @@ public class ConfigUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void m_slider_textDepthStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_textDepthStateChanged
-        ConfigurationManager.TEXT_DEPTH = m_slider_textDepth.getValue() / 10.0f;
-        ConfigurationManager.currentRoot.color(false);
+        ConfigurationManager.TEXT_DEPTH = m_slider_textDepth.getValue() / 2f;
+        ConfigurationManager.currentRoot.color(false);        
     }//GEN-LAST:event_m_slider_textDepthStateChanged
 
     private void m_okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_okButtonActionPerformed
