@@ -404,7 +404,20 @@ public class Player extends Thread {
             if(lastAttachedTo != null && lastAttached != null) {
                 lastAttachedTo.removeChild(lastAttached);
             }
-            lastAttachedTo = ((TextObject3d) tObj.getTransformGroup()).getTheTextTransformGroup();
+            TransformGroup theTrasnformGroup = tObj.getTransformGroup();
+            
+            // Attach the image to the 3d text object itself if this is a word
+            if(tObj.getLevel() == RawTextParser.LEVEL_WORD_ID) {
+                lastAttachedTo = ((TextObject3d) tObj.getTransformGroup()).getTheTextTransformGroup();
+            }
+            // Otherwise, attach it to the first word of the object
+            else {
+                // Get the list of children
+                ArrayList theChildren = tObj.getAllChildrenOfLevel(RawTextParser.LEVEL_WORD_ID);
+                // Get the last word of the object
+                HierarchyObject theWord = (HierarchyObject) theChildren.get(theChildren.size()-1);
+                lastAttachedTo = ((TextObject3d) theWord.getTransformGroup()).getTheTextTransformGroup();
+            }
             lastAttachedTo.addChild(node);
             
             lastAttached = node;

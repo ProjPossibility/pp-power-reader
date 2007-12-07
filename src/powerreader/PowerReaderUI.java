@@ -499,6 +499,8 @@ public class PowerReaderUI extends javax.swing.JFrame {
         if(m_slider_lod.getValue() < m_slider_lof.getValue()) {
             m_slider_lof.setValue(m_slider_lod.getValue());
         }
+        
+        // Set the focus level
         int currentFocusLevel = (3 - m_slider_lof.getValue());
         ConfigurationManager.setFocusLevel(currentFocusLevel);
         HierarchyObject currentObj = Player.getFocusOn();
