@@ -185,13 +185,6 @@ public class Player extends Thread {
                 
                 // Highlight/grow the current object
                 currentObj.color(true);
-                // Get image
-                if(ConfigurationManager.showImages()) {
-                    displayImage(currentObj.getValue(),currentObj);
-                }
-                
-                // Disable render on everything but the current object
-                disableRenderExcept(currentObj);
                 
                 if(ConfigurationManager.followFocus()) {
                     // Center the scene on the focused item
@@ -202,6 +195,15 @@ public class Player extends Thread {
                     ConfigurationManager.refreshTranslate();
                     
                 }
+                
+                // Get image
+                if(ConfigurationManager.showImages()) {
+                    displayImage(currentObj);
+                }
+                
+                // Disable render on everything but the current object
+                disableRenderExcept(currentObj);
+                
                 
                 // Speak the current object--synchronize with the speech API
                 synchronized(Speech.getSync()) {
@@ -362,7 +364,7 @@ public class Player extends Thread {
     }
     
     
-    private void displayImage(final String pickedText, final HierarchyObject tObj) {
+    static public void displayImage(final HierarchyObject tObj) {
         
         // clear out any existing images from mouse picking
         removeImages();

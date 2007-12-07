@@ -476,6 +476,9 @@ public class PowerReaderUI extends javax.swing.JFrame {
 
     private void m_slider_imageSizeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_imageSizeStateChanged
         ConfigurationManager.setImageScale(m_slider_imageSize.getValue());
+        if(ConfigurationManager.showImages()) {
+            Player.displayImage(Player.getFocusOn());
+        }
     }//GEN-LAST:event_m_slider_imageSizeStateChanged
     
     private void m_slider_lodStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_lodStateChanged
@@ -515,6 +518,11 @@ public class PowerReaderUI extends javax.swing.JFrame {
     
     private void m_checkBox_showImagesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_showImagesActionPerformed
         ConfigurationManager.toggleShowImages();
+        if(!ConfigurationManager.showImages()) {
+            Player.removeImages();
+        } else {
+            Player.displayImage(Player.getFocusOn());
+        }
     }//GEN-LAST:event_m_checkBox_showImagesActionPerformed
     
     private void m_checkBox_speechEnabled1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_checkBox_speechEnabled1ActionPerformed
