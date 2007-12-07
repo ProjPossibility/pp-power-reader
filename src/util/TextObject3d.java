@@ -99,6 +99,10 @@ public class TextObject3d extends TransformGroup {
         theText.addChild(m_textShape);
         rotation_group.addChild( theText );
         
+        // squeeze the text
+        Transform3D squeeze = new Transform3D();
+        squeeze.setScale(new Vector3d(1,1,ConfigurationManager.TEXT_DEPTH));
+        theText.setTransform(squeeze);
         
     }
     
@@ -153,7 +157,7 @@ public class TextObject3d extends TransformGroup {
         m_textShape.setAppearance(m_textAppearanceHighlight);
         if(ConfigurationManager.wordsGrow()) {
             Transform3D scale = new Transform3D();
-            scale.setScale(new Vector3d(1.0f,1.6f,1.0f));
+            scale.setScale(new Vector3d(1.0f,1.6f,ConfigurationManager.TEXT_DEPTH));
             // Alternative method -- have words come out at you
             // scale.setTranslation(new Vector3f(0,0,10f));
             theText.setTransform(scale);
@@ -163,7 +167,7 @@ public class TextObject3d extends TransformGroup {
         m_textShape.setAppearance(m_textAppearanceBaseColor);
         
         Transform3D scale = new Transform3D();
-        scale.setScale(new Vector3d(1.0f,1.0f,1.0f));
+        scale.setScale(new Vector3d(1.0f,1.0f,ConfigurationManager.TEXT_DEPTH));
         theText.setTransform(scale);
     }
     

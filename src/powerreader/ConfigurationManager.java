@@ -23,6 +23,7 @@ import javax.media.j3d.TransformGroup;
 import javax.swing.JSlider;
 import javax.vecmath.Vector3f;
 import speech.Speech;
+import util.HierarchyObject;
 
 /**
  *
@@ -34,6 +35,8 @@ public class ConfigurationManager {
     public static Color DEFAULT_BG_COLOR = Color.ORANGE;
     public static Color DEFAULT_FG_COLOR = Color.BLUE;
     public static Color DEFAULT_HL_COLOR = Color.RED;
+    
+    public static float TEXT_DEPTH = 0.1f;
     
     static float DEFAULT_X = 0.0f;
     static float DEFAULT_Y = 0.0f;
@@ -76,6 +79,8 @@ public class ConfigurationManager {
     private String fileName = null;
     
     private JSlider m_zoomSlider = null;
+    
+    public static HierarchyObject currentRoot = null;
     
     static {
         m_instance = new ConfigurationManager();

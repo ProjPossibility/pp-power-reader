@@ -44,7 +44,7 @@ public class RawTextParser {
     /** Creates a new instance of RawTextParser */
     public RawTextParser(String filename) {
         m_fileName = filename;
-        ConfigurationManager.setCurrentFileName(filename);        
+        ConfigurationManager.setCurrentFileName(filename);
     }
     
     public BranchGroup getRootNode() {
@@ -204,6 +204,9 @@ public class RawTextParser {
             // Set parser values
             m_hierarchyRoot = docuObj;
             m_rootNode = docuObj.getBranchGroup();
+            
+            // Save the root in the configuration manager
+           ConfigurationManager.currentRoot = m_hierarchyRoot;
             
             
         } catch (FileNotFoundException ex) {

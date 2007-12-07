@@ -43,11 +43,6 @@
                       <Component id="m_combo_dictionaryLookup" min="-2" pref="182" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="m_okButton" pref="153" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="m_cancelButton" min="-2" pref="166" max="-2" attributes="1"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
                       <Component id="m_label_leftClick" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="92" max="32767" attributes="0"/>
                       <Component id="m_combo_leftClick" min="-2" pref="182" max="-2" attributes="0"/>
@@ -63,15 +58,23 @@
                           <Component id="jLabel1" alignment="1" pref="139" max="32767" attributes="0"/>
                           <Component id="m_label_rightClick1" alignment="1" pref="139" max="32767" attributes="0"/>
                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="m_slider_textDepth" alignment="1" pref="182" max="32767" attributes="0"/>
                           <Group type="103" alignment="1" groupAlignment="1" max="-2" attributes="0">
                               <Component id="m_checkBox_mouseWheel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="m_combo_rightClick" alignment="1" min="-2" pref="182" max="-2" attributes="1"/>
+                              <Component id="m_combo_rightClick" alignment="1" pref="182" max="32767" attributes="1"/>
                           </Group>
-                          <Component id="m_slider_lineWidth" min="0" pref="0" max="32767" attributes="1"/>
+                          <Component id="m_slider_lineWidth" alignment="1" min="0" pref="0" max="32767" attributes="1"/>
                       </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="m_okButton" pref="153" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="m_cancelButton" min="-2" pref="166" max="-2" attributes="1"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -130,11 +133,20 @@
                   <Component id="m_slider_lineWidth" min="-2" max="-2" attributes="1"/>
               </Group>
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="m_slider_textDepth" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabel4" min="-2" pref="14" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace pref="16" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="m_okButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="m_cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -334,6 +346,33 @@
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
         <Property name="text" type="java.lang.String" value="this change to take effect"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSlider" name="m_slider_textDepth">
+      <Properties>
+        <Property name="majorTickSpacing" type="int" value="1"/>
+        <Property name="maximum" type="int" value="10"/>
+        <Property name="minimum" type="int" value="1"/>
+        <Property name="paintLabels" type="boolean" value="true"/>
+        <Property name="paintTicks" type="boolean" value="true"/>
+        <Property name="snapToTicks" type="boolean" value="true"/>
+        <Property name="value" type="int" value="1"/>
+      </Properties>
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="m_slider_textDepthStateChanged"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel3">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Tahoma" size="11" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Text Depth"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel4">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Sets the 3D Text Depth"/>
       </Properties>
     </Component>
   </SubComponents>
