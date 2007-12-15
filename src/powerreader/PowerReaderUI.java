@@ -16,9 +16,7 @@ import javax.swing.JColorChooser;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3f;
 import java.awt.Component;
-import java.io.File;
 import javax.swing.JFileChooser;
-import javax.swing.WindowConstants;
 import javax.vecmath.Point3d;
 import speech.Speech;
 import util.HierarchyObject;
@@ -42,7 +40,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
     private Pick pick;
     
     // Config panel
-    private ConfigUI m_configPanel;
+    private OptionsUI m_optionsPanel;
     
     /** Creates new form PowerReaderUI */
     public PowerReaderUI() {
@@ -51,8 +49,7 @@ public class PowerReaderUI extends javax.swing.JFrame {
         // Link the configuration manager and the slider on this UI
         ConfigurationManager.setZoomSlider(m_slider_zoomLevel);
         // Initialize config panel
-        m_configPanel = new ConfigUI();
-        m_configPanel.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        m_optionsPanel = new OptionsUI(this,false);
         
         // Set default button colors
         m_button_bgColor.setBackground(ConfigurationManager.DEFAULT_BG_COLOR);
@@ -62,6 +59,8 @@ public class PowerReaderUI extends javax.swing.JFrame {
         TextObject3d.setBaseColor(new Color3f(ConfigurationManager.DEFAULT_FG_COLOR));
         TextObject3d.setHighlightColor(new Color3f(ConfigurationManager.DEFAULT_HL_COLOR));
         
+        // Set the read speed slider based on Configuration settings
+        m_slider_readSpeed.setValue(m_slider_readSpeed.getMaximum()-ConfigurationManager.DEFAULT_SPEED);
         // Now initialize the 3D Canvas
         create3dCanvas();
     }
@@ -625,12 +624,12 @@ public class PowerReaderUI extends javax.swing.JFrame {
     }//GEN-LAST:event_m_checkBox_speechEnabledActionPerformed
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        m_configPanel.setVisible(true);
+        m_optionsPanel.setVisible(true);
         
     }//GEN-LAST:event_jButton1ActionPerformed
     
     private void m_slider_readSpeedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_m_slider_readSpeedStateChanged
-        Player.setSleepDelay(3100-m_slider_readSpeed.getValue());
+        ConfigurationManager.setSpeed(m_slider_readSpeed.getMaximum()-m_slider_readSpeed.getValue());
     }//GEN-LAST:event_m_slider_readSpeedStateChanged
     
     private void m_buton_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_buton_stopActionPerformed

@@ -33,7 +33,6 @@ import image.ImageFetcher;
  * @author Christopher Leung
  */
 public class Player extends Thread {
-    public static int WPM_FACTOR = 120000;
     
     private HierarchyObject m_root;
     private int m_focusLevel;
@@ -92,10 +91,6 @@ public class Player extends Thread {
         m_instance.m_focusIndex = 0;
         m_instance.m_root = root;
         m_instance.m_objectsToSpeak = m_instance.m_root.getAllChildrenOfLevel(m_instance.m_focusLevel);
-    }
-    
-    static public void setSleepDelay(int factor) {
-        Speech.setSpeed(WPM_FACTOR/factor);
     }
     
     static public HierarchyObject getFocusOn() {

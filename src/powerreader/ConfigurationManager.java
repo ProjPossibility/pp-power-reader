@@ -31,6 +31,12 @@ import util.HierarchyObject;
  */
 public class ConfigurationManager {
     
+    // Arbitrary factor by which we use to adjust the speech speed
+    public static int WPM_FACTOR = 120000;
+    public static int DEFAULT_SPEED = 800;
+    private static int SPEED_OFFSET = 100;
+    private int m_currentSpeed;
+    
     public static int DEFAULT_ZOOM = -25;
     public static Color DEFAULT_BG_COLOR = Color.ORANGE;
     public static Color DEFAULT_FG_COLOR = Color.BLUE;
@@ -150,8 +156,11 @@ public class ConfigurationManager {
         
         // Fonts
         
-        // Voices
+        // Speech
+        m_currentSpeed = DEFAULT_SPEED;
         
+        // Duplicate of "setSpeed", which we can't call right now
+        Speech.setSpeed(WPM_FACTOR/(m_currentSpeed+SPEED_OFFSET));
     }
     
     static public DictionaryLookup getDictionary() {
@@ -252,12 +261,18 @@ public class ConfigurationManager {
     static public void setDetailLevel(int level) {
         m_detailLevel = level;
     }
-
-     static public void setImageScale(int scale) {
+    
+    static public void setImageScale(int scale) {
         m_imageScale = scale;
     }
-     
+    
     static int getImageScale() {
         return m_imageScale;
+    }
+    
+    static void setSpeed(int factor) {
+        m_instance.m_currentSpeed = factor;
+        // Make sure speed is at "least" SPEED_OFFSET
+        Speech.setSpeed(WPM_FACTOR/(factor+SPEED_OFFSET));
     }
 }
