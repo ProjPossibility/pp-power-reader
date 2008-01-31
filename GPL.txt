@@ -1,4 +1,3 @@
-/*
     This file is part of Power Reader.
 
     Power Reader is free software: you can redistribute it and/or modify
@@ -17,32 +16,4 @@
     This software was developed by members of Project:Possibility, a software 
     collaboration for the disabled.
     
-    For more information, visit http://www.projectpossibility.org
- */
-
-package dictionary;
-
-import java.util.regex.*;
-
-/**
- *
- * @author zhanshi
- */
-public abstract class DictionaryLookup {
-    
-    protected static String dictionaryName;
-            
-    /** Creates a new instance of DictionaryLookup */
-    public DictionaryLookup() {
-    }
-    public abstract String getDefinition(String text);
-    
-    public String sanitize(String text) {
-        return text.replaceAll("^[^\\w]*", "").replaceAll("[^\\w]*$", "");
-    }
-    
-    static public String getName() {
-        return dictionaryName;
-    }
-
-}
+    For more information, visit http://projectpossibility.org
