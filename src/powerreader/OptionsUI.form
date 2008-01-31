@@ -196,6 +196,7 @@
             <StringItem index="3" value="Do nothing"/>
           </StringArray>
         </Property>
+        <Property name="selectedIndex" type="int" value="2"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="m_combo_rightClick">
@@ -208,6 +209,7 @@
             <StringItem index="3" value="Do nothing"/>
           </StringArray>
         </Property>
+        <Property name="selectedIndex" type="int" value="1"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="m_okButton">

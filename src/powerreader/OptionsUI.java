@@ -86,8 +86,10 @@ public class OptionsUI extends javax.swing.JDialog {
         m_combo_leftClick.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Focus on item", "Drag and scroll", "Read dictionary definition", "Do nothing" }));
 
         m_combo_middleClick.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Focus on item", "Drag and scroll", "Read dictionary definition", "Do nothing" }));
+        m_combo_middleClick.setSelectedIndex(2);
 
         m_combo_rightClick.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Focus on item", "Drag and scroll", "Read dictionary definition", "Do nothing" }));
+        m_combo_rightClick.setSelectedIndex(1);
 
         m_okButton.setText("OK");
         m_okButton.addActionListener(new java.awt.event.ActionListener() {
