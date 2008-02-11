@@ -73,9 +73,12 @@ public class TextObject3d extends TransformGroup {
     public TextObject3d(String text) {
         super();
         
+        this.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
+        
         // face it in the scene graph
         Transform3D rotation = new Transform3D();
         TransformGroup rotation_group = new TransformGroup( rotation );
+        rotation_group.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
         this.addChild( rotation_group );
         
         // Set up 3d geometry
@@ -107,17 +110,17 @@ public class TextObject3d extends TransformGroup {
         
         nextLocation.x += up.x + nextLocationIncrementWordSentence.x;
         
-        m_textShape = new Shape3D();
-        m_textShape.setGeometry(textGeom);
-        m_textShape.setAppearance(m_textAppearanceBaseColor);
-        m_textShape.setCapability(Shape3D.ALLOW_APPEARANCE_OVERRIDE_WRITE);
+        m_textShape = new Shape3D(textGeom,m_textAppearanceBaseColor);
+        m_textShape.setAppearanceOverrideEnable(true);
         m_textShape.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
+        m_textShape.setCapability(Shape3D.ENABLE_PICK_REPORTING);
         
         // attach it
         theText = new TransformGroup();
         theText.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         theText.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
         theText.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
+        theText.setCapability(TransformGroup.ENABLE_PICK_REPORTING);
         theText.addChild(m_textShape);
         rotation_group.addChild( theText );
         
@@ -132,9 +135,6 @@ public class TextObject3d extends TransformGroup {
         // create the 3d text
         Appearance textAppear = new Appearance();
         Material textMaterial = new Material();
-        textMaterial.setCapability(Material.ALLOW_COMPONENT_WRITE);
-        textMaterial.setCapability(Material.ALLOW_COMPONENT_READ);
-        textMaterial.setCapability(Material.EMISSIVE);
         textMaterial.setEmissiveColor(color);
         textAppear.setMaterial(textMaterial);
         return textAppear;

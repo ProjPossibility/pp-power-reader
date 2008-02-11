@@ -51,6 +51,9 @@ public class HierarchyObject {
     // Ordered list of children
     private ArrayList m_children;
     
+    // Stores whether this object is being rendered or not
+    private boolean m_render;
+    
     /**
      * Creates a new instance of HierarchyObject
      * @param newLevel Level of the hierarchy object
@@ -58,6 +61,7 @@ public class HierarchyObject {
      * @param newNode Reference to the scene graph node
      */
     public HierarchyObject(int newLevel, String newType) {
+        m_render = true;
         m_level = newLevel;
         m_type = newType;
         m_children = new ArrayList();
@@ -206,14 +210,16 @@ public class HierarchyObject {
     }
     
     public void disableRender() {
-        if(this.getParent() != null) {
+        if(m_render == true) {
             this.getParent().getTransformGroup().removeChild(m_branchGroup);
+            m_render = false;
         }
     }
     
     public void enabledRender() {
-        if(this.getParent() != null && m_branchGroup.getParent() == null) {
+        if(this.getParent() != null && m_render == false) {
             this.getParent().getTransformGroup().addChild(m_branchGroup);
+            m_render = true;
         }
     }
 }

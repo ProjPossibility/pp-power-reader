@@ -42,6 +42,7 @@ import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.media.j3d.Raster;
+import javax.media.j3d.SceneGraphPath;
 import javax.vecmath.Point3f;
 
 import com.sun.j3d.utils.picking.*;
@@ -102,13 +103,19 @@ public class Pick extends MouseInputAdapter implements MouseWheelListener {
             PickResult result = pickCanvas.pickClosest();
             
             if (result != null) {
-                Shape3D s3 = (Shape3D)result.getNode(PickResult.SHAPE3D);
                 
-                if (s3 != null) {
-                    
-                    // Get the textobject picked
-                    TextObject3d tObj = (TextObject3d) s3.getParent().getParent().getParent();
-                    
+                // Retrieve the picked text object
+                TextObject3d tObj = null;
+                SceneGraphPath pickedPath = result.getSceneGraphPath();
+                
+                for(int i = 0; i< pickedPath.nodeCount(); i++) {
+                    if (pickedPath.getNode(i) instanceof TextObject3d) {
+                        tObj = (TextObject3d) pickedPath.getNode(i);
+                    }
+                }
+                
+                if (tObj != null) {
+                                        
                     // Get its hierarchy object of the word
                     WordHashMap map = WordHashMap.getInstance();
                     HierarchyObject pickedObject = map.getHirarchyObject(tObj);

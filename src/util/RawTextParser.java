@@ -85,6 +85,7 @@ public class RawTextParser {
         node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
         node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
         node.setCapability(BranchGroup.ALLOW_DETACH);
+        node.setCapability(BranchGroup.ENABLE_PICK_REPORTING);
         
         BufferedReader input = null;
         String line = null;
