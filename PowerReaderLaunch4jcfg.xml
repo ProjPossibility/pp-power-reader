@@ -1,0 +1,38 @@
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>C:\Documents and Settings\Christopher Leung\Desktop\PowerReader\dist\PowerReader.jar</jar>
+  <outfile>C:\Documents and Settings\Christopher Leung\Desktop\PowerReaderApp\PowerReader.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <icon></icon>
+  <classPath>
+    <mainClass>powerreader.Main</mainClass>
+    <cp>lib/swing-layout-1.0.jar</cp>
+    <cp>lib/cmu_time_awb.jar</cp>
+    <cp>lib/cmu_us_kal.jar</cp>
+    <cp>lib/cmudict04.jar</cp>
+    <cp>lib/cmulex.jar</cp>
+    <cp>lib/cmutimelex.jar</cp>
+    <cp>lib/en_us.jar</cp>
+    <cp>lib/freetts.jar</cp>
+    <cp>lib/flickrapi-1.0b5.jar</cp>
+    <cp>lib/j3dcore.jar</cp>
+    <cp>lib/j3dutils.jar</cp>
+    <cp>lib/vecmath.jar</cp>
+  </classPath>
+  <jre>
+    <path></path>
+    <minVersion>1.5.0</minVersion>
+    <maxVersion></maxVersion>
+    <dontUsePrivateJres>false</dontUsePrivateJres>
+    <initialHeapSize>0</initialHeapSize>
+    <maxHeapSize>0</maxHeapSize>
+  </jre>
+</launch4jConfig>
