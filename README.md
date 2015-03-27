@@ -1,4 +1,6 @@
 # pp-power-reader
+A graphical, interactive text reader that allows the user to personally adjust based on individual needs
+
 Right now this is an experimental project as we investigate supporting development of our projects
 
 Overview
